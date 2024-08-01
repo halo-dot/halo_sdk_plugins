@@ -1,0 +1,97 @@
+ext {
+    kotlin_version = '1.3.72'
+}
+group 'za.co.synthesis.halo.sdkflutterplugin'
+version '1.0-SNAPSHOT'
+
+Properties properties = new Properties()
+if (rootProject.file("local.properties").exists()) {
+    properties.load(project.rootProject.file("local.properties").newDataInputStream())
+}
+
+buildscript {
+    ext.kotlin_version = '1.3.72'
+    repositories {
+        google()
+        mavenCentral()
+        maven { url 'https://jitpack.io' }
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:4.1.0'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        // classpath 'com.google.gms:google-services:4.3.10'
+    }
+}
+
+rootProject.allprojects {
+    repositories {
+        google()
+        maven { url 'https://jitpack.io' }
+
+        def repos = [
+            'releases',
+            'snapshots'
+        ]
+        repos.each {repo ->
+            maven {
+                name = repo
+                url = "s3://synthesis-halo-artifacts/$repo"
+                credentials(AwsCredentials) {
+
+                    def localAccessKey = properties.getProperty('aws.accesskey')
+                    def systemEnvAccessKey = System.getenv('AWS_ACCESS_KEY_ID')
+
+                    def localSecretKey = properties.getProperty('aws.secretkey')
+                    def systemEnvSecretKey = System.getenv('AWS_SECRET_ACCESS_KEY')
+
+                    def localtoken = properties.getProperty('aws.token')
+                    def systemEnvToken = System.getenv('AWS_SESSION_TOKEN')
+
+                    accessKey = localAccessKey != null ? localAccessKey : systemEnvAccessKey
+                    secretKey = localSecretKey != null ? localSecretKey : systemEnvSecretKey
+
+                    if (systemEnvToken != null){
+                        sessionToken = systemEnvToken
+                    }
+                }
+            }
+        }
+    }
+}
+
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+
+android {
+    compileSdkVersion 31
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+    }
+
+    defaultConfig {
+        minSdkVersion 29
+    }
+}
+
+def sdkVersion="2.1.22"
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
+    implementation 'androidx.core:core-ktx:1.3.1'
+
+    // Halo SDK
+    releaseImplementation group: "za.co.synthesis.halo", name: "sdk", version: "$sdkVersion", changing: true
+    debugImplementation group: "za.co.synthesis.halo", name: "sdk", version: "$sdkVersion-debug", changing: true
+}
