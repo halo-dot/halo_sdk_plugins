@@ -1,0 +1,213 @@
+ext {
+    kotlin_version = '1.3.72'
+}
+def localProperties = new Properties()
+def localPropertiesFile = rootProject.file('local.properties')
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.withReader('UTF-8') { reader ->
+        localProperties.load(reader)
+    }
+}
+
+def flutterRoot = localProperties.getProperty('flutter.sdk')
+if (flutterRoot == null) {
+    throw new GradleException("Flutter SDK not found. Define location with flutter.sdk in the local.properties file.")
+}
+
+def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
+if (flutterVersionCode == null) {
+    flutterVersionCode = '1'
+}
+
+def flutterVersionName = localProperties.getProperty('flutter.versionName')
+if (flutterVersionName == null) {
+    flutterVersionName = '1.0'
+}
+
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
+
+android {
+    compileSdkVersion 33
+    ndkVersion '21.2.6472646'
+
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+    }
+
+    lintOptions {
+        disable 'InvalidPackage'
+        // Rapid linting always fails for some undetermined reason, need to look into this
+        checkReleaseBuilds false
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+    }
+
+    defaultConfig {
+        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
+        applicationId "za.co.synthesis.halo.sdkflutterplugin_example"
+        minSdkVersion 29
+        targetSdkVersion 33
+        versionCode flutterVersionCode.toInteger()
+        versionName flutterVersionName
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+        testInstrumentationRunnerArguments clearPackageData: 'true'
+    }
+
+    buildTypes {
+        release {
+            // TODO: Add your own signing config for the release build.
+            // Signing with the debug keys for now, so `flutter run --release` works.
+            signingConfig signingConfigs.debug
+        }
+    }
+}
+
+flutter {
+    source '../..'
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
+    implementation 'androidx.core:core-ktx:1.3.1'
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+}
+
+Properties properties = new Properties()
+def propertiesFile = project.rootProject.file('local.properties')
+if (propertiesFile.exists()) {
+    properties.load(propertiesFile.newDataInputStream())
+}
+
+def localScpToolDir = properties.getProperty('scp.dir')
+def systemEnvScpToolDir = System.getenv('SCP_DIR')
+
+def scpToolDir =  localScpToolDir ?: systemEnvScpToolDir
+
+android.applicationVariants.all { variant ->
+    if (variant.buildType.name == 'profile') {
+        return
+    }
+    ['apk', 'aab'].forEach { artifactType ->
+        def profileFile = "../../mpos${variant.name.capitalize()}${artifactType.capitalize()}.nwproj"
+
+        task "createProfileFile${variant.name.capitalize()}${artifactType.capitalize()}" {
+            group 'codeProtection'
+            description 'Create nwproj file from template'
+
+            doLast {
+                file(profileFile).delete()
+
+                def templateFilePath = "$projectDir/../../mposTemplate.nwproj"
+
+                def templateFile = file(templateFilePath).text
+
+                def mappingFilePath = variant.mappingFile
+
+                def replaceMap = []
+                def inputFile
+                if (artifactType == "apk") {
+                    inputFile = "$buildDir/outputs/flutter-apk/app-${variant.flavorName}-${variant.buildType.name}.apk"
+                } else {
+                    inputFile = "$buildDir/outputs/bundle/${variant.name}/app-${variant.flavorName}-${variant.buildType.name}.aab"
+                }
+                if (mappingFilePath != null && file(mappingFilePath).exists())
+                {
+                    println mappingFilePath
+
+                    def mappingFile = file(mappingFilePath).text
+
+                    def className = "za.co.synthesis.halo.halo_mpos_common.ProtectionCallbacksKt"
+                    def debuggerCallback = "debuggerCallback"
+                    def integrityCallback = "integrityCallback"
+                    def rootedCallback = "rootCallback"
+                    replaceMap = [
+                        "inputFile" : inputFile,
+                        "analysisOutputFile": inputFile.replaceAll("\\.(apk|aab)", "-analysis.\$1"),
+                        "profilingOutputFile": inputFile.replaceAll("\\.(apk|aab)", "-profiling.\$1"),
+                        "protectionOutputFile": inputFile.replaceAll("\\.(apk|aab)", "-protected.\$1"),
+                        "mappingFile": mappingFilePath.path,
+                        "integrityCallback" : "${className}.${integrityCallback}",
+                        "antidebugCallback" : "${className}.${debuggerCallback}",
+                        "rootedCallback" : "${className}.${rootedCallback}"
+                    ]
+                }
+                else {
+                    replaceMap = [
+                        "inputFile" : inputFile,
+                        "analysisOutputFile": inputFile.replaceAll("\\.(apk|aab)", "-analysis.\$1"),
+                        "profilingOutputFile": inputFile.replaceAll("\\.(apk|aab)", "-profiling.\$1"),
+                        "protectionOutputFile": inputFile.replaceAll("\\.(apk|aab)", "-protected.\$1"),
+                        "mappingFile": "",
+                        "integrityCallback" : "za.co.synthesis.halo.halo_mpos_common.ProtectionCallbacksKt.integrityCallback",
+                        "antidebugCallback" : "za.co.synthesis.halo.halo_mpos_common.ProtectionCallbacksKt.debuggerCallback",
+                        "rootedCallback" : "za.co.synthesis.halo.halo_mpos_common.ProtectionCallbacksKt.rootCallback"
+                    ]
+                }
+
+                def renderedFile = templateFile
+
+                replaceMap.each { entry ->
+                    renderedFile = renderedFile.replaceAll("\\{\\{${entry.key}\\}\\}", entry.value)
+                }
+
+                def file = file(profileFile)
+                file.createNewFile()
+                file.text = renderedFile
+            }
+        }
+
+        task "prepare${variant.name.capitalize()}${artifactType.capitalize()}"(type: Exec) {
+            group 'codeProtection'
+            description 'Convert parts of Android artifact to C, which can then be processed in the analysis, profiling and protection procedures'
+
+            dependsOn "createProfileFile${variant.name.capitalize()}${artifactType.capitalize()}"
+            commandLine "$scpToolDir/scp-tool",
+                '--prepare', profileFile,
+                '--mapping-file', "$buildDir/outputs/mapping/${variant.name}/mapping.txt"
+        }
+
+        task "analyse${variant.name.capitalize()}${artifactType.capitalize()}"(type: Exec) {
+            group 'codeProtection'
+            description 'Determines what files are compiled and how. Used for profiling and protecting'
+
+            dependsOn "prepare${variant.name.capitalize()}${artifactType.capitalize()}"
+            commandLine "$scpToolDir/scp-tool",
+                '--analyze', profileFile,
+                '--mapping-file', "$buildDir/outputs/mapping/${variant.name}/mapping.txt"
+        }
+
+        task "profile${variant.name.capitalize()}${artifactType.capitalize()}"(type: Exec) {
+            group 'codeProtection'
+            description 'Build a profiling application'
+
+            dependsOn "analyse${variant.name.capitalize()}${artifactType.capitalize()}"
+            commandLine "$scpToolDir/scp-tool",
+                '--build-profiling', profileFile,
+                '--mapping-file', "$buildDir/outputs/mapping/${variant.name}/mapping.txt"
+        }
+
+        task "protect${variant.name.capitalize()}${artifactType.capitalize()}"(type: Exec) {
+            group 'codeProtection'
+            description 'Build protected application'
+
+            dependsOn "analyse${variant.name.capitalize()}${artifactType.capitalize()}"
+            commandLine "$scpToolDir/scp-tool",
+                '--protect', profileFile,
+                '--mapping-file', "$buildDir/outputs/mapping/${variant.name}/mapping.txt"
+        }
+    }
+}
