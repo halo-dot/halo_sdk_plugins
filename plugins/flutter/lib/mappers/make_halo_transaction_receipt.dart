@@ -33,8 +33,8 @@ HaloTransactionReceipt? makeHaloTransactionReceipt(
     data['panSequenceNumber'] as String?,
     data['effectiveDate'] as String?,
     data['disposition'] as String?,
-    data['currencyCode'] as String,
-    data['amountAuthorised'] as String,
-    data['amountOther'] as String,
+    data['currencyCode'] as String?,
+    data['amountAuthorised'] as String?,
+    data['amountOther'] as String?,
   );
 }
