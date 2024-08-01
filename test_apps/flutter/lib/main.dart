@@ -97,33 +97,38 @@ class _MyAppState extends State<MyApp> {
         appBar: AppBar(
           title: const Text('Plugin example app'),
         ),
-        body: Column(mainAxisSize: MainAxisSize.max, children: [
-          AmountField(flex: 2, amount: amount),
-          Expanded(
-              flex: 1,
-              child: TextField(
-                  controller: textFieldController,
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      hintText: 'Merchant reference'))),
-          Expanded(
-              flex: 2,
-              child: ListView(
-                  reverse: true,
-                  children: uiMessages.reversed
-                      .map((it) => Text(
-                            "${it.text}",
-                            softWrap: true,
-                            style: TextStyle(color: it.color),
-                          ))
-                      .toList())),
-          Keypad(flex: 6, amount: amount, setAmount: setAmount),
-          ElevatedButton(
-            onPressed: startTransaction,
-            child: const Text('Pay',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-          )
-        ]),
+        body: Padding(
+            padding: const EdgeInsets.fromLTRB(8, 2, 10, 8),
+            child: Column(mainAxisSize: MainAxisSize.max, children: [
+              AmountField(flex: 2, amount: amount),
+              Expanded(
+                  flex: 1,
+                  child: TextField(
+                      controller: textFieldController,
+                      decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          hintText: 'Merchant reference'))),
+              Expanded(
+                  flex: 2,
+                  child: ListView(
+                      reverse: true,
+                      children: uiMessages.reversed
+                          .map((it) => Text(
+                                "${it.text}",
+                                softWrap: true,
+                                style: TextStyle(color: it.color),
+                              ))
+                          .toList())),
+              Keypad(flex: 6, amount: amount, setAmount: setAmount),
+              Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+                ElevatedButton(
+                  onPressed: startTransaction,
+                  child: const Text('Pay',
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                )
+              ])
+            ])),
       ),
     );
   }
