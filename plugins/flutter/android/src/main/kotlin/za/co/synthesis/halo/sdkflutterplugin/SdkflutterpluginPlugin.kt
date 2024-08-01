@@ -32,6 +32,7 @@ class SdkflutterpluginPlugin: FlutterPlugin, MethodCallHandler {
         "initializeHaloSDK" -> result.success(haloSdkImplementation.initializeHaloSDK(getHashMapFromArguments(call.arguments())))
         "startTransaction" -> result.success(haloSdkImplementation.startTransaction(getHashMapFromArguments(call.arguments())))
         "jwtCallback" -> result.success(haloSdkImplementation.jwtCallback(call.arguments()))
+        "cancelTransaction" -> result.success(haloSdkImplementation.cancelTransaction())
         else -> result.notImplemented()
       }
     } catch (e: Exception) {

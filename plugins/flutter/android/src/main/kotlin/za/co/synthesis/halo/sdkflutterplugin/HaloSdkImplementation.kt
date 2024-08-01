@@ -28,6 +28,12 @@ class HaloSdkImplementation(messanger: BinaryMessenger) {
     return null
   }
 
+  fun cancelTransaction(): Any? {
+    Log.d(TAG, "cancelTransaction")
+    HaloSDK.requestTransactionCancellation()
+    return null
+  }
+
   fun startTransaction(args: HashMap<String, Any>): Any? {
     Log.d(TAG, "startTransaction: $args")
 

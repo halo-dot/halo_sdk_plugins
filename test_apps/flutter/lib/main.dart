@@ -83,6 +83,10 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
+  void cancelTransaction() {
+    Sdkflutterplugin.cancelTransaction();
+  }
+
   @override
   void dispose() {
     // Clean up the controller when the widget is disposed.
@@ -124,6 +128,15 @@ class _MyAppState extends State<MyApp> {
                 ElevatedButton(
                   onPressed: startTransaction,
                   child: const Text('Pay',
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                ),
+                ElevatedButton(
+                  onPressed: cancelTransaction,
+                  style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all<Color>(Colors.grey)),
+                  child: const Text('Cancel',
                       style:
                           TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                 )

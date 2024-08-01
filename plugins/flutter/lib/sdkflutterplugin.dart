@@ -23,7 +23,6 @@ class Sdkflutterplugin {
   static const MethodChannel _channel = MethodChannel('sdkflutterplugin');
   static IHaloCallbacks? _haloClientCallbacks;
 
-  //
   static final eventStream =
       EventChannel('haloSdkEventChannel').receiveBroadcastStream();
 
@@ -81,6 +80,10 @@ class Sdkflutterplugin {
       "transactionCurrency": transactionCurrency
     };
     await _channel.invokeMethod('startTransaction', args);
+  }
+
+  static Future<void> cancelTransaction() async {
+    await _channel.invokeMethod('cancelTransaction');
   }
 
   static void whenJwtProvided(String jwt) {
