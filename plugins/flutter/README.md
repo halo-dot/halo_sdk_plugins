@@ -116,9 +116,24 @@ allprojects {
 
 ### Usage
 
-1. Your Android `MainActivity` class should extend `HaloActivity` which hooks into the SDK lifecycle methods for you. (FYI: `HaloActivity` extends `FlutterFragmentActivity`).
+1. First you need to request the permissions needed by the SDK. Add the following permissions to your `AndroidManifest.xml` file:
 
-2. In your Flutter project, you can now use the plugin to interact with the SDK. Here is an example of how to use the plugin:
+```xml
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="za.co.synthesis.halo.sdkflutterplugin_example">
+    <uses-permission android:name="android.permission.INTERNET"/><!--  add this  -->
+    <uses-permission android:name="android.permission.NFC"/><!--  add this  -->
+    <!--  ....  -->
+</manifest xmlns:android="http://schemas.android.com/apk/res/android">
+```
+2. Request the permissions in your Flutter application before initializing the SDK. Here is an example of how to do this:
+
+```dart
+```
+
+3. Your Android `MainActivity` class should extend `HaloActivity` which hooks into the SDK lifecycle methods for you. (FYI: `HaloActivity` extends `FlutterFragmentActivity`).
+
+4. In your Flutter project, you can now use the plugin to interact with the SDK. Here is an example of how to use the plugin:
 
 - First you have to implement the `IHaloCallbacks` interface in your Flutter project. This will allow you to receive callbacks from the SDK. Here is an example of how to do this:
 
