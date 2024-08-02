@@ -60,7 +60,7 @@ class _MyAppState extends State<MyApp> {
   void onInitializeSdk() {
     var haloCallbacks = HaloCallbacks(setUiMessage);
     Sdkflutterplugin.initializeHaloSDK(haloCallbacks,
-        "za.co.synthesis.halo.sdkflutterplugin_example", "0.0.1");
+        "za.co.synthesis.halo.sdkflutterplugin_example", "0.0.1", 300000);
   }
 
   void setUiMessage(UiMessage m) {

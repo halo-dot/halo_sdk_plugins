@@ -58,12 +58,14 @@ class Sdkflutterplugin {
     IHaloCallbacks haloCallbacks,
     String applicationPackageName,
     String applicationVersion,
+    int? onStartTransactionTimeOut,
   ) async {
     _haloClientCallbacks = haloCallbacks;
     setCallbackListener(haloCallbacks);
-    Map<dynamic, String> args = {
+    Map<dynamic, dynamic> args = {
       MethodArgs.applicationPackageName: applicationPackageName,
-      MethodArgs.applicationVersion: applicationVersion
+      MethodArgs.applicationVersion: applicationVersion,
+      MethodArgs.onStartTransactionTimeOut: onStartTransactionTimeOut
     };
     await _channel.invokeMethod(MethodTypes.initializeHaloSDK, args);
   }
@@ -72,7 +74,7 @@ class Sdkflutterplugin {
       double transactionAmount,
       String merchantTransactionReference,
       String transactionCurrency) async {
-    Map<String, Object> args = {
+    Map<String, dynamic> args = {
       MethodArgs.transactionAmount: transactionAmount,
       MethodArgs.merchantTransactionReference: merchantTransactionReference,
       MethodArgs.transactionCurrency: transactionCurrency
