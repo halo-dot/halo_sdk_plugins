@@ -127,7 +127,7 @@ class _MyAppState extends State<MyApp> {
               Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
                 ElevatedButton(
                   onPressed: startTransaction,
-                  child: const Text('Pay',
+                  child: const Text('Charge',
                       style:
                           TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                 ),
