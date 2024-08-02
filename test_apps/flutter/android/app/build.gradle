@@ -85,8 +85,3 @@ def propertiesFile = project.rootProject.file('local.properties')
 if (propertiesFile.exists()) {
     properties.load(propertiesFile.newDataInputStream())
 }
-
-def localScpToolDir = properties.getProperty('scp.dir')
-def systemEnvScpToolDir = System.getenv('SCP_DIR')
-
-def scpToolDir =  localScpToolDir ?: systemEnvScpToolDir
