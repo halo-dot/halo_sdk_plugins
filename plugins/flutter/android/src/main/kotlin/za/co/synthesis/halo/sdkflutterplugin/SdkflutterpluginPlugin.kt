@@ -1,9 +1,6 @@
 package za.co.synthesis.halo.sdkflutterplugin
 
-import androidx.annotation.NonNull
-
 import io.flutter.embedding.engine.plugins.FlutterPlugin
-import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
@@ -19,20 +16,20 @@ class SdkflutterpluginPlugin: FlutterPlugin, MethodCallHandler {
 
   private lateinit var haloSdkImplementation: HaloSdkImplementation
 
-  override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
+  override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
     methodChannel = MethodChannel(flutterPluginBinding.binaryMessenger, "sdkflutterplugin")
     methodChannel.setMethodCallHandler(this)
 
     haloSdkImplementation = HaloSdkImplementation(flutterPluginBinding.binaryMessenger)
   }
 
-  override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
+  override fun onMethodCall(call: MethodCall, result: Result) {
     try {
       when (call.method) {
-        "initializeHaloSDK" -> result.success(haloSdkImplementation.initializeHaloSDK(getHashMapFromArguments(call.arguments())))
-        "startTransaction" -> result.success(haloSdkImplementation.startTransaction(getHashMapFromArguments(call.arguments())))
-        "jwtCallback" -> result.success(haloSdkImplementation.jwtCallback(call.arguments()))
-        "cancelTransaction" -> result.success(haloSdkImplementation.cancelTransaction())
+        "initializeHaloSDK" -> haloSdkImplementation.initializeHaloSDK(result, getHashMapFromArguments(call.arguments()))
+        "startTransaction" -> haloSdkImplementation.startTransaction(result, getHashMapFromArguments(call.arguments()))
+        "jwtCallback" -> haloSdkImplementation.jwtCallback(result, call.arguments())
+        "cancelTransaction" -> haloSdkImplementation.cancelTransaction(result)
         else -> result.notImplemented()
       }
     } catch (e: Exception) {
@@ -40,7 +37,7 @@ class SdkflutterpluginPlugin: FlutterPlugin, MethodCallHandler {
     }
   }
 
-  override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
+  override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
     methodChannel.setMethodCallHandler(null)
   }
 }

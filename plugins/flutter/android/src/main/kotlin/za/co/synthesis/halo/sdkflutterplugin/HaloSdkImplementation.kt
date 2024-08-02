@@ -4,6 +4,7 @@ import android.util.Log
 import io.flutter.plugin.common.BinaryMessenger
 import za.co.synthesis.halo.sdk.HaloSDK
 import za.co.synthesis.halo.sdk.model.HaloInitializationParameters
+import io.flutter.plugin.common.MethodChannel.Result
 
 class HaloSdkImplementation(messanger: BinaryMessenger) {
   private val TAG = "HaloSdkImplim"
@@ -14,7 +15,7 @@ class HaloSdkImplementation(messanger: BinaryMessenger) {
     haloCallbacks = HaloCallbacks(messanger)
   }
 
-  fun initializeHaloSDK(args: HashMap<String, String>): Any? {
+  fun initializeHaloSDK(result: Result, args: HashMap<String, String>) {
     Log.d(TAG, "initializeHaloSDK: $args")
 
     HaloSDK.initialize(
@@ -25,16 +26,16 @@ class HaloSdkImplementation(messanger: BinaryMessenger) {
         args[Const.APPLICATION_VERSION] as String
       )
     )
-    return null
+    result.success(null)
   }
 
-  fun cancelTransaction(): Any? {
+  fun cancelTransaction(result: Result) {
     Log.d(TAG, "cancelTransaction")
     HaloSDK.requestTransactionCancellation()
-    return null
+    result.success(null)
   }
 
-  fun startTransaction(args: HashMap<String, Any>): Any? {
+  fun startTransaction(result: Result, args: HashMap<String, Any>) {
     Log.d(TAG, "startTransaction: $args")
 
     val extraFields = getRest<String>(args, listOf(
@@ -43,18 +44,19 @@ class HaloSdkImplementation(messanger: BinaryMessenger) {
       Const.TRANSACTION_CURRENCY
     ))
 
-    HaloSDK.startTransaction(
+    val startTransactionResult = HaloSDK.startTransaction(
       (args[Const.TRANSACTION_AMOUNT] as Double).toBigDecimal(),
       args[Const.MERCHANT_TRANSACTION_REFERENCE] as String,
       args[Const.TRANSACTION_CURRENCY] as String,
       extraFields
     )
-    return null
+
+    result.success(makeMap(startTransactionResult))
   }
 
-  fun jwtCallback(args: Any): Any? {
+  fun jwtCallback(result: Result, args: Any) {
     Log.d(TAG, "jwtCallback: $args")
     haloCallbacks.jwtCallback(args as String)
-    return null
+    result.success(null)
   }
 }

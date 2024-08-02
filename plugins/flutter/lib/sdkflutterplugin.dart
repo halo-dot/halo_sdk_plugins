@@ -9,8 +9,10 @@ import 'consts/method_types.dart';
 import 'mappers/make_attestation_health_result.dart';
 import 'mappers/make_halo_error_code.dart';
 import 'mappers/make_halo_initialization_result.dart';
+import 'mappers/make_halo_start_transaction_result.dart';
 import 'mappers/make_halo_ui_message.dart';
 import 'mappers/make_transaction_result.dart';
+import 'model/halo_start_transaction_result.dart';
 import 'model/i_halo_callbacks.dart';
 
 class Sdkflutterplugin {
@@ -66,14 +68,20 @@ class Sdkflutterplugin {
     await _channel.invokeMethod(MethodTypes.initializeHaloSDK, args);
   }
 
-  static Future<void> startTransaction(double transactionAmount,
-      String merchantTransactionReference, String transactionCurrency) async {
+  static Future<HaloStartTransactionResult> startTransaction(
+      double transactionAmount,
+      String merchantTransactionReference,
+      String transactionCurrency) async {
     Map<String, Object> args = {
       MethodArgs.transactionAmount: transactionAmount,
       MethodArgs.merchantTransactionReference: merchantTransactionReference,
       MethodArgs.transactionCurrency: transactionCurrency
     };
-    await _channel.invokeMethod(MethodTypes.startTransaction, args);
+
+    var transationStartResultMap =
+        await _channel.invokeMethod(MethodTypes.startTransaction, args);
+
+    return makeHaloStartTransactionResult(transationStartResultMap);
   }
 
   static Future<void> cancelTransaction() async {

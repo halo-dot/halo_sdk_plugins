@@ -69,7 +69,7 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
-  void startTransaction() {
+  void startTransaction() async {
     if (!isValidAmount(amount)) {
       setUiMessage(
           UiMessage("Invalid amount, please provide amount", Colors.orange));
@@ -78,8 +78,11 @@ class _MyAppState extends State<MyApp> {
           "Invalid merchant reference, please provide merchant reference",
           Colors.orange));
     } else {
-      Sdkflutterplugin.startTransaction(
+      var startTransactionResult = await Sdkflutterplugin.startTransaction(
           double.parse(amount), textFieldController.text, 'ZAR');
+      setUiMessage(UiMessage(
+          "Transaction start state: ${startTransactionResult.resultType} ${startTransactionResult.errorCode}",
+          Colors.black));
     }
   }
 

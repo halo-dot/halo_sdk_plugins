@@ -5,6 +5,7 @@ import za.co.synthesis.halo.haloCommonInterface.HaloTransactionResult
 import za.co.synthesis.halo.sdk.model.HaloAttestationHealthResult
 import za.co.synthesis.halo.sdk.model.HaloCurrencyValue
 import za.co.synthesis.halo.sdk.model.HaloInitializationResult
+import za.co.synthesis.halo.sdk.model.HaloStartTransactionResult
 import za.co.synthesis.halo.sdk.model.HaloUIMessage
 import za.co.synthesis.halo.sdk.model.HaloWarning
 import java.util.Currency
@@ -134,5 +135,12 @@ internal fun makeMap(data: HaloWarning): HashMap<String, Any> {
     return hashMapOf(
         Pair("errorCode", data.errorCode.name),
         Pair("details", data.details)
+    )
+}
+
+internal fun makeMap(data: HaloStartTransactionResult): HashMap<String, Any> {
+    return hashMapOf(
+        Pair("resultType", data.resultType.name),
+        Pair("errorCode", data.errorCode.name)
     )
 }
