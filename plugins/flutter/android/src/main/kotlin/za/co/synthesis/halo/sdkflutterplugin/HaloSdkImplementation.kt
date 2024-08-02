@@ -15,7 +15,7 @@ class HaloSdkImplementation(messanger: BinaryMessenger) {
     haloCallbacks = HaloCallbacks(messanger)
   }
 
-  fun initializeHaloSDK(result: Result, args: HashMap<String, String>) {
+  fun initializeHaloSDK(result: Result, args: HashMap<String, Any>) {
     Log.d(TAG, "initializeHaloSDK: $args")
 
     HaloSDK.initialize(
@@ -54,9 +54,9 @@ class HaloSdkImplementation(messanger: BinaryMessenger) {
     result.success(makeMap(startTransactionResult))
   }
 
-  fun jwtCallback(result: Result, args: Any) {
+  fun jwtCallback(result: Result, args: String) {
     Log.d(TAG, "jwtCallback: $args")
-    haloCallbacks.jwtCallback(args as String)
+    haloCallbacks.jwtCallback(args)
     result.success(null)
   }
 }

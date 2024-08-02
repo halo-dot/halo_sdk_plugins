@@ -26,9 +26,9 @@ class SdkflutterpluginPlugin: FlutterPlugin, MethodCallHandler {
   override fun onMethodCall(call: MethodCall, result: Result) {
     try {
       when (call.method) {
-        "initializeHaloSDK" -> haloSdkImplementation.initializeHaloSDK(result, getHashMapFromArguments(call.arguments()))
-        "startTransaction" -> haloSdkImplementation.startTransaction(result, getHashMapFromArguments(call.arguments()))
-        "jwtCallback" -> haloSdkImplementation.jwtCallback(result, call.arguments())
+        "initializeHaloSDK" -> haloSdkImplementation.initializeHaloSDK(result, call.arguments<HashMap<String, Any>>())
+        "startTransaction" -> haloSdkImplementation.startTransaction(result, call.arguments<HashMap<String, Any>>())
+        "jwtCallback" -> haloSdkImplementation.jwtCallback(result, call.arguments<String>())
         "cancelTransaction" -> haloSdkImplementation.cancelTransaction(result)
         else -> result.notImplemented()
       }

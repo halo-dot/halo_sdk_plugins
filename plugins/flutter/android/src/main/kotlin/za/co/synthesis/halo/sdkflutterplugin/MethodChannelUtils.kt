@@ -10,15 +10,6 @@ import za.co.synthesis.halo.sdk.model.HaloUIMessage
 import za.co.synthesis.halo.sdk.model.HaloWarning
 import java.util.Currency
 
-internal fun <T1, T2> getHashMapFromArguments(arguments: Any?): HashMap<T1, T2> {
-    val args = arguments as HashMap<*, *>
-    val map = HashMap<T1, T2>()
-    for (key in args.keys) {
-        map[key as T1] = args[key] as T2
-    }
-    return map
-}
-
 internal fun <T> getRest(args: Map<String, Any>, keys: List<String>): Map<String, T> {
     val rest = HashMap<String, T>()
 
