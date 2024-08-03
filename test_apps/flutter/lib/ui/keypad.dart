@@ -90,7 +90,7 @@ class KeypadButton extends StatelessWidget {
             ),
           ),
           onTap: () => onTap(text),
-          splashColor: Colors.lightBlue,
+          highlightColor: Colors.lightBlue,
         )));
   }
 }
