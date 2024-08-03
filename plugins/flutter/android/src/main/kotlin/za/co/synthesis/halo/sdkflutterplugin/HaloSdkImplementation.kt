@@ -21,7 +21,7 @@ class HaloSdkImplementation(messanger: BinaryMessenger) {
     HaloSDK.initialize(
       HaloInitializationParameters(
         haloCallbacks,
-        (args[Const.ON_START_TRANSACTION_TIME_OUT] as Long?) ?: ON_START_TRANSACTION_TIME_OUT,
+        (args[Const.ON_START_TRANSACTION_TIME_OUT] as Int?)?.toLong() ?: ON_START_TRANSACTION_TIME_OUT,
         args[Const.APPLICATION_PACKAGE_NAME] as String,
         args[Const.APPLICATION_VERSION] as String
       )
