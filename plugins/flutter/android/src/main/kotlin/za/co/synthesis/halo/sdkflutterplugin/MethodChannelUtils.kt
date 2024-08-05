@@ -92,7 +92,7 @@ internal fun makeMap(data: HaloUIMessage): HashMap<String, Any?> {
     )
 }
 
-internal fun makeMap(data: HaloCurrencyValue?): HashMap<String, Any>? {
+internal fun makeMap(data: HaloCurrencyValue?): HashMap<String, Any?>? {
     if (data == null) {
         return null
     }
@@ -102,7 +102,10 @@ internal fun makeMap(data: HaloCurrencyValue?): HashMap<String, Any>? {
     )
 }
 
-internal fun makeMap(data: Currency): HashMap<String, Any> {
+internal fun makeMap(data: Currency?): HashMap<String, Any>? {
+    if (data == null) {
+        return null
+    }
     return hashMapOf(
         Pair("currencyCode", data.currencyCode),
         Pair("defaultFractionDigits", data.defaultFractionDigits),
@@ -111,7 +114,7 @@ internal fun makeMap(data: Currency): HashMap<String, Any> {
     )
 }
 
-internal fun makeMap(data: HaloInitializationResult): HashMap<String, Any> {
+internal fun makeMap(data: HaloInitializationResult): HashMap<String, Any?> {
     return hashMapOf(
         Pair("resultType", data.resultType.name),
         Pair("terminalCurrency", makeMap(data.terminalCurrency)),
