@@ -254,15 +254,19 @@ Read all about it [here](https://docs.flutter.dev/platform-integration/platform-
 
 ### Push changes to the public remote
 
-This process can be cleaned up (have a script created for it), but for now, here are the steps:
+First you need to install [git-filter-repo](https://github.com/newren/git-filter-repo), if you have Homebrew just run `brew install git-filter-repo` and ensure you have `python >= 3.6`. Otherwise you can follow the steps on the link.
 
-1. First you need to install [git-filter-repo](https://github.com/newren/git-filter-repo), if you have Homebrew just run `brew install git-filter-repo` and ensure you have `python >= 3.6`. Otherwise you can follow the steps on the link
+Run `scripts/push_plugins_to_public_repo.sh`. Use the `--help` to understand how to use it.
+
+Here is what the script does (incase you want to do it manually):
+
+1. First you need to install [git-filter-repo](https://github.com/newren/git-filter-repo), if you have Homebrew just run `brew install git-filter-repo` and ensure you have `python >= 3.6`. Otherwise you can follow the steps on the link.
 
 2. Clone a new copy of the `halo_mpos` repo, checkout the branch with the latest code you want to push.
 
 3. In the new repo, run this `git filter-repo --path plugins --path test_apps` if that fails you may want to add the `--force` flag
 
-4. Do a `git remote add public git@bitbucket.org:synthesis_admin/halo_sdk_plugins.git`
+4. Do a `git remote add public git@github.com:halo-dot/halo_sdk_plugins.git`
 
 5. Checkout a branch that exists on the remote you've just added, e.g. `git checkout main`
 
