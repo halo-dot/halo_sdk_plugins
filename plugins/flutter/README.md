@@ -14,7 +14,7 @@ samples, guidance on mobile development, and a full API reference.
 ## Getting started for users
 
 ### Environment
-1. Make sure you have your envirnoment setup to buidl Flutter apps. You can follow the instructions [here](https://flutter.dev/docs/get-started/install).
+1. Make sure you have your envirnoment setup to build Flutter apps. You can follow the instructions [here](https://flutter.dev/docs/get-started/install).
 
 2. The Android SDK that is implemented was built with kotlin `1.3.72`, your project should be on the same version (>= `1.4.x` has breaking changes).
 
@@ -60,15 +60,14 @@ defaultConfig {
 ### Plugin Installation
 
 1. In your `pubspec.yaml` file, add the following dependency:
-(Once it's live)
+(From Github)
 ```yaml
 dependencies:
-  sdkflutterplugin: ^0.0.1
-```
-(For now)
-```yaml
-dependencies:
-  sdkflutterplugin: ../sdkflutterplugin # <-- relative path to the plugin root folder
+  sdkflutterplugin:
+    git:
+      url: https://github.com/halo-dot/halo_sdk_plugins.git
+      ref: main
+      path: plugins/flutter
 ```
 
 2. The plugin will need to download the SDK binaries from the Halo S3 bucket. To do this, you will need credentials to access the SDK. Find your `accessKeyId` and `secretAccessKey` [here](https://go.developerportal.dev.haloplus.io/). Add these to your `local.properties` file in your project android root folder (create one if it doesn't exist):
@@ -78,7 +77,7 @@ aws.accesskey=ABCEFGHIJKLMNOPOOO
 aws.secretkey=F1Gb2024LHoX44WEWUvaL70I0luATf5Vqqc983gNP3BA
 ```
 
-3. Then add this to you `android/app/build.gradle` file:
+3. Then add this to you `android/app/build.gradle` file (this might already exist):
 
 ```gradle
 def localProperties = new Properties()
@@ -121,17 +120,60 @@ allprojects {
 ```xml
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="za.co.synthesis.halo.sdkflutterplugin_example">
-    <uses-permission android:name="android.permission.INTERNET"/><!--  add this  -->
-    <uses-permission android:name="android.permission.NFC"/><!--  add this  -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.NFC"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
     <!--  ....  -->
 </manifest xmlns:android="http://schemas.android.com/apk/res/android">
 ```
-2. Request the permissions in your Flutter application before initializing the SDK. Here is an example of how to do this:
+2. Request the permissions in your Flutter application before initializing the SDK. Here is an example of how to do this (please handle cases where the user denies the permissions or rational is requested):
 
 ```dart
+Future<void> checkPermissions() async {
+  var permissions = [
+    Permission.camera,
+    Permission.phone,
+    Permission.storage,
+    Permission.notification,
+    Permission.location,
+  ];
+
+  for (var permission in permissions) {
+    await requestPermission(permission);
+  }
+}
+
+Future<void> requestPermission(Permission permission) async {
+  var permissionStatus = await permission.status;
+  if (permissionStatus.isGranted) {
+    debugPrint("${permission} permission is granted, not requesting");
+  } else if (permissionStatus.isPermanentlyDenied) {
+    debugPrint("${permission} permission is permanently denied, enable in settings");
+  } else {
+    var requestResult = await permission.request();
+
+    if (requestResult.isGranted) {
+      debugPrint("${permission} permission is granted");
+    } else if (requestResult.isPermanentlyDenied) {
+      debugPrint("${permission} permission is permanently denied, enable in settings");
+    }
+  }
+}
 ```
 
 3. Your Android `MainActivity` class should extend `HaloActivity` which hooks into the SDK lifecycle methods for you. (FYI: `HaloActivity` extends `FlutterFragmentActivity`).
+
+e.g
+```kotlin
+import za.co.synthesis.halo.sdkflutterplugin.HaloActivity
+
+class MainActivity: HaloActivity() {
+}
+```
 
 4. In your Flutter project, you can now use the plugin to interact with the SDK. Here is an example of how to use the plugin:
 
@@ -184,8 +226,6 @@ Sdkflutterplugin.initializeHaloSDK(haloCallbacks,
 ```dart
 Sdkflutterplugin.startTransaction(1.00, 'Some merchant reference', 'ZAR');
 ```
-
-NB: if you do not get a UI message back, it's likey the JWT is invalid or expired.
 
 From this point, a number of UI messages will be pushed to the registered callbacks.
 You will use this to show the user the appropriate UI/text.
