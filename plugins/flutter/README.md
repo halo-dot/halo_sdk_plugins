@@ -130,7 +130,18 @@ allprojects {
     <!--  ....  -->
 </manifest xmlns:android="http://schemas.android.com/apk/res/android">
 ```
-2. Request the permissions in your Flutter application before initializing the SDK. Here is an example of how to do this (please handle cases where the user denies the permissions or rational is requested):
+
+2. Add the plugin to help you request permissions in your Flutter application. Add the following to your `pubspec.yaml` file:
+```yaml
+dependencies:
+  permission_handler: ^11.0.0
+  # ...
+```
+Notice the version, later versions expect a higher version of Flutter and Dart. Also if you use this plugin. Be sure in your `android/app/build.gradle` your `compileSdkVersion` and `targetSdkVersion` are at `34` or higher.
+
+<strong>Remember to run `flutter pub get` after making changes to your pubspec file</strong>
+
+3. Request the permissions in your Flutter application before initializing the SDK. Here is an example of how to do this (please handle cases where the user denies the permissions or rational is requested):
 
 ```dart
 Future<void> checkPermissions() async {

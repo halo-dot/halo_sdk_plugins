@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:sdkflutterplugin/model/halo_attestation_health_result.dart';
 import 'package:sdkflutterplugin/model/halo_initialization_result.dart';
 import 'package:sdkflutterplugin/model/halo_transaction_result.dart';
@@ -34,21 +35,49 @@ class _MyAppState extends State<MyApp> {
   List<UiMessage> uiMessages = [];
   var textFieldController = TextEditingController();
 
-  // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> initPlatformState() async {
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    // We also handle the message potentially returning null.
-
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
     if (!mounted) return;
 
-    onInitializeSdk();
+    checkPermissions();
     setState(() {
       amount = "";
       uiMessages = [];
     });
+  }
+
+  Future<void> checkPermissions() async {
+    var permissions = [
+      Permission.camera,
+      Permission.phone,
+      Permission.storage,
+      Permission.notification,
+      Permission.location,
+    ];
+
+    for (var permission in permissions) {
+      await requestPermission(permission);
+    }
+
+    onInitializeSdk();
+  }
+
+  Future<void> requestPermission(Permission permission) async {
+    var permissionStatus = await permission.status;
+    if (permissionStatus.isGranted) {
+      debugPrint("${permission} permission is granted, not requesting");
+    } else if (permissionStatus.isPermanentlyDenied) {
+      debugPrint(
+          "${permission} permission is permanently denied, enable in settings");
+    } else {
+      var requestResult = await permission.request();
+
+      if (requestResult.isGranted) {
+        debugPrint("${permission} permission is granted");
+      } else if (requestResult.isPermanentlyDenied) {
+        debugPrint(
+            "${permission} permission is permanently denied, enable in settings");
+      }
+    }
   }
 
   void setAmount(String value) {
