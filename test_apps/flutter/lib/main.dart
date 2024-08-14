@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:sdkflutterplugin/model/halo_attestation_health_result.dart';
 import 'package:sdkflutterplugin/model/halo_initialization_result.dart';
@@ -88,8 +89,13 @@ class _MyAppState extends State<MyApp> {
 
   void onInitializeSdk() {
     var haloCallbacks = HaloCallbacks(setUiMessage);
-    Sdkflutterplugin.initializeHaloSDK(haloCallbacks,
-        "za.co.synthesis.halo.sdkflutterplugin_example", "0.0.1", 300000);
+    try {
+      Sdkflutterplugin.initializeHaloSDK(haloCallbacks,
+          "za.co.synthesis.halo.sdkflutterplugin_example", "0.0.1", 300000);
+    } on PlatformException catch (e) {
+      setUiMessage(UiMessage(
+          "SDK initialisation error: ${e.code} ${e.message}", Colors.red));
+    }
   }
 
   void setUiMessage(UiMessage m) {
@@ -107,11 +113,16 @@ class _MyAppState extends State<MyApp> {
           "Invalid merchant reference, please provide merchant reference",
           Colors.orange));
     } else {
-      var startTransactionResult = await Sdkflutterplugin.startTransaction(
-          double.parse(amount), textFieldController.text, 'ZAR');
-      setUiMessage(UiMessage(
-          "Transaction start state: ${startTransactionResult.resultType} ${startTransactionResult.errorCode}",
-          Colors.black));
+      try {
+        var startTransactionResult = await Sdkflutterplugin.startTransaction(
+            double.parse(amount), textFieldController.text, 'ZAR');
+        setUiMessage(UiMessage(
+            "Transaction start state: ${startTransactionResult.resultType} ${startTransactionResult.errorCode}",
+            Colors.black));
+      } on PlatformException catch (e) {
+        setUiMessage(UiMessage(
+            "Transaction start error: ${e.code} ${e.message}", Colors.red));
+      }
     }
   }
 
