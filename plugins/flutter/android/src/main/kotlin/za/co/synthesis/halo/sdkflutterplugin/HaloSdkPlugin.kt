@@ -5,6 +5,7 @@ import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
+import android.os.Process
 
 /** SdkflutterpluginPlugin */
 class SdkflutterpluginPlugin: FlutterPlugin, MethodCallHandler {
@@ -39,5 +40,6 @@ class SdkflutterpluginPlugin: FlutterPlugin, MethodCallHandler {
 
   override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
     methodChannel.setMethodCallHandler(null)
+    Process.killProcess(Process.myPid())
   }
 }
