@@ -65,10 +65,16 @@ defaultConfig {
 dependencies:
   sdkflutterplugin:
     git:
-      url: https://github.com/halo-dot/halo_sdk_plugins.git
+      url: git@github.com:halo-dot/halo_sdk_plugins.git
       ref: main
       path: plugins/flutter
 ```
+
+(From local)
+```yaml
+dependencies:
+  sdkflutterplugin: ../sdkflutterplugin # <-- relative path to the plugin root folder
+
 
 2. The plugin will need to download the SDK binaries from the Halo S3 bucket. To do this, you will need credentials to access the SDK. Find your `accessKeyId` and `secretAccessKey` [here](https://go.developerportal.dev.haloplus.io/). Add these to your `local.properties` file in your project android root folder (create one if it doesn't exist):
 
