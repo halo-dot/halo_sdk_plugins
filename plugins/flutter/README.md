@@ -14,7 +14,7 @@ samples, guidance on mobile development, and a full API reference.
 ## Getting started for users
 
 ### Environment
-1. Make sure you have your envirnoment setup to build Flutter apps. You can follow the instructions [here](https://flutter.dev/docs/get-started/install).
+1. Make sure you have your environment setup to build Flutter apps. You can follow the instructions [here](https://flutter.dev/docs/get-started/install).
 
 2. The Android SDK that is implemented was built with kotlin `1.3.72`, your project should be on the same version (>= `1.4.x` has breaking changes).
 
