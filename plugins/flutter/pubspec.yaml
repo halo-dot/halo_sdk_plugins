@@ -3,7 +3,6 @@ description: A flutter plugin of the Halo Dot SDK that allows integrators to emb
 version: 0.0.1
 homepage: https://www.halodot.io/halo-sdk
 repository: https://github.com/halo-dot/halo_sdk_plugins
-publish_to: https://pub.dev
 topics:
   - contactless
   - payment
