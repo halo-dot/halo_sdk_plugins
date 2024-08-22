@@ -1,6 +1,5 @@
-import 'package:sdkflutterplugin/mappers/make_currency.dart';
-import 'package:sdkflutterplugin/mappers/make_halo_error_code.dart';
-
+import './make_currency.dart';
+import './make_halo_error_code.dart';
 import '../model/halo_initialization_result.dart';
 import 'make_halo_initialization_result_type.dart';
 import 'make_halo_warnings.dart';
