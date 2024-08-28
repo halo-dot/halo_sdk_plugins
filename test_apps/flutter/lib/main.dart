@@ -2,13 +2,13 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:halo_sdk_flutter_plugin/model/halo_attestation_health_result.dart';
+import 'package:halo_sdk_flutter_plugin/model/halo_initialization_result.dart';
+import 'package:halo_sdk_flutter_plugin/model/halo_transaction_result.dart';
+import 'package:halo_sdk_flutter_plugin/model/halo_ui_message.dart';
+import 'package:halo_sdk_flutter_plugin/model/i_halo_callbacks.dart';
+import 'package:halo_sdk_flutter_plugin/sdkflutterplugin.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:sdkflutterplugin/model/halo_attestation_health_result.dart';
-import 'package:sdkflutterplugin/model/halo_initialization_result.dart';
-import 'package:sdkflutterplugin/model/halo_transaction_result.dart';
-import 'package:sdkflutterplugin/model/halo_ui_message.dart';
-import 'package:sdkflutterplugin/model/i_halo_callbacks.dart';
-import 'package:sdkflutterplugin/sdkflutterplugin.dart';
 import 'package:sdkflutterplugin_example/jwt_token.dart';
 
 import 'ui/amount_field.dart';
