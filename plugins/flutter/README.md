@@ -51,8 +51,8 @@ defaultConfig {
 2. The plugin will need to download the SDK binaries from the Halo S3 bucket. To do this, you will need credentials to access the SDK. Find your `accesskey` and `secretkey` [here](https://go.developerportal.dev.haloplus.io/). Add these to your `local.properties` file in your android root folder (create one if it doesn't exist):
 
 ```properties
-aws.accesskey=ABCEFGHIJKLMNOPOOO
-aws.secretkey=F1Gb2024LHoX44WEWUvaL70I0luATf5Vqqc983gNP3BA
+aws.accesskey=<accesskey>
+aws.secretkey=<secretkey>
 ```
 
 <strong>NB: mind the casing of the values</strong>
