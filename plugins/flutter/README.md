@@ -277,16 +277,12 @@ Run `scripts/push_plugins_to_public_repo.sh`. Use the `--help` to understand how
 
 Here is what the script does (incase you want to do it manually):
 
-1. First you need to install [git-filter-repo](https://github.com/newren/git-filter-repo), if you have Homebrew just run `brew install git-filter-repo` and ensure you have `python >= 3.6`. Otherwise you can follow the steps on the link.
+1. It clones a new copy of the `halo_mpos` repo, checkout the branch with the latest code you want to push.
 
-2. Clone a new copy of the `halo_mpos` repo, checkout the branch with the latest code you want to push.
+2. In the new repo, it runs this `git filter-repo --path plugins --path test_apps --force` to remove all the commit but the onces that touch these folders.
 
-3. In the new repo, run this `git filter-repo --path plugins --path test_apps` if that fails you may want to add the `--force` flag
+4. It ddoes a `git remote add public git@github.com:halo-dot/halo_sdk_plugins.git`
 
-4. Do a `git remote add public git@github.com:halo-dot/halo_sdk_plugins.git`
+5. Then Checkouts a branch that exists on the remote you've just added, e.g. `git checkout main`
 
-5. Checkout a branch that exists on the remote you've just added, e.g. `git checkout main`
-
-6. Then finally you can push the code with `git push public <branch>` where <branch> is the branch name that exists on remote.
-
-All done, the code is pushed to the public repo. This process will be simplified at some point.
+6. Then finally it pushes the code with `git push public <branch>` where <branch> is the branch name that exists on remote.
