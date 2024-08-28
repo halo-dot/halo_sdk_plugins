@@ -98,10 +98,10 @@ packages:
   halo_sdk_flutter_plugin:
     dependency: "direct main"
     description:
-      name: halo_sdk_flutter_plugin
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.0.1"
+      path: "../../plugins/flutter"
+      relative: true
+    source: path
+    version: "0.0.2"
   js:
     dependency: transitive
     description:
