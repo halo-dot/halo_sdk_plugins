@@ -1,15 +1,14 @@
 # Halo SDK Flutter Plugin
 
-A flutter implementation of the Halo SDK.
+A flutter implementation of the [Halo Dot SDK](https://halo-dot-developer-docs.gitbook.io/halo-dot/sdk/1.-getting-started).
 
-This project is a starting point for a Flutter
-[plug-in package](https://flutter.dev/developing-packages/),
-a specialized package that includes platform-specific implementation code for
-Android and/or iOS.
+The Halo Dot SDK is an Isolating MPoC SDK payment processing MPOC Software with Attestation & Monitoring Capabilities.
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+The Architecture of this isolating MPoC Payment Software, is described in the diagram below.
+
+The below diagram also showcases the SDK boundary and the interaction between the SDK its integrating channels, and the 3rd party payment gateway. It also describes the boundary of the SDK and how it interacts with integrators and the third party payments. It also includes details of how the data is communicated sent in-between the boundary.
+
+![Halo Dot SDK Architecture](./readme_assets/halo_sdk_architecture.png)
 
 ## Getting started for users
 
@@ -32,18 +31,6 @@ buildscript {
 }
 ```
 
-Check also in your `android/app/build.gradle` file. You should have something like this:
-```gradle
-ext {
-    kotlin_version = '1.3.72' // <-- version defined here
-}
-// ...
-dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version" // <-- version used here
-    // ...
-}
-```
-
 3. The SDK was tested using Java 11. We cannot confirm yet if anything before or later will work.
 
 4. The SDK was tested using Flutter `2.10.5` and Dart `2.16.2` (DevTools `2.9.2`).
@@ -59,29 +46,16 @@ defaultConfig {
 
 ### Plugin Installation
 
-1. In your `pubspec.yaml` file, add the following dependency:
-(From Github)
-```yaml
-dependencies:
-  sdkflutterplugin:
-    git:
-      url: git@github.com:halo-dot/halo_sdk_plugins.git
-      ref: main
-      path: plugins/flutter
-```
+1. Run `flutter pub add halo_sdk_flutter_plugin` to add the flutter plugin to your flutter project
 
-(From local)
-```yaml
-dependencies:
-  sdkflutterplugin: ../sdkflutterplugin # <-- relative path to the plugin root folder
-
-
-2. The plugin will need to download the SDK binaries from the Halo S3 bucket. To do this, you will need credentials to access the SDK. Find your `accessKeyId` and `secretAccessKey` [here](https://go.developerportal.dev.haloplus.io/). Add these to your `local.properties` file in your project android root folder (create one if it doesn't exist):
+2. The plugin will need to download the SDK binaries from the Halo S3 bucket. To do this, you will need credentials to access the SDK. Find your `accesskey` and `secretkey` [here](https://go.developerportal.dev.haloplus.io/). Add these to your `local.properties` file in your android root folder (create one if it doesn't exist):
 
 ```properties
 aws.accesskey=ABCEFGHIJKLMNOPOOO
 aws.secretkey=F1Gb2024LHoX44WEWUvaL70I0luATf5Vqqc983gNP3BA
 ```
+
+<strong>NB: mind the casing of the values</strong>
 
 3. Then add this to you `android/app/build.gradle` file (this might already exist):
 
@@ -95,7 +69,7 @@ if (localPropertiesFile.exists()) {
 }
 ```
 
-4. Finally set the repo for kotlin `1.3.72` and some more config in the `android/build.gradle` file:
+4. Finally make sure you have Maven Central for kotlin `1.3.72` and some more config in the `android/build.gradle` file:
 ```gradle
 allprojects {
     repositories {
@@ -118,6 +92,56 @@ allprojects {
     // ...
 }
 ```
+
+### Requirements on the Mobile Back-End
+
+#### JWT
+
+All calls made to the Halo.SDK requires a valid JWT. The mobile application's server should issue the JWT that can be used to authenticate with the Halo Kernel Server.
+
+You should provide this JWT to the callback function when `onRequestJWT` is invoked by the Halo Dot SDK.
+
+#### JWT LifeTime
+
+Since the JWT essentially authorizes payment acceptance for a given merchant user, it is essential that the JWT lifetime be kept as short as possible, in order to limit the amount of time an attacker has to crack the key itself and then to limit the scope of damage in the event of a key compromise.
+
+A lifetime of 15 minutes is recommended.
+
+#### JWT Signing Public Key Format
+
+The JWT public key should be published as a certificate, in a text-friendly format, e.g. B64 encoded PEM (.crt, .pem).
+
+#### JWT Serialization Format
+
+The compact serialization format is expected, i.e:
+
+```
+urlencodedB64(header) + '.' + urlencodedB64(payload) + '.' + urlencodedB64(signature)
+```
+
+For example:
+```
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dnZWRJbkFzIjoiYWRtaW4iLCJpYXQiOjE0MjI3Nzk2Mzh9.gzSraSYS8EXBxLN_oWnFSRgCzcmJmMjLiuyu5CSpyH
+```
+
+#### JWT Claims
+
+The JWT must make a number of claims - all of them standard except for `aud_fingerprints` (Audience Fingerprints):
+
+| field |	type |	Note |
+| ---- | ---- | ---- |
+| alg | String |The signing algorithm is RSA signed SHA-256 hash, aliased as RS256. An asymmetric encryption(signing) scheme is required to allow the Kernel Server to be able to validate the token without being able to generate it. If symmetric key encryption was used to sign the auth token (e.g., using the HMAC algorithm), then non-repudiation would be lost. |
+| sub | String | The Payment Processor Merchant-User ID, or Application ID |
+| iss | String | This is a unique (from the perspective of Halo server) identifier for the JWT issuer, agreed upon by the JWT issuer and Synthesis, and configured in advance by Synthesis in the Halo server, e.g. authserver.haloplus.io |
+| aud | String | URL of Halo server TLS endpoint, e.g. 'kernelserver.qa.haloplus.io'. This value should be obtained from Synthesis (different per environment) e.g. for QA it would be 'kernelserver.qa.haloplus.io' and for DEV 'kernelserver.za.dev.haloplus.io' |
+| usr | String | The details of the user performing the transaction, typically the username used to sign into the Integrators application. |
+| iat | NumericDate | The UTC timestamp of when the JWT was generated. |
+| exp | NumericDate | The UTC time of expiration of the JWT. |
+| aud_fingerprints | String | a CSV list of expected SHA-256 fingerprints for the Kernel Server TLS endpoint. This list may contain multiple values to support certificate rotation. In the QA environment, the expected value as of writting this would be: "sha256/zc6c97JhKPZUa+rIrVqjknDE1lDcDK77G41sDo+1ay0=" |
+
+All these values can be validated by making a request to `https://kernelserver.qa.haloplus.io/<sdk-version>/tokens/checkjwt`. 
+</br>Method: `POST`
+</br>Header: Bearer Auth
 
 ### Usage
 
