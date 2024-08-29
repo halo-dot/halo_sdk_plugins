@@ -31,6 +31,7 @@ build/
 # Some random files
 *.DS_Store
 
-# Pub packages should ignore the following files
+# Pub packages should ignore the following files too
 test/**
 sdkflutterplugin_test.dart
+DEVELOPER_README.md
