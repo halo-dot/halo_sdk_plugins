@@ -111,7 +111,7 @@ defaultConfig {
   
 1. Run `flutter pub add halo_sdk_flutter_plugin` to add the flutter plugin to your flutter project  
 2. We recommend also installing `flutter pub add permission_handler`  
-3. The plugin will need to download the SDK binaries from the Halo S3 bucket.<br/>To do this, you will need credentials to access the SDK. Find your `accesskey` and `secretkey` [Developer portal] <img alt="access key" src="./readme_assets/access_key.png width="100px"/>. <br/>Add these to your `local.properties` file in your android root folder (create one if it doesn't exist):  
+3. The plugin will need to download the SDK binaries from the Halo S3 bucket.<br/>To do this, you will need credentials to access the SDK. Find your `accesskey` and `secretkey` [Developer portal] <img alt="access key" src="./readme_assets/access_key.png" width="100px"/>. <br/>Add these to your `local.properties` file in your android root folder (create one if it doesn't exist):  
   
 ```properties  
 aws.accesskey=<accesskey>  
