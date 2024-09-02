@@ -3,24 +3,30 @@
   
 A flutter implementation of the [Halo Dot SDK](https://halo-dot-developer-docs.gitbook.io/halo-dot/sdk/1.-getting-started).  
   
-The Halo Dot SDK is an Isolating MPoC SDK payment processing MPOC Software with Attestation & Monitoring Capabilities.
+The Halo Dot SDK is an Isolating MPoC SDK payment processing MPOC Software with Attestation & Monitoring Capabilities.  
+  
+The Architecture of this isolating MPoC Payment Software is described in the diagram below.  
+  
+The below diagram also showcases the SDK boundary and the interaction between the SDK its integrating channels, and the 3rd party payment gateway. It also describes the boundary of the SDK and how it interacts with integrators and the third party payments. It also includes details of how the data is communicated sent in-between the boundary.  
+  
+![Halo Dot SDK Architecture](./readme_assets/full_process_MIPS_1200.png)  
   
 ## Table of Content
 
- - [Requirements](#requirements)
- - [Developer portal registration](#developer-portal-registration)
- - [Getting Started](#getting-started)
-	 - [Flutter App](#flutter-app)
-	 - [Environment Setup](#environment)
-	 - [Plugin Installation](#plugin -installation)
-	 - [Requirements on the Mobile Back-End](#requirements-on-the-mobile-back-end)
-		 - [JWT](#JWT)
-		 - [JWT Lifetime](#jwt-lifetime)
-		 - [JWT Signing Public Key Format](#jwt-signing-public-key-format)
-		 - [JWT Serialization Format](#jwt-serialization-format)
-		 - [JWT Claims](#jwt-claims)
-	 - [Usage](#usage)
-	 - [FAQ](#faq)
+ - [Requirements](#markdown-header-requirements)
+ - [Developer portal registration](#markdown-header-developer-portal-registration)
+ - [Getting Started](#markdown-header-getting-started)
+	 - [Flutter App](#markdown-header-flutter-app)
+	 - [Environment Setup](#markdown-header-environment)
+	 - [Plugin Installation](#markdown-header-plugin-installation)
+	 - [Requirements on the Mobile Back-End](#markdown-header-equirements-on-the-mobile-back-end)
+		 - [JWT](#markdown-header-jwt)
+		 - [JWT Lifetime](#markdown-header-jwt-lifetime)
+		 - [JWT Signing Public Key Format](#markdown-header-jwt-signing-public-key-format)
+		 - [JWT Serialization Format](#markdown-header-jwt-serialization-format)
+		 - [JWT Claims](#markdown-header-jwt-claims)
+	 - [Usage](#markdown-header-usage)
+	 - [FAQ](#markdown-header-faq)
 
 
 ## Requirements
