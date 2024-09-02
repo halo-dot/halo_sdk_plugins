@@ -7,9 +7,9 @@ See [Environment](./README.md#environment).
 ### Things to know
 
 - The codebase uses MethodChannels to trigger native functions from the Flutter side.
-- Although we could have used MethodChannels to send callback messages from native code to Flutter, we use EventChannels (no particular reason, just a tried and tested method)
+- Although we could have used MethodChannels to send callback messages from native code to Flutter, we use EventChannels to stream event that happens in the native code.
 - The Channels that pass data between the two platforms accepts a limited list of data types.
-- Importtant to note that Lists and Maps should always be of type `dynamic` when passing data from native to dart.
+- Important to note that Lists and Maps should always be of type `dynamic` when passing data from native to dart e.g. `List<dynamic> and Map<String, dynamic>`
 - Although little documentation exists about EventChannels, they too follow most of the rules of MethodChannels.
 
 Read all about it [here](https://docs.flutter.dev/platform-integration/platform-channels).

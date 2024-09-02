@@ -36,9 +36,9 @@ The following is a list of requirements needed to implement the Halo Dot SDK
  - A developers account (Register at the [developer portal])
  - Sign a Non Disclosure Agreement (NDA) 
  - A public key and private key to generate a JWT
- - [Kotlin] ^1.3.72 *(@note: a higher version is in work)*
- - [Flutter] ^2.10.5 *(@note: a higher version is in work)* <br/> If you have a different version we can recommend using [fvm]
- - [Dart] ^2.9.2 *(@note: a higher version is in work)*
+ - [Kotlin] 1.3.72 *(@note: a higher version is in work)*
+ - [Flutter] 2.10.5 *(@note: a higher version is in work)* <br/> If you have a different version we can recommend using [fvm]
+ - [Dart] 2.9.2 *(@note: a higher version is in work)*
  - [Java] 11
  - IDE ([Android Studio Preferably](https://developer.android.com/studio/install))
  - Recommended Libraries
