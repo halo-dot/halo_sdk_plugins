@@ -3,13 +3,7 @@
   
 A flutter implementation of the [Halo Dot SDK](https://halo-dot-developer-docs.gitbook.io/halo-dot/sdk/1.-getting-started).  
   
-The Halo Dot SDK is an Isolating MPoC SDK payment processing MPOC Software with Attestation & Monitoring Capabilities.  
-  
-The Architecture of this isolating MPoC Payment Software is described in the diagram below.  
-  
-The below diagram also showcases the SDK boundary and the interaction between the SDK its integrating channels, and the 3rd party payment gateway. It also describes the boundary of the SDK and how it interacts with integrators and the third party payments. It also includes details of how the data is communicated sent in-between the boundary.  
-  
-![Halo Dot SDK Architecture](./readme_assets/halo_sdk_architecture.png)  
+The Halo Dot SDK is an Isolating MPoC SDK payment processing MPOC Software with Attestation & Monitoring Capabilities.
   
 ## Table of Content
 
