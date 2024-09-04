@@ -1,9 +1,8 @@
 name: halo_sdk_flutter_plugin
 description: A flutter plugin of the Halo Dot SDK that allows integrators to embed contactless payments into their own Flutter mobile apps. The SDK provides a fully isolated SDK that meets requirements of PCI MPoC.
-version: 0.0.1
+version: 0.0.2
 homepage: https://www.halodot.io/halo-sdk
 repository: https://github.com/halo-dot/halo_sdk_plugins
-publish_to: https://pub.dev
 topics:
   - contactless
   - payment
