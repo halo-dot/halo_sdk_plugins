@@ -9,24 +9,24 @@ The Architecture of this isolating MPoC Payment Software is described in the dia
   
 The below diagram also showcases the SDK boundary and the interaction between the SDK its integrating channels, and the 3rd party payment gateway. It also describes the boundary of the SDK and how it interacts with integrators and the third party payments. It also includes details of how the data is communicated sent in-between the boundary.  
   
-![Halo Dot SDK Architecture](./readme_assets/full_process_MIPS_1200.png)  
+![Halo Dot SDK Architecture](https://static.dev.haloplus.io/static/mpos/readme/assets/full_process_MIPS_1200.png)  
   
 ## Table of Content
 
- - [Requirements](#markdown-header-requirements)
- - [Developer portal registration](#markdown-header-developer-portal-registration)
- - [Getting Started](#markdown-header-getting-started)
-	 - [Flutter App](#markdown-header-flutter-app)
-	 - [Environment Setup](#markdown-header-environment)
-	 - [Plugin Installation](#markdown-header-plugin-installation)
-	 - [Requirements on the Mobile Back-End](#markdown-header-equirements-on-the-mobile-back-end)
-		 - [JWT](#markdown-header-jwt)
-		 - [JWT Lifetime](#markdown-header-jwt-lifetime)
-		 - [JWT Signing Public Key Format](#markdown-header-jwt-signing-public-key-format)
-		 - [JWT Serialization Format](#markdown-header-jwt-serialization-format)
-		 - [JWT Claims](#markdown-header-jwt-claims)
-	 - [Usage](#markdown-header-usage)
-	 - [FAQ](#markdown-header-faq)
+ - [Requirements](#requirements)
+ - [Developer portal registration](#developer-portal-registration)
+ - [Getting Started](#getting-started)
+	 - [Flutter App](#flutter-app)
+	 - [Environment Setup](#environment)
+	 - [Plugin Installation](#plugin-installation)
+	 - [Requirements on the Mobile Back-End](#equirements-on-the-mobile-back-end)
+		 - [JWT](#jwt)
+		 - [JWT Lifetime](#jwt-lifetime)
+		 - [JWT Signing Public Key Format](#jwt-signing-public-key-format)
+		 - [JWT Claims](#jwt-claims)
+	 - [Usage](#usage)
+   - [Documentation](#documentation)
+	 - [FAQ](#faq)
 
 
 ## Requirements
@@ -58,10 +58,10 @@ You are required to register on our QA (test environment) before testing in prod
 ### Registration
 * Access the [developer portal] and register
 * Verify your account through OTP
-* Click on access to the SDK <img src="./readme_assets/access_sdk.jpg" width="150px" alt="access key." />
+* Click on access to the SDK <img src="https://static.dev.haloplus.io/static/mpos/readme/assets/access_sdk.jpg" width="150px" alt="access key." />
 * Download and Accept the Non Disclosure Agreement
-* Submit your public key and create an Issuer name. This will be used to verify the JWT you will create. <img src="./readme_assets/public_key.png" alt="public key." width="150px"  />
-* Access key and Secret key will be created. This will be used in your IDE to access the Halo SDK [see where it is used](#plugin-Installation) <img src="./readme_assets/access_key.png" alt="access key." width="150px"  /> 
+* Submit your public key and create an Issuer name. This will be used to verify the JWT you will create. <img src="https://static.dev.haloplus.io/static/mpos/readme/assets/public_key.png" alt="public key." width="150px"  />
+* Access key and Secret key will be created. This will be used in your IDE to access the Halo SDK [see where it is used](#plugin-Installation) <img src="https://static.dev.haloplus.io/static/mpos/readme/assets/access_key.png" alt="access key." width="150px"  /> 
 
 ## Getting started  
 
@@ -111,7 +111,7 @@ defaultConfig {
   
 1. Run `flutter pub add halo_sdk_flutter_plugin` to add the flutter plugin to your flutter project  
 2. We recommend also installing `flutter pub add permission_handler`  
-3. The plugin will need to download the SDK binaries from the Halo S3 bucket.<br/>To do this, you will need credentials to access the SDK. Find your `accesskey` and `secretkey` [Developer portal] <img alt="access key" src="./readme_assets/access_key.png" width="100px"/>. <br/>Add these to your `local.properties` file in your android root folder (create one if it doesn't exist):  
+3. The plugin will need to download the SDK binaries from the Halo S3 bucket.<br/>To do this, you will need credentials to access the SDK. Find your `accesskey` and `secretkey` [Developer portal] <img alt="access key" src="https://static.dev.haloplus.io/static/mpos/readme/assets/access_key.png" width="100px"/>. <br/>Add these to your `local.properties` file in your android root folder (create one if it doesn't exist):  
   
 ```properties  
 aws.accesskey=<accesskey>  
@@ -227,7 +227,7 @@ All these values can be validated by making a request to `https://kernelserver.q
 </br>Method: `POST`  
 </br>Header: Bearer Auth  
   
-### Usage  
+## Usage  
   
 1. First you need to request the permissions needed by the SDK. Add the following permissions to your `AndroidManifest.xml` file:  
 
@@ -367,12 +367,19 @@ Sdkflutterplugin.startTransaction(1.00, 'Some merchant reference', 'ZAR');
 From this point, a number of UI messages will be pushed to the registered callbacks.  
 You will use this to show the user the appropriate UI/text.
 
+## Documentation
+
+[Documentation](https://halo-dot-developer-docs.gitbook.io/halo-dot/sdk)
+
+
 ## FAQ
 
 My `android/build.gradle` looks different
+
 : New version of android studio have the version of [Kotlin] set as `ext.kotlin_version = '1.3.72'`
 
 How do I set my `compileSdkVersion` if it is currently set as `flutter.compileSdkVersion`
+
 : You can set the `compileSdkVersion` in the `local.properties` file
 ```
 sdk.dir=/home/{me}/android-sdk/  
@@ -389,9 +396,11 @@ You can then reference this in `android/app/build.gradle` file
 ```
 
 How do I set my `minSdkVersion` if it is currently set as `flutter.minSdkVersion` 
+
 : See answer above 
 
 I am not able to import the Halo SDK.
+
 : * Try opening the android folder from Android studio and running gradle sync
 : * Ensure you have the plugin install `flutter pub add halo_sdk_flutter_plugin`
 : *  Ensure you have the correct [Java] 11, [Kotlin] ^1.3.72, [Flutter] ^2.10.5
