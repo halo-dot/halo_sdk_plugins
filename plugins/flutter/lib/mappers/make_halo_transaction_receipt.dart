@@ -1,5 +1,4 @@
 import 'dart:typed_data';
-
 import '../model/halo_transaction_receipt.dart';
 import 'make_halo_cryptogram_type.dart';
 

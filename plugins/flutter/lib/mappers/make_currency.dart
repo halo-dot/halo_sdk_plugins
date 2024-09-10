@@ -1,4 +1,4 @@
-import 'package:sdkflutterplugin/model/currency.dart';
+import '../model/currency.dart';
 
 Currency? makeCurrency(Map<dynamic, dynamic>? data) {
   if (data == null) {
