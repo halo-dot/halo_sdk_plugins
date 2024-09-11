@@ -35,3 +35,6 @@ Here is what the script does (incase you want to do it manually):
 5. Then Checkouts a branch that exists on the remote you've just added, e.g. `git checkout main`
 
 6. Then finally it pushes the code with `git push public <branch>` where <branch> is the branch name that exists on remote.
+
+7. To publish to pub.dev run `dart pub publish [--force]`
+
