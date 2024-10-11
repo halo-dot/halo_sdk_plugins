@@ -1,4 +1,4 @@
-import 'package:sdkflutterplugin/model/halo_cryptogram_type.dart';
+import '../model/halo_cryptogram_type.dart';
 
 HaloCryptogramType? makeHaloCryptogramType(String cryptogramType) {
   switch (cryptogramType) {

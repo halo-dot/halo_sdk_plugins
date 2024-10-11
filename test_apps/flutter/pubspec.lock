@@ -95,6 +95,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  halo_sdk_flutter_plugin:
+    dependency: "direct main"
+    description:
+      path: "../../plugins/flutter"
+      relative: true
+    source: path
+    version: "0.0.2"
   js:
     dependency: transitive
     description:
@@ -186,13 +193,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.7.3"
-  sdkflutterplugin:
-    dependency: "direct main"
-    description:
-      path: "../../plugins/flutter"
-      relative: true
-    source: path
-    version: "0.0.1"
   sky_engine:
     dependency: transitive
     description: flutter

@@ -1,4 +1,4 @@
-import 'package:sdkflutterplugin/model/halo_ui_message_id.dart';
+import '../model/halo_ui_message_id.dart';
 
 HaloUiMessageId makeMessageId(String value) {
   switch (value) {
