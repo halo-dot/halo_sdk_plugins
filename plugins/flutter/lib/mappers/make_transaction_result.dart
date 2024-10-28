@@ -1,5 +1,4 @@
-import 'package:sdkflutterplugin/model/halo_transaction_result.dart';
-
+import '../model/halo_transaction_result.dart';
 import 'make_halo_error_code.dart';
 import 'make_halo_transaction_receipt.dart';
 import 'make_halo_transaction_result_type.dart';

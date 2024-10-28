@@ -1,4 +1,4 @@
-import 'package:sdkflutterplugin/model/halo_attestation_health_result.dart';
+import '../model/halo_attestation_health_result.dart';
 import 'make_attestation_health_result_type.dart';
 import 'make_halo_error_code.dart';
 

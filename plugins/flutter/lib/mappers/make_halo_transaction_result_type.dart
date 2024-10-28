@@ -1,4 +1,4 @@
-import 'package:sdkflutterplugin/model/halo_transaction_result_type.dart';
+import '../model/halo_transaction_result_type.dart';
 
 HaloTransactionResultType makeHaloTransactionResultType(String value) {
   switch (value) {
