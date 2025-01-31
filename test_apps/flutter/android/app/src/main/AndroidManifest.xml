@@ -1,12 +1,14 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="za.co.synthesis.halo.sdkflutterplugin_example">
+    package="za.co.synthesis.halo.sdkflutterplugin_example"
+    xmlns:tools="http://schemas.android.com/tools">
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.NFC"/>
    <application
         android:label="sdkflutterplugin_example"
         android:name="${applicationName}"
         android:extractNativeLibs="true"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        tools:replace="android:label">
         <activity
             android:name=".MainActivity"
             android:exported="true"
