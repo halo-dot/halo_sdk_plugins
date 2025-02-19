@@ -49,9 +49,8 @@ class _MyAppState extends State<MyApp> {
   Future<void> checkPermissions() async {
     var permissions = [
       Permission.camera,
-      Permission.phone,
-      Permission.storage,
-      Permission.notification,
+      Permission.bluetoothConnect,
+      Permission.bluetoothScan,
       Permission.location,
     ];
 
