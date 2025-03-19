@@ -1,0 +1,1876 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".TransactionDetailsActivity"
+    android:background="#FFFFFF"
+    android:fitsSystemWindows="true">
+
+    <ScrollView
+        android:id="@+id/add_api_request_scrollView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/done_btn">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/transaction_details_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/imageView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:srcCompat="@drawable/transaction_unsuccessful" />
+
+            <TextView
+                android:id="@+id/transaction_details_error_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="30dp"
+                android:layout_marginTop="15dp"
+                android:text="@string/transaction_details_error_textview"
+                android:textColor="#000000"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintTop_toBottomOf="@+id/imageView2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <TextView
+                android:id="@+id/transaction_details_error_sub_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="30dp"
+                android:layout_marginTop="15dp"
+                android:text="@string/transaction_details_error_sub_textview"
+                android:textColor="#000000"
+                android:textSize="16sp"
+                app:layout_constraintTop_toBottomOf="@+id/transaction_details_error_tv"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <TextView
+                android:id="@+id/transaction_details_header_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="40dp"
+                android:text="@string/transaction_details_header_textview"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:id="@+id/divider_1"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_marginStart="40dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="40dp"
+                android:background="#EAEAEA"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintHorizontal_chainStyle="spread"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/transaction_details_header_tv" />
+
+            <TextView
+                android:id="@+id/transaction_details_id_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="25dp"
+                android:text="@string/transaction_details_id_textview"
+                android:textColor="#000000"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/divider_1" />
+
+            <TextView
+                android:id="@+id/transaction_details_id_value_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="50dp"
+                android:layout_marginEnd="16dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="Transaction Details ID"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toEndOf="@+id/transaction_details_id_tv"
+                app:layout_constraintTop_toTopOf="@id/transaction_details_id_tv" />
+
+            <TextView
+                android:id="@+id/transaction_details_passthroughUserId_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="25dp"
+                android:text="@string/transaction_details_passthroughUserId_textview"
+                android:textColor="#000000"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/transaction_details_id_value_tv" />
+
+            <TextView
+                android:id="@+id/transaction_details_passthroughUserId_value_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="Passthrough User Id"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/transaction_details_passthroughUserId_tv"
+                app:layout_constraintBottom_toBottomOf="@id/transaction_details_passthroughUserId_tv" />
+
+            <TextView
+                android:id="@+id/transaction_details_merchantTransactionReference_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="25dp"
+                android:text="@string/transaction_details_merchantTransactionReference_textview"
+                android:textColor="#000000"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/transaction_details_passthroughUserId_value_tv" />
+
+            <TextView
+                android:id="@+id/transaction_details_merchantTransactionReference_value_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="Merchant Transaction Reference"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/transaction_details_merchantTransactionReference_tv"
+                app:layout_constraintBottom_toBottomOf="@id/transaction_details_merchantTransactionReference_tv" />
+
+            <TextView
+                android:id="@+id/transaction_details_encryptedV2_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="25dp"
+                android:text="@string/transaction_details_encryptedV2_textview"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/transaction_details_merchantTransactionReference_value_tv" />
+
+            <TextView
+                android:id="@+id/transaction_details_jwe_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="15dp"
+                android:text="@string/transaction_details_jwe_textview"
+                android:textColor="#000000"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/transaction_details_encryptedV2_tv" />
+
+            <TextView
+                android:id="@+id/transaction_details_jwe_value_tv"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="50dp"
+                android:layout_marginEnd="16dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="JWE"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toEndOf="@+id/transaction_details_jwe_tv"
+                app:layout_constraintTop_toTopOf="@id/transaction_details_jwe_tv" />
+
+            <TextView
+                android:id="@+id/transaction_details_keyVersion_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="25dp"
+                android:text="@string/transaction_details_keyVersion_textview"
+                android:textColor="#000000"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/transaction_details_jwe_value_tv" />
+
+            <TextView
+                android:id="@+id/transaction_details_keyVersion_value_tv"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="50dp"
+                android:layout_marginEnd="16dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="Key Version"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toEndOf="@+id/transaction_details_keyVersion_tv"
+                app:layout_constraintTop_toTopOf="@id/transaction_details_keyVersion_tv" />
+
+            <TextView
+                android:id="@+id/transaction_details_fingerprint_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="25dp"
+                android:text="@string/transaction_details_fingerprint_textview"
+                android:textColor="#000000"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/transaction_details_keyVersion_value_tv" />
+
+            <TextView
+                android:id="@+id/transaction_details_fingerprint_value_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="Fingerprint"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/transaction_details_fingerprint_tv"
+                app:layout_constraintBottom_toBottomOf="@id/transaction_details_fingerprint_tv" />
+
+            <Button
+                android:id="@+id/see_more_1_btn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="40dp"
+                android:layout_marginEnd="16dp"
+                android:background="#FFFFFF"
+                android:text="@string/transaction_details_see_more_button"
+                android:textAllCaps="false"
+                android:textColor="#DA29B2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/transaction_details_fingerprint_value_tv"
+                style="?android:attr/borderlessButtonStyle" />
+
+            <TextView
+                android:id="@+id/transaction_details_latitude_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="25dp"
+                android:text="@string/transaction_details_latitude_textview"
+                android:textColor="#000000"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/see_more_1_btn" />
+
+            <TextView
+                android:id="@+id/transaction_details_latitude_value_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="Latitude"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/transaction_details_latitude_tv"
+                app:layout_constraintBottom_toBottomOf="@id/transaction_details_latitude_tv" />
+
+            <TextView
+                android:id="@+id/transaction_details_longitude_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="25dp"
+                android:text="@string/transaction_details_longitude_textview"
+                android:textColor="#000000"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/transaction_details_latitude_value_tv" />
+
+            <TextView
+                android:id="@+id/transaction_details_longitude_value_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="Longitude"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/transaction_details_longitude_tv"
+                app:layout_constraintBottom_toBottomOf="@id/transaction_details_longitude_tv" />
+
+            <TextView
+                android:id="@+id/transaction_details_deviceinstallationId_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="25dp"
+                android:text="@string/transaction_details_deviceinstallationId_textview"
+                android:textColor="#000000"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/transaction_details_longitude_value_tv" />
+
+            <TextView
+                android:id="@+id/transaction_details_deviceinstallationId_value_tv"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="50dp"
+                android:layout_marginEnd="16dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="Device Installation Id"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/transaction_details_deviceinstallationId_tv"
+                app:layout_constraintTop_toTopOf="@id/transaction_details_deviceinstallationId_tv" />
+
+            <TextView
+                android:id="@+id/transaction_details_transactionstatusId_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="25dp"
+                android:text="@string/transaction_details_transactionstatusId_textview"
+                android:textColor="#000000"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/transaction_details_deviceinstallationId_value_tv" />
+
+            <TextView
+                android:id="@+id/transaction_details_transactionstatusId_value_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="Transaction Status Id"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/transaction_details_transactionstatusId_tv"
+                app:layout_constraintBottom_toBottomOf="@id/transaction_details_transactionstatusId_tv" />
+
+            <TextView
+                android:id="@+id/transaction_details_transactionDispositionId_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="25dp"
+                android:text="@string/transaction_details_transactionDispositionId_textview"
+                android:textColor="#000000"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/transaction_details_transactionstatusId_value_tv" />
+
+            <TextView
+                android:id="@+id/transaction_details_transactionDispositionId_value_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="transactionDispositionId"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/transaction_details_transactionDispositionId_tv"
+                app:layout_constraintBottom_toBottomOf="@id/transaction_details_transactionDispositionId_tv" />
+
+            <TextView
+                android:id="@+id/transaction_details_amount_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="25dp"
+                android:text="@string/transaction_details_amount_textview"
+                android:textColor="#000000"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/transaction_details_transactionDispositionId_value_tv" />
+
+            <TextView
+                android:id="@+id/transaction_details_amount_value_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="Amount"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/transaction_details_amount_tv"
+                app:layout_constraintBottom_toBottomOf="@id/transaction_details_amount_tv" />
+
+            <TextView
+                android:id="@+id/transaction_details_accountNumber_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="25dp"
+                android:text="@string/transaction_details_accountNumber_textview"
+                android:textColor="#000000"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/transaction_details_amount_value_tv" />
+
+            <TextView
+                android:id="@+id/transaction_details_accountNumber_value_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="Account Number"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/transaction_details_accountNumber_tv"
+                app:layout_constraintBottom_toBottomOf="@id/transaction_details_accountNumber_tv" />
+
+            <TextView
+                android:id="@+id/transaction_details_currency_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="25dp"
+                android:text="@string/transaction_details_currency_textview"
+                android:textColor="#000000"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/transaction_details_accountNumber_value_tv" />
+
+            <TextView
+                android:id="@+id/transaction_details_currency_value_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="Currency"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/transaction_details_currency_tv"
+                app:layout_constraintBottom_toBottomOf="@id/transaction_details_currency_tv" />
+
+            <TextView
+                android:id="@+id/transaction_details_responseCode_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="25dp"
+                android:text="@string/transaction_details_responseCode_textview"
+                android:textColor="#000000"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/transaction_details_currency_value_tv" />
+
+            <TextView
+                android:id="@+id/transaction_details_responseCode_value_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="Response Code"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/transaction_details_responseCode_tv"
+                app:layout_constraintBottom_toBottomOf="@id/transaction_details_responseCode_tv" />
+
+            <TextView
+                android:id="@+id/transaction_details_transactionTypeId_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="25dp"
+                android:text="@string/transaction_details_transactionTypeId_textview"
+                android:textColor="#000000"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/transaction_details_responseCode_value_tv" />
+
+            <TextView
+                android:id="@+id/transaction_details_transactionTypeId_value_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="Transaction Type Id"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/transaction_details_transactionTypeId_tv"
+                app:layout_constraintBottom_toBottomOf="@id/transaction_details_transactionTypeId_tv" />
+
+            <TextView
+                android:id="@+id/transaction_details_originalTransactionId_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="25dp"
+                android:text="@string/transaction_details_originalTransactionId_textview"
+                android:textColor="#000000"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/transaction_details_transactionTypeId_value_tv" />
+
+            <TextView
+                android:id="@+id/transaction_details_originalTransactionId_value_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="Original Transaction Id"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/transaction_details_originalTransactionId_tv"
+                app:layout_constraintBottom_toBottomOf="@id/transaction_details_originalTransactionId_tv" />
+
+            <TextView
+                android:id="@+id/transaction_details_acquirerId_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="25dp"
+                android:text="@string/transaction_details_acquirerId_textview"
+                android:textColor="#000000"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/transaction_details_originalTransactionId_value_tv" />
+
+            <TextView
+                android:id="@+id/transaction_details_acquirerId_value_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="Acquirer Id"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/transaction_details_acquirerId_tv"
+                app:layout_constraintBottom_toBottomOf="@id/transaction_details_acquirerId_tv" />
+
+            <TextView
+                android:id="@+id/transaction_details_userId_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="25dp"
+                android:text="@string/transaction_details_userId_textview"
+                android:textColor="#000000"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/transaction_details_acquirerId_value_tv" />
+
+            <TextView
+                android:id="@+id/transaction_details_userId_value_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="User Id"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/transaction_details_userId_tv"
+                app:layout_constraintBottom_toBottomOf="@id/transaction_details_userId_tv" />
+
+            <TextView
+                android:id="@+id/transaction_details_transactionFeesConfigId_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="25dp"
+                android:text="@string/transaction_details_transactionFeesConfigId_textview"
+                android:textColor="#000000"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/transaction_details_userId_value_tv" />
+
+            <TextView
+                android:id="@+id/transaction_details_transactionFeesConfigId_value_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="Transaction Fees Config Id"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/transaction_details_transactionFeesConfigId_tv"
+                app:layout_constraintBottom_toBottomOf="@id/transaction_details_transactionFeesConfigId_tv" />
+
+            <TextView
+                android:id="@+id/transaction_details_TransactionFee_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="25dp"
+                android:text="@string/transaction_details_TransactionFee_textview"
+                android:textColor="#000000"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/transaction_details_transactionFeesConfigId_value_tv" />
+
+            <TextView
+                android:id="@+id/transaction_details_TransactionFee_value_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="Transaction Fee"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/transaction_details_TransactionFee_tv"
+                app:layout_constraintBottom_toBottomOf="@id/transaction_details_TransactionFee_tv" />
+
+            <TextView
+                android:id="@+id/transaction_details_authorisationCode_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="25dp"
+                android:text="@string/transaction_details_authorisationCode_textview"
+                android:textColor="#000000"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/transaction_details_TransactionFee_value_tv" />
+
+            <TextView
+                android:id="@+id/transaction_details_authorisationCode_value_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="Authorisation Code"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/transaction_details_authorisationCode_tv"
+                app:layout_constraintBottom_toBottomOf="@id/transaction_details_authorisationCode_tv" />
+
+            <Button
+                android:id="@+id/see_more_2_btn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="40dp"
+                android:layout_marginEnd="16dp"
+                android:background="#FFFFFF"
+                android:text="@string/transaction_details_see_more_button"
+                android:textAllCaps="false"
+                android:textColor="#DA29B2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/transaction_details_authorisationCode_value_tv"
+                style="?android:attr/borderlessButtonStyle" />
+
+            <TextView
+                android:id="@+id/transaction_details_createdAt_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="25dp"
+                android:text="@string/transaction_details_createdAt_textview"
+                android:textColor="#000000"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/see_more_2_btn" />
+
+            <TextView
+                android:id="@+id/transaction_details_createdAt_value_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="Created At"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/transaction_details_createdAt_tv"
+                app:layout_constraintBottom_toBottomOf="@id/transaction_details_createdAt_tv" />
+
+            <TextView
+                android:id="@+id/transaction_details_updatedAt_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="25dp"
+                android:text="@string/transaction_details_updatedAt_textview"
+                android:textColor="#000000"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/transaction_details_createdAt_value_tv" />
+
+            <TextView
+                android:id="@+id/transaction_details_updatedAt_value_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="Updated At"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/transaction_details_updatedAt_tv"
+                app:layout_constraintBottom_toBottomOf="@id/transaction_details_updatedAt_tv" />
+
+            <TextView
+                android:id="@+id/transaction_details_effectiveDate_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="25dp"
+                android:text="@string/transaction_details_effectiveDate_textview"
+                android:textColor="#000000"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/transaction_details_updatedAt_value_tv" />
+
+            <TextView
+                android:id="@+id/transaction_details_effectiveDate_value_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="Effective Date"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/transaction_details_effectiveDate_tv"
+                app:layout_constraintBottom_toBottomOf="@id/transaction_details_effectiveDate_tv" />
+
+            <TextView
+                android:id="@+id/transaction_details_expiryDate_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="25dp"
+                android:text="@string/transaction_details_expiryDate_textview"
+                android:textColor="#000000"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/transaction_details_effectiveDate_value_tv" />
+
+            <TextView
+                android:id="@+id/transaction_details_expiryDate_value_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="Expiry Date"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/transaction_details_expiryDate_tv"
+                app:layout_constraintBottom_toBottomOf="@id/transaction_details_expiryDate_tv" />
+
+            <TextView
+                android:id="@+id/transaction_details_tid_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="25dp"
+                android:text="@string/transaction_details_tid_textview"
+                android:textColor="#000000"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/transaction_details_expiryDate_value_tv" />
+
+            <TextView
+                android:id="@+id/transaction_details_tid_value_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="tid"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/transaction_details_tid_tv"
+                app:layout_constraintBottom_toBottomOf="@id/transaction_details_tid_tv" />
+
+            <TextView
+                android:id="@+id/transaction_details_transactionReference_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="25dp"
+                android:text="@string/transaction_details_transactionReference_textview"
+                android:textColor="#000000"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/transaction_details_tid_value_tv" />
+
+            <TextView
+                android:id="@+id/transaction_details_transactionReference_value_tv"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="50dp"
+                android:layout_marginEnd="16dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="Transaction Reference"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/transaction_details_transactionReference_tv"
+                app:layout_constraintTop_toTopOf="@id/transaction_details_transactionReference_tv" />
+
+            <TextView
+                android:id="@+id/transaction_details_merchantName_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="25dp"
+                android:text="@string/transaction_details_merchantName_textview"
+                android:textColor="#000000"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/transaction_details_transactionReference_value_tv" />
+
+            <TextView
+                android:id="@+id/transaction_details_merchantName_value_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="Merchant Name"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/transaction_details_merchantName_tv"
+                app:layout_constraintBottom_toBottomOf="@id/transaction_details_merchantName_tv" />
+
+            <TextView
+                android:id="@+id/transaction_details_formattedMerchantAddress_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="25dp"
+                android:text="@string/transaction_details_formattedMerchantAddress_textview"
+                android:textColor="#000000"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/transaction_details_merchantName_value_tv" />
+
+            <TextView
+                android:id="@+id/transaction_details_formattedMerchantAddress_value_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text=""
+                android:textColor="#000000"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/transaction_details_formattedMerchantAddress_tv"
+                app:layout_constraintBottom_toBottomOf="@id/transaction_details_formattedMerchantAddress_tv" />
+
+            <TextView
+                android:id="@+id/transaction_details_transactionType_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="25dp"
+                android:text="@string/transaction_details_transactionType_textview"
+                android:textColor="#000000"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/transaction_details_formattedMerchantAddress_value_tv" />
+
+            <TextView
+                android:id="@+id/transaction_details_transactionType_value_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="Transaction Type"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/transaction_details_transactionType_tv"
+                app:layout_constraintBottom_toBottomOf="@id/transaction_details_transactionType_tv" />
+
+            <TextView
+                android:id="@+id/transaction_details_approvalText_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="25dp"
+                android:text="@string/transaction_details_approvalText_textview"
+                android:textColor="#000000"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/transaction_details_transactionType_value_tv" />
+
+            <TextView
+                android:id="@+id/transaction_details_approvalText_value_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="Approval Text"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/transaction_details_approvalText_tv"
+                app:layout_constraintBottom_toBottomOf="@id/transaction_details_approvalText_tv" />
+
+            <TextView
+                android:id="@+id/transaction_details_aid_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="25dp"
+                android:text="@string/transaction_details_aid_textview"
+                android:textColor="#000000"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/transaction_details_approvalText_value_tv" />
+
+            <TextView
+                android:id="@+id/transaction_details_aid_value_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="aid"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/transaction_details_aid_tv"
+                app:layout_constraintBottom_toBottomOf="@id/transaction_details_aid_tv" />
+
+            <Button
+                android:id="@+id/see_more_3_btn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="40dp"
+                android:layout_marginEnd="16dp"
+                android:background="#FFFFFF"
+                android:text="@string/transaction_details_see_more_button"
+                android:textAllCaps="false"
+                android:textColor="#DA29B2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/transaction_details_aid_value_tv"
+                style="?android:attr/borderlessButtonStyle" />
+
+            <TextView
+                android:id="@+id/transaction_details_applicationLabel_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="25dp"
+                android:text="@string/transaction_details_applicationLabel_textview"
+                android:textColor="#000000"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/see_more_3_btn" />
+
+            <TextView
+                android:id="@+id/transaction_details_applicationLabel_value_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="Application Label"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/transaction_details_applicationLabel_tv"
+                app:layout_constraintBottom_toBottomOf="@id/transaction_details_applicationLabel_tv" />
+
+            <TextView
+                android:id="@+id/transaction_details_applicationPreferredName_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="25dp"
+                android:text="@string/transaction_details_applicationPreferredName_textview"
+                android:textColor="#000000"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/transaction_details_applicationLabel_value_tv" />
+
+            <TextView
+                android:id="@+id/transaction_details_applicationPreferredName_value_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="Application Preferred Name"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/transaction_details_applicationPreferredName_tv"
+                app:layout_constraintBottom_toBottomOf="@id/transaction_details_applicationPreferredName_tv" />
+
+            <TextView
+                android:id="@+id/transaction_details_association_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="25dp"
+                android:text="@string/transaction_details_association_textview"
+                android:textColor="#000000"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/transaction_details_applicationPreferredName_value_tv" />
+
+            <TextView
+                android:id="@+id/transaction_details_association_value_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="Association"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/transaction_details_association_tv"
+                app:layout_constraintBottom_toBottomOf="@id/transaction_details_association_tv" />
+
+            <TextView
+                android:id="@+id/transaction_details_isoResponseCode_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="25dp"
+                android:text="@string/transaction_details_isoResponseCode_textview"
+                android:textColor="#000000"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/transaction_details_association_value_tv" />
+
+            <TextView
+                android:id="@+id/transaction_details_isoResponseCode_value_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="iso Response Code"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/transaction_details_isoResponseCode_tv"
+                app:layout_constraintBottom_toBottomOf="@id/transaction_details_isoResponseCode_tv" />
+
+            <TextView
+                android:id="@+id/transaction_details_cryptogram_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="25dp"
+                android:text="@string/transaction_details_cryptogram_textview"
+                android:textColor="#000000"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/transaction_details_isoResponseCode_value_tv" />
+
+            <TextView
+                android:id="@+id/transaction_details_cryptogram_value_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="Cryptogram"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/transaction_details_cryptogram_tv"
+                app:layout_constraintBottom_toBottomOf="@id/transaction_details_cryptogram_tv" />
+
+            <TextView
+                android:id="@+id/transaction_details_cryptogramType_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="25dp"
+                android:text="@string/transaction_details_cryptogramType_textview"
+                android:textColor="#000000"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/transaction_details_cryptogram_value_tv" />
+
+            <TextView
+                android:id="@+id/transaction_details_cryptogramType_value_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="Cryptogram Type"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/transaction_details_cryptogramType_tv"
+                app:layout_constraintBottom_toBottomOf="@id/transaction_details_cryptogramType_tv" />
+
+            <TextView
+                android:id="@+id/transaction_details_tvr_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="25dp"
+                android:text="@string/transaction_details_tvr_textview"
+                android:textColor="#000000"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/transaction_details_cryptogramType_value_tv" />
+
+            <TextView
+                android:id="@+id/transaction_details_tvr_value_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="TVR"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/transaction_details_tvr_tv"
+                app:layout_constraintBottom_toBottomOf="@id/transaction_details_tvr_tv" />
+
+            <TextView
+                android:id="@+id/transaction_details_date_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="25dp"
+                android:text="@string/transaction_details_date_textview"
+                android:textColor="#000000"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/transaction_details_tvr_value_tv" />
+
+            <TextView
+                android:id="@+id/transaction_details_date_value_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="Date"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/transaction_details_date_tv"
+                app:layout_constraintBottom_toBottomOf="@id/transaction_details_date_tv" />
+
+            <TextView
+                android:id="@+id/transaction_details_time_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="25dp"
+                android:text="@string/transaction_details_time_textview"
+                android:textColor="#000000"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/transaction_details_date_value_tv" />
+
+            <TextView
+                android:id="@+id/transaction_details_time_value_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="Time"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/transaction_details_time_tv"
+                app:layout_constraintBottom_toBottomOf="@id/transaction_details_time_tv" />
+
+            <TextView
+                android:id="@+id/transaction_details_maskedPan_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="25dp"
+                android:text="@string/transaction_details_maskedPan_textview"
+                android:textColor="#000000"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/transaction_details_time_value_tv" />
+
+            <TextView
+                android:id="@+id/transaction_details_maskedPan_value_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="Masked Pan"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/transaction_details_maskedPan_tv"
+                app:layout_constraintBottom_toBottomOf="@id/transaction_details_maskedPan_tv" />
+
+            <TextView
+                android:id="@+id/tt3_transaction_details_qrCodeState_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="25dp"
+                android:text="@string/transaction_details_qrCodeState_textview"
+                android:textColor="#000000"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/transaction_details_maskedPan_value_tv" />
+
+            <TextView
+                android:id="@+id/tt3_transaction_details_qrCodeState_value_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="QR Code State"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tt3_transaction_details_qrCodeState_tv"
+                app:layout_constraintBottom_toBottomOf="@id/tt3_transaction_details_qrCodeState_tv" />
+
+            <TextView
+                android:id="@+id/tt3_transaction_details_transactionId_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="25dp"
+                android:text="@string/transaction_details_transactionId_textview"
+                android:textColor="#000000"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tt3_transaction_details_qrCodeState_value_tv" />
+
+            <TextView
+                android:id="@+id/tt3_transaction_details_transactionId_value_tv"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginEnd="16dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:gravity="right"
+                android:text="Transaction Id"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/tt3_transaction_details_transactionId_tv"
+                app:layout_constraintTop_toTopOf="@+id/tt3_transaction_details_transactionId_tv" />
+
+            <TextView
+                android:id="@+id/tt3_transaction_details_merchantTransactionReference_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="25dp"
+                android:text="@string/transaction_details_merchantTransactionReference_textview_2"
+                android:textColor="#000000"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tt3_transaction_details_transactionId_value_tv" />
+
+            <TextView
+                android:id="@+id/tt3_transaction_details_merchantTransactionReference_value_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="Merchant Transaction Reference"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tt3_transaction_details_merchantTransactionReference_tv"
+                app:layout_constraintBottom_toBottomOf="@id/tt3_transaction_details_merchantTransactionReference_tv" />
+
+            <TextView
+                android:id="@+id/tt3_transaction_details_userId_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="25dp"
+                android:text="@string/transaction_details_userId_textview_2"
+                android:textColor="#000000"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tt3_transaction_details_merchantTransactionReference_value_tv" />
+
+            <TextView
+                android:id="@+id/tt3_transaction_details_userId_value_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="User Id"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tt3_transaction_details_userId_tv"
+                app:layout_constraintBottom_toBottomOf="@id/tt3_transaction_details_userId_tv" />
+
+            <TextView
+                android:id="@+id/tt3_transaction_details_status_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="25dp"
+                android:text="@string/transaction_details_status_textview"
+                android:textColor="#000000"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tt3_transaction_details_userId_value_tv" />
+
+            <TextView
+                android:id="@+id/tt3_transaction_details_status_value_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="Status"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tt3_transaction_details_status_tv"
+                app:layout_constraintBottom_toBottomOf="@id/tt3_transaction_details_status_tv" />
+
+            <TextView
+                android:id="@+id/tt3_transaction_details_disposition_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="25dp"
+                android:text="@string/transaction_details_disposition_textview"
+                android:textColor="#000000"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tt3_transaction_details_status_value_tv" />
+
+            <TextView
+                android:id="@+id/tt3_transaction_details_disposition_value_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="Disposition"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tt3_transaction_details_disposition_tv"
+                app:layout_constraintBottom_toBottomOf="@id/tt3_transaction_details_disposition_tv" />
+
+            <TextView
+                android:id="@+id/tt3_transaction_details_amount_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="25dp"
+                android:text="@string/transaction_details_amount_textview_2"
+                android:textColor="#000000"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tt3_transaction_details_disposition_value_tv" />
+
+            <TextView
+                android:id="@+id/tt3_transaction_details_amount_value_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="Amount"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tt3_transaction_details_amount_tv"
+                app:layout_constraintBottom_toBottomOf="@id/tt3_transaction_details_amount_tv" />
+
+            <TextView
+                android:id="@+id/tt3_transaction_details_currency_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="25dp"
+                android:text="@string/transaction_details_currency_textview_2"
+                android:textColor="#000000"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tt3_transaction_details_amount_value_tv" />
+
+            <TextView
+                android:id="@+id/tt3_transaction_details_currency_value_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="Currency"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tt3_transaction_details_currency_tv"
+                app:layout_constraintBottom_toBottomOf="@id/tt3_transaction_details_currency_tv" />
+
+            <TextView
+                android:id="@+id/tt3_transaction_details_type_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="25dp"
+                android:text="@string/transaction_details_type_textview"
+                android:textColor="#000000"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tt3_transaction_details_currency_value_tv" />
+
+            <TextView
+                android:id="@+id/tt3_transaction_details_type_value_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="Type"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tt3_transaction_details_type_tv"
+                app:layout_constraintBottom_toBottomOf="@id/tt3_transaction_details_type_tv" />
+
+            <TextView
+                android:id="@+id/tt3_transaction_details_responseCode_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="25dp"
+                android:text="@string/transaction_details_responseCode_textview_2"
+                android:textColor="#000000"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tt3_transaction_details_type_value_tv" />
+
+            <TextView
+                android:id="@+id/tt3_transaction_details_responseCode_value_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="Response Code"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tt3_transaction_details_responseCode_tv"
+                app:layout_constraintBottom_toBottomOf="@id/tt3_transaction_details_responseCode_tv" />
+
+            <TextView
+                android:id="@+id/tt3_transaction_details_authorisationCode_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="25dp"
+                android:text="@string/transaction_details_authorisationCode_textview_2"
+                android:textColor="#000000"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tt3_transaction_details_responseCode_value_tv" />
+
+            <TextView
+                android:id="@+id/tt3_transaction_details_authorisationCode_value_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="Authorisation Code"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tt3_transaction_details_authorisationCode_tv"
+                app:layout_constraintBottom_toBottomOf="@id/tt3_transaction_details_authorisationCode_tv" />
+
+            <Button
+                android:id="@+id/see_more_4_btn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="40dp"
+                android:layout_marginEnd="16dp"
+                android:background="#FFFFFF"
+                android:text="@string/transaction_details_see_more_button"
+                android:textAllCaps="false"
+                android:textColor="#DA29B2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tt3_transaction_details_authorisationCode_value_tv"
+                style="?android:attr/borderlessButtonStyle" />
+
+            <TextView
+                android:id="@+id/tt3_transaction_details_createdAt_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="25dp"
+                android:text="@string/transaction_details_createdAt_textview_2"
+                android:textColor="#000000"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/see_more_4_btn" />
+
+            <TextView
+                android:id="@+id/tt3_transaction_details_createdAt_value_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="Created At"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tt3_transaction_details_createdAt_tv"
+                app:layout_constraintBottom_toBottomOf="@id/tt3_transaction_details_createdAt_tv" />
+
+            <TextView
+                android:id="@+id/tt3_transaction_details_updatedAt_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="25dp"
+                android:text="@string/transaction_details_updatedAt_textview_2"
+                android:textColor="#000000"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tt3_transaction_details_createdAt_value_tv" />
+
+            <TextView
+                android:id="@+id/tt3_transaction_details_updatedAt_value_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="Updated At"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tt3_transaction_details_updatedAt_tv"
+                app:layout_constraintBottom_toBottomOf="@id/tt3_transaction_details_updatedAt_tv" />
+
+            <TextView
+                android:id="@+id/tt3_transaction_details_accountNumber_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="25dp"
+                android:text="@string/transaction_details_accountNumber_textview_2"
+                android:textColor="#000000"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tt3_transaction_details_updatedAt_value_tv" />
+
+            <TextView
+                android:id="@+id/tt3_transaction_details_accountNumber_value_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="Account Number"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tt3_transaction_details_accountNumber_tv"
+                app:layout_constraintBottom_toBottomOf="@id/tt3_transaction_details_accountNumber_tv" />
+
+            <TextView
+                android:id="@+id/tt3_transaction_details_idNumber_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="25dp"
+                android:text="@string/transaction_details_idNumber_textview"
+                android:textColor="#000000"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tt3_transaction_details_accountNumber_value_tv" />
+
+            <TextView
+                android:id="@+id/tt3_transaction_details_idNumber_value_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="ID Number"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tt3_transaction_details_idNumber_tv"
+                app:layout_constraintBottom_toBottomOf="@id/tt3_transaction_details_idNumber_tv" />
+
+            <TextView
+                android:id="@+id/tt3_transaction_details_creditorABSN_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="25dp"
+                android:text="@string/transaction_details_creditorABSN_textview"
+                android:textColor="#000000"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tt3_transaction_details_idNumber_value_tv" />
+
+            <TextView
+                android:id="@+id/tt3_transaction_details_creditorABSN_value_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="Creditor ABSN"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tt3_transaction_details_creditorABSN_tv"
+                app:layout_constraintBottom_toBottomOf="@id/tt3_transaction_details_creditorABSN_tv" />
+
+            <TextView
+                android:id="@+id/tt3_transaction_details_maxCollectionAmount_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="25dp"
+                android:text="@string/transaction_details_maxCollectionAmount_textview"
+                android:textColor="#000000"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tt3_transaction_details_creditorABSN_value_tv" />
+
+            <TextView
+                android:id="@+id/tt3_transaction_details_maxCollectionAmount_value_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="Max Collection Amount"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tt3_transaction_details_maxCollectionAmount_tv"
+                app:layout_constraintBottom_toBottomOf="@id/tt3_transaction_details_maxCollectionAmount_tv" />
+
+            <TextView
+                android:id="@+id/tt3_transaction_details_contractReference_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="25dp"
+                android:text="@string/transaction_details_contractReference_textview"
+                android:textColor="#000000"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tt3_transaction_details_maxCollectionAmount_value_tv" />
+
+            <TextView
+                android:id="@+id/tt3_transaction_details_contractReference_value_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="Contract Reference"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tt3_transaction_details_contractReference_tv"
+                app:layout_constraintBottom_toBottomOf="@id/tt3_transaction_details_contractReference_tv" />
+
+            <TextView
+                android:id="@+id/tt3_transaction_details_collectionDay_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="25dp"
+                android:text="@string/transaction_details_collectionDay_textview"
+                android:textColor="#000000"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tt3_transaction_details_contractReference_value_tv" />
+
+            <TextView
+                android:id="@+id/tt3_transaction_details_collectionDay_value_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="Collection Day"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tt3_transaction_details_collectionDay_tv"
+                app:layout_constraintBottom_toBottomOf="@id/tt3_transaction_details_collectionDay_tv" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+    <Button
+        android:id="@+id/done_btn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/gradient_button"
+        android:text="@string/transaction_details_done_button"
+        android:textAllCaps="false"
+        android:textColor="#FFFFFF"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

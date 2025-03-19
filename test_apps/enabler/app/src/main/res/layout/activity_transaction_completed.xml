@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".TransactionCompletedActivity"
+    android:background="#FFFFFF"
+    android:fitsSystemWindows="true">
+
+    <TextView
+        android:id="@+id/transaction_result_header_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:text="TextView"
+        android:textColor="#000000"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/transaction_result_tv"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/transaction_result_header_tv"
+        app:srcCompat="@drawable/img_link_generated" />
+
+    <TextView
+        android:id="@+id/transaction_result_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="30dp"
+        android:text="TextView"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/transaction_result_reason_tv"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/transaction_result_reason_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minLines="2"
+        android:text="TextView"
+        android:textColor="#808080"
+        app:layout_constraintBottom_toTopOf="@+id/transaction_details_btn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/transaction_result_header_tv"
+        app:layout_constraintVertical_bias="0.75" />
+
+    <Button
+        android:id="@+id/transaction_details_btn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/gradient_button"
+        android:text="@string/transaction_completed_transaction_details_button"
+        android:textAllCaps="false"
+        android:textColor="#FFFFFF"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/done_btn" />
+
+    <Button
+        android:id="@+id/done_btn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/edit_text_border"
+        android:text="@string/transaction_completed_done_button"
+        android:textAllCaps="false"
+        android:textColor="#000000"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        style="?android:attr/borderlessButtonStyle" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
