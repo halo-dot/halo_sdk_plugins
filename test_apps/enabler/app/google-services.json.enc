@@ -1,0 +1,48 @@
+{
+	"project_info": {
+		"project_number": "ENC[AES256_GCM,data:ojMbRdKz6HRo0dZL,iv:o2DzToXsalFMXayebzi3pHF4bS93KYYDmOWVE/GBjts=,tag:as2pu3hYgI8fqHGcXJUshg==,type:str]",
+		"project_id": "ENC[AES256_GCM,data:cZZAMGv7+bwVed0J,iv:nwXlFxAgVOHUbDGyk81ohYazhT1eEOl4xLur8em73j4=,tag:G7b9Od3axtJ5exOAiQthdw==,type:str]",
+		"storage_bucket": "ENC[AES256_GCM,data:9wFrm3ZkTzOnKZd1q/jJiNKG8jCCMmVp9vmb6SpPUCs=,iv:9Sk96jXrUVl6HPg1a1wH0ZrFpFz7UD0sFWwrXYMV/XM=,tag:MlN4XRRL3iO3MUNoVYdBYw==,type:str]"
+	},
+	"client": [
+		{
+			"client_info": {
+				"mobilesdk_app_id": "ENC[AES256_GCM,data:W86tahRncE8rREPHEQfJ1DtV5X4GX2P0cqLS9binGlAn7z6jF5/sVmzfMhgR,iv:bxysNdCrJv1BcnclFE1zA8mUVnsAXCVIqikLDqtrEqQ=,tag:4HNzfHwWeJsWDgRaWbDY3Q==,type:str]",
+				"android_client_info": {
+					"package_name": "ENC[AES256_GCM,data:xmFUV4rrwUPWJom3SLIyphHtkg3h6Q76U5DX9i8buUtBH0cN0sDUtA==,iv:587i+duFFRFMEvGNNnsx1UoHJzlUMi8rCG5/PBLG82s=,tag:Bbx3wbuidtJIIA4frGKS7Q==,type:str]"
+				}
+			},
+			"oauth_client": [],
+			"api_key": [
+				{
+					"current_key": "ENC[AES256_GCM,data:lYLLvjDaZw6gWRv5q/xMFMojAvqsOYgnya8e9UPL/ERPFMwxdzyn,iv:HxFblUIZ55bVQElhj1NsAx7YeqnrPF9OvfGpGNLIAFo=,tag:jIKVLu0VI+fpLQomIM8kLg==,type:str]"
+				}
+			],
+			"services": {
+				"appinvite_service": {
+					"other_platform_oauth_client": []
+				}
+			}
+		}
+	],
+	"configuration_version": "ENC[AES256_GCM,data:0Q==,iv:hvJDuGcexk5wenzgirA5X63UbMb0EUpwlTeEhS/v2sI=,tag:5xfwCMHLhaSoGzSUFHs6eg==,type:str]",
+	"sops": {
+		"kms": [
+			{
+				"arn": "arn:aws:kms:eu-west-1:459295082152:key/3b80ba1e-0064-4446-8450-a980ac15e8e5",
+				"created_at": "2025-03-24T14:11:00Z",
+				"enc": "AQICAHjx7cFDCyqca0KcoRsvX+32q3CK6xNafu3/HCwaQpeG/wGUY3AcGvP1uHiU0hw2qkwYAAAAfjB8BgkqhkiG9w0BBwagbzBtAgEAMGgGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQM/Z+BDph5xjRNMXOEAgEQgDvVUFIriVs5tloWAkoxoJ74EQnJscnTt02LIzUYLqXZd25R8K+JYDeblyjruOyY4+ssyFY8B5tpB8D+og==",
+				"aws_profile": ""
+			}
+		],
+		"gcp_kms": null,
+		"azure_kv": null,
+		"hc_vault": null,
+		"age": null,
+		"lastmodified": "2025-03-24T14:11:00Z",
+		"mac": "ENC[AES256_GCM,data:QtQlQTPFNLCxDtQ400Hnmly3yx4PflzoGvloX77jK0bi0kldu6n5+/uUa8vDzE0jwrlbBesSpIMn9hh9yDAfivrC4Mos+p+3Tx1yffrcrTaiKeTDuldKFAZIWE1z/sVRAwNPnIlQ93f7gZOseBbomQbboE71oafELAHqdcu/tVI=,iv:y525CE3E0v+UjUWawExqFqoI7UZVPcjupnPcPI54L6A=,tag:UicqUfVssZZw319uYimZ9g==,type:str]",
+		"pgp": null,
+		"unencrypted_suffix": "_unencrypted",
+		"version": "3.7.3"
+	}
+}
