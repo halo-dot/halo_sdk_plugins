@@ -11,7 +11,7 @@ The below diagram also showcases the SDK boundary and the interaction between th
   
 ![Halo Dot SDK Architecture](https://static.dev.haloplus.io/static/mpos/readme/assets/full_process_MIPS_1200.png)  
   
-## Table of Content
+## Table of Contents
 
  - [Requirements](#requirements)
  - [Developer portal registration](#developer-portal-registration)
@@ -34,26 +34,26 @@ The below diagram also showcases the SDK boundary and the interaction between th
 
 The following is a list of requirements needed to implement the Halo Dot SDK
 
- - A developers account (Register at the [developer portal])
- - Sign a Non Disclosure Agreement (NDA) 
- - A public key and private key to generate a JWT
- - [Kotlin] 1.3.72 *(@note: a higher version is in work)*
- - [Flutter] 2.10.5 *(@note: a higher version is in work)* <br/> If you have a different version we can recommend using [fvm]
- - [Dart] 2.9.2 *(@note: a higher version is in work)*
- - [Java] 11
+ - A developer account (Register at the [developer portal])
+ - A signed Non Disclosure Agreement/NDA (found on the developer portal)
+ - A public key and private key to generate a JWT (public key is submitted on the developer portal)
+ - [Kotlin] 2.0.21 *(@note: a higher version is in work)*
+ - [Flutter] 3.27.3 *(@note: a higher version is in work)* <br/>
+ - [Dart] 3.6.1 *(@note: bundled with Flutter)*
+ - [Java] 21
  - IDE ([Android Studio Preferably](https://developer.android.com/studio/install))
  - Recommended Libraries
-	 - [permission_handler] : ^11.0.0
-	 - [dart_jsonwebtoken] : ^2.4.2
+	 - [permission_handler] : ^11.3.1
+	 - [dart_jsonwebtoken] : ^2.16.2
  - FAQ
 
 ## Developer portal registration
 
-You are required to register on our QA (test environment) before testing in production.<br/>The developer portal enables you to 
+You are required to register on our QA (UAT - User Acceptance Testing environment) before testing in production.<br/>The developer portal enables you to 
 
  1. Accept the Non Disclosure Agreement
  2. Access the SDK
- 3. Submit your public key
+ 3. Submit your public key (used to verify your JWT)
  4. Give you details for your JWT
 
 ### Registration
@@ -69,50 +69,37 @@ You are required to register on our QA (test environment) before testing in prod
 Make sure you have your environment set up to build Flutter apps. You can follow the instructions [here](https://flutter.dev/docs/get-started/install). 
 
 ### Flutter App
-Create a Flutter app or integrate it into your current application.<br/> Ensure that Android and IOs platforms are added, they are currently the only supported platforms.
+Create a Flutter app or integrate it into your current application.<br/> Ensure that Android is added, is currently the only supported platform.
 ```bash
 #using flutter
 flutter create . --project-name my_sdk_flutter_plugin --org za.co.synthesis.halo.test.plugin
 #using fvm
-fvm spawn 2.10.5 create . --project-name my_sdk_flutter_plugin --org za.co.synthesis.halo.test.plugin
+fvm spawn 3.27.3 create . --project-name my_sdk_flutter_plugin --org za.co.synthesis.halo.test.plugin
 ```
   
 ### Environment  
   
-The Android SDK that is implemented was built with [Kotlin] `1.3.72`, your project should be on the same version (>= `1.4.x` has breaking changes).  
+1. The SDK was tested using [Java] 21. We cannot confirm yet if a later version will work as expected.
   
-Check this in your `android/build.gradle` file. You should have something like this:  
-See FAQ if your file looks different
+2. The SDK was tested using [Flutter] `3.27.3` and [Dart] `3.6.1` (DevTools `2.40.2`).  
   
-```gradle  
-ext {  
- kotlin_version = '1.3.72'  <-- version defined here  
- buildscript {  
-   dependencies { 
-     // ... classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version" // <-- version used here 
-   }
- }  
-```  
-  
-3. The SDK was tested using [Java] 11. We cannot confirm yet if anything before or later will work.  
-  
-4. The SDK was tested using [Flutter] `2.10.5` and [Dart] `2.16.2` (DevTools `2.9.2`).  
-  
-5. The `minSdkVersion` for the Android project should be `29` or higher. Check this in your `android/app/build.gradle` file:  
-6. See the FAQ if you have issue with setting the minSdkVersion
+3. The `minSdkVersion` for the Android project should be `29` or higher. Check this in your `android/app/build.gradle` file.
+
 ```gradle  
 defaultConfig {  
   applicationId "za.co.synthesis.halo.sdkflutterplugin_example" 
   minSdkVersion 29 // <-- this should be 29 or higher 
   // ...
 }  
-```  
+```
+
+4. See the FAQ if you have issue with setting the minSdkVersion
   
 ### Plugin Installation  
   
 1. Run `flutter pub add halo_sdk_flutter_plugin` to add the flutter plugin to your flutter project  
 2. We recommend also installing `flutter pub add permission_handler`  
-3. The plugin will need to download the SDK binaries from the Halo S3 bucket.<br/>To do this, you will need credentials to access the SDK. Find your `accesskey` and `secretkey` [Developer portal] <img alt="access key" src="https://static.dev.haloplus.io/static/mpos/readme/assets/access_key.png" width="500px"/>. <br/>Add these to your `local.properties` file in your android root folder (create one if it doesn't exist):  
+3. The plugin will need to download the SDK binaries from the Halo Maven Repo hosted on AWS S3.<br/>To do this, you will need credentials. Find your `accesskey` and `secretkey` in the [Developer portal] <img alt="access key" src="https://static.dev.haloplus.io/static/mpos/readme/assets/access_key.png" width="500px"/>. <br/>Add these to your `local.properties` file in your android root folder (create one if it doesn't exist):  
   
 ```properties  
 aws.accesskey=<accesskey>  
@@ -128,29 +115,6 @@ def localProperties = new Properties()
 def localPropertiesFile = rootProject.file('local.properties')  
 if (localPropertiesFile.exists()) {  
  localPropertiesFile.withReader('UTF-8') { reader -> localProperties.load(reader) }}  
-```  
-  
-4. Finally make sure you have Maven Central for [Kotlin] `1.3.72` and some more config in the `android/build.gradle` file:  
-```gradle  
-allprojects {  
- repositories { 
-   google()
-   mavenCentral() // <-- add this for kotlin 1.3.72 
-   maven { url 'https://jitpack.io' }  
-   // add this block 
-   configurations.all { 
-     resolutionStrategy.cacheChangingModulesFor 1, 'days'
-     resolutionStrategy.dependencySubstitution { 
-       substitute(module("androidx.core:core-ktx")).with(module("androidx.core:core-ktx:(*, 1.3.2]")) 
-       substitute(module("org.jetbrains.kotlin:kotlin-stdlib-jdk7")).with(module("org.jetbrains.kotlin:kotlin-stdlib-jdk7:(*, 1.3.72]")) 
-       substitute(module("org.jetbrains.kotlin:kotlin-stdlib-jdk8")).with(module("org.jetbrains.kotlin:kotlin-stdlib-jdk7:(*, 1.3.72]")) 
-       substitute(module("androidx.window:window-java")).with(module("androidx.core:core-ktx:(*, 1.3.2]")) 
-       substitute(module("com.google.firebase:firebase-analytics-ktx")).with(module("com.google.firebase:firebase-analytics-ktx:19.0.0")) 
-     } 
-   } 
- } 
- // ...
-}  
 ```  
   
 ### Requirements on the Mobile Back-End  
@@ -238,10 +202,23 @@ All these values can be validated by making a request to `https://kernelserver.q
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.NFC"/>
     <uses-permission android:name="android.permission.CAMERA"/>
+    
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+    
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
     <uses-permission android:name="android.permission.VIBRATE"/>
+
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" android:usesPermissionFlags="neverForLocation" />
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
     <!--  ....  -->
 </manifest xmlns:android="http://schemas.android.com/apk/res/android">
 ```
@@ -249,9 +226,9 @@ All these values can be validated by making a request to `https://kernelserver.q
 2. Add the plugin to help you request permissions in your Flutter application. Add the following to your `pubspec.yaml` file:  
 ```yaml  
 dependencies:  
- permission_handler: ^11.0.0 # ...  
+ permission_handler: ^11.3.1 # ...  
 ```  
-Notice the version, later versions expect a higher version of Flutter and Dart.<br/> Also if you use this plugin. Be sure in your `android/app/build.gradle` your `compileSdkVersion` and `targetSdkVersion` are at `34` or higher.  
+Make sure that in your `android/app/build.gradle` your `compileSdkVersion` and `targetSdkVersion` are at `34` or higher.  
   
 <strong>Remember to run `flutter pub get` after making changes to your pubspec file</strong>  
   
@@ -261,9 +238,8 @@ Notice the version, later versions expect a higher version of Flutter and Dart.<
 Future<void> checkPermissions() async {
   var permissions = [
     Permission.camera,
-    Permission.phone,
-    Permission.storage,
-    Permission.notification,
+    Permission.bluetoothConnect,
+    Permission.bluetoothScan,
     Permission.location,
   ];
 
@@ -272,7 +248,7 @@ Future<void> checkPermissions() async {
   }
 }
 
-Future<void> requestPermission(Permission permission) async {
+Future<void> on(Permission permission) async {
   var permissionStatus = await permission.status;
   if (permissionStatus.isGranted) {
     debugPrint("${permission} permission is granted, not requesting");
@@ -290,7 +266,7 @@ Future<void> requestPermission(Permission permission) async {
 }
 ```
   
-4. Your Android `MainActivity` (usually located @ *app/src/main/AndroidManifest.xml*) class should extend `HaloActivity` which hooks into the SDK lifecycle methods for you. (FYI: `HaloActivity` extends `FlutterFragmentActivity`).  
+4. Your Android `MainActivity` (usually located @ *app/src/main/kotlin/<appId>/MainActivity) class should extend `HaloActivity` which hooks into the SDK lifecycle methods for you. (FYI: `HaloActivity` extends `FlutterFragmentActivity`).  
   
 e.g  
 ```kotlin  
@@ -340,6 +316,11 @@ class HaloCallbacks implements IHaloCallbacks {
   void onSecurityError(errorCode) {
     debugPrint("example app: security error: $errorCode");
   }
+
+  @override
+  void onCameraControlLost() {
+    debugPrint("example app: camera control lost");
+  }
 }
 ``` 
 You can decide, based on what the SDK sends via the callbacks, how you would like to affect the UI  
@@ -379,16 +360,12 @@ You can test transactions using a virtual card, such as [Vida Mobile CDET](https
 
 ## FAQ
 
-My `android/build.gradle` looks different
+Question: How do I set my `compileSdkVersion` if it is currently set as `flutter.compileSdkVersion`
 
-: New version of android studio have the version of [Kotlin] set as `ext.kotlin_version = '1.3.72'`
-
-How do I set my `compileSdkVersion` if it is currently set as `flutter.compileSdkVersion`
-
-: You can set the `compileSdkVersion` in the `local.properties` file
+Answer: You can set the `compileSdkVersion` in the `local.properties` file
 ```
 sdk.dir=/home/{me}/android-sdk/  
-flutter.sdk=/home/{me}/fvm/versions/2.10.5  
+flutter.sdk=/home/{me}/fvm/versions/3.27.3  
 flutter.buildMode=debug  
 flutter.versionName=1.0.0  
 flutter.versionCode=1  
@@ -400,18 +377,19 @@ You can then reference this in `android/app/build.gradle` file
   compileSdkVersion localProperties.getProperty('flutter.compileSdkVersion').toInteger()
 ```
 
-How do I set my `minSdkVersion` if it is currently set as `flutter.minSdkVersion` 
+Question: How do I set my `minSdkVersion` if it is currently set as `flutter.minSdkVersion` 
 
-: See answer above 
+Answer: See answer above 
 
-I am not able to import the Halo SDK.
+Question: I am not able to import the Halo SDK.
 
-: * Try opening the android folder from Android studio and running gradle sync
-: * Ensure you have the plugin install `flutter pub add halo_sdk_flutter_plugin`
-: *  Ensure you have the correct [Java] 11, [Kotlin] ^1.3.72, [Flutter] ^2.10.5
-: * Ensure that the `minSdkVersion` = 29 or above
-: * Ensure that the `compileSdkVersion`and `targetSdkVersion` are at `34` or higher
-: * You have the correct `accesskey` and `secretkey` setup in `local.properties`
+Answer:
+: * Try opening the android folder from Android studio and running gradle sync<br/>
+: * Ensure you have the plugin install `flutter pub add halo_sdk_flutter_plugin`<br/>
+: *  Ensure you have the correct [Java] 21, [Kotlin] ^2.0.21, [Flutter] ^3.27.3<br/>
+: * Ensure that the `minSdkVersion` = 29 or above<br/>
+: * Ensure that the `compileSdkVersion`and `targetSdkVersion` are at `34` or higher<br/>
+: * You have the correct `accesskey` and `secretkey` setup in `local.properties`<br/>
 
 [developer portal]:https://go.developerportal.qa.haloplus.io/
 [dart_jsonwebtoken]:https://pub.dev/packages/dart_jsonwebtoken
