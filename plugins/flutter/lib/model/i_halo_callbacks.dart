@@ -16,4 +16,6 @@ abstract class IHaloCallbacks {
   void onRequestJWT(void Function(String jwt) callback);
 
   void onSecurityError(HaloErrorCode errorCode);
+
+  void onCameraControlLost();
 }

@@ -17,7 +17,8 @@ enum class EventTypes (val eventType: String) {
     UI("ui"),
     INITIALIZATION("initialization"),
     ON_JWT_REQUEST("onJwtRequest"),
-    SECURITY("security")
+    SECURITY("security"),
+    CAMERA("camera")
 }
 
 class HaloCallbacks(
@@ -95,6 +96,15 @@ class HaloCallbacks(
             eventSink?.success(map)
         }
     }
+
+    override fun onCameraControlLost() {
+        Log.d(TAG, "onCameraControlLost")
+        val map = hashMapOf<String, Any>(Pair("eventType", EventTypes.CAMERA.eventType), Pair("data", "onCameraControlLost"))
+        handler.post {
+            eventSink?.success(map)
+        }
+    }
+
     //endregion *******************
 
     fun jwtCallback(jwt: String) {

@@ -251,4 +251,10 @@ class HaloCallbacks implements IHaloCallbacks {
     debugPrint("example app: security error: $errorCode");
     setUiMessage(UiMessage("Security error: $errorCode", Colors.red));
   }
+
+  @override
+  void onCameraControlLost() {
+    debugPrint("example app: camera control lost");
+    setUiMessage(UiMessage("Camera control lost", Colors.red));
+  }
 }

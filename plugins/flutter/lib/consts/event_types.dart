@@ -6,4 +6,5 @@ class EventTypes {
   static const initialization = "initialization";
   static const onJwtRequest = "onJwtRequest";
   static const security = "security";
+  static const camera = "camera";
 }
