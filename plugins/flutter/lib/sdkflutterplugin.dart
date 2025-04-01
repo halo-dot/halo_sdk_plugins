@@ -49,6 +49,9 @@ class Sdkflutterplugin {
         case (EventTypes.security):
           haloCallbacks.onSecurityError(makeHaloErrorCode(event["data"]));
           break;
+        case (EventTypes.camera):
+          haloCallbacks.onCameraControlLost();
+          break;
         default:
       }
     });
