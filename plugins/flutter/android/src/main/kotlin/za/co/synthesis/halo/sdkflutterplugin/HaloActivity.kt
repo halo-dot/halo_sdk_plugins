@@ -17,12 +17,6 @@ abstract class HaloActivity: FlutterFragmentActivity() {
         NfcAdapter.getDefaultAdapter(this)
     }
 
-//    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
-//        Log.d(TAG, "onCreate... 1")
-//        super.onCreate(savedInstanceState, persistentState)
-//        HaloSDK.onCreate(this , this, savedInstanceState, persistentState)
-//    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.d(TAG, "onCreate... 2")
         super.onCreate(savedInstanceState)
