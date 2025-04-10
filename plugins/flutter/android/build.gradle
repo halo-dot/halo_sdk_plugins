@@ -26,11 +26,13 @@ buildscript {
 rootProject.allprojects {
     repositories {
         google()
+        mavenLocal()
         maven { url 'https://jitpack.io' }
 
         def repos = [
             'releases',
-            'snapshots'
+            'snapshots',
+            'releaseCandidates'
         ]
         repos.each {repo ->
             maven {
@@ -93,5 +95,5 @@ dependencies {
 
     // Halo SDK
     releaseImplementation group: "za.co.synthesis.halo", name: "sdk", version: "$sdkVersion", changing: true
-    debugImplementation group: "za.co.synthesis.halo", name: "sdk", version: "$sdkVersion-debug", changing: true
+    debugImplementation group: "za.co.synthesis.halo", name: "sdk", version: "$sdkVersion-debug-rc", changing: true
 }
