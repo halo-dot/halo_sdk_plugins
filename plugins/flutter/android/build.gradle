@@ -26,13 +26,11 @@ buildscript {
 rootProject.allprojects {
     repositories {
         google()
-        mavenLocal()
         maven { url 'https://jitpack.io' }
 
         def repos = [
             'releases',
-            'snapshots',
-            'releaseCandidates'
+            'snapshots'
         ]
         repos.each {repo ->
             maven {
