@@ -93,5 +93,5 @@ dependencies {
 
     // Halo SDK
     releaseImplementation group: "za.co.synthesis.halo", name: "sdk", version: "$sdkVersion", changing: true
-    debugImplementation group: "za.co.synthesis.halo", name: "sdk", version: "$sdkVersion-debug-rc", changing: true
+    debugImplementation group: "za.co.synthesis.halo", name: "sdk", version: "$sdkVersion-debug", changing: true
 }
