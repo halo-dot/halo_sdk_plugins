@@ -1,5 +1,5 @@
 ext {
-    kotlin_version = '1.3.72'
+    kotlin_version = '2.0.21'
 }
 group 'za.co.synthesis.halo.sdkflutterplugin'
 version '1.0-SNAPSHOT'
@@ -10,7 +10,7 @@ if (rootProject.file("local.properties").exists()) {
 }
 
 buildscript {
-    ext.kotlin_version = '1.3.72'
+    ext.kotlin_version = '2.0.21'
     repositories {
         google()
         mavenCentral()
@@ -18,7 +18,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.1.0'
+        classpath 'com.android.tools.build:gradle:8.2.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
@@ -63,15 +63,16 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
 android {
-    compileSdkVersion 31
+    compileSdk 35
+    namespace 'za.co.synthesis.halo.sdkflutterplugin'
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_21
+        targetCompatibility JavaVersion.VERSION_21
     }
 
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = '21'
     }
 
     sourceSets {
@@ -83,12 +84,12 @@ android {
     }
 }
 
-def sdkVersion="2.1.26"
+def sdkVersion="4.0.4"
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
-    implementation 'androidx.core:core-ktx:1.3.1'
+    implementation 'androidx.core:core-ktx:1.9.0'
 
     // Halo SDK
     releaseImplementation group: "za.co.synthesis.halo", name: "sdk", version: "$sdkVersion", changing: true

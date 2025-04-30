@@ -1,0 +1,14 @@
+-dontwarn com.fasterxml.jackson.annotation.JsonIgnoreProperties
+-dontwarn com.fasterxml.jackson.annotation.JsonInclude$Include
+-dontwarn com.fasterxml.jackson.annotation.JsonInclude
+-dontwarn com.fasterxml.jackson.annotation.JsonProperty
+-dontwarn com.fasterxml.jackson.core.type.TypeReference
+-dontwarn com.fasterxml.jackson.databind.ObjectMapper
+-dontwarn javax.naming.NamingEnumeration
+-dontwarn javax.naming.NamingException
+-dontwarn javax.naming.directory.Attribute
+-dontwarn javax.naming.directory.Attributes
+-dontwarn javax.naming.directory.DirContext
+-dontwarn javax.naming.directory.InitialDirContext
+-dontwarn javax.naming.directory.SearchControls
+-dontwarn javax.naming.directory.SearchResult

@@ -49,9 +49,8 @@ class _MyAppState extends State<MyApp> {
   Future<void> checkPermissions() async {
     var permissions = [
       Permission.camera,
-      Permission.phone,
-      Permission.storage,
-      Permission.notification,
+      Permission.bluetoothConnect,
+      Permission.bluetoothScan,
       Permission.location,
     ];
 
@@ -251,5 +250,11 @@ class HaloCallbacks implements IHaloCallbacks {
   void onSecurityError(errorCode) {
     debugPrint("example app: security error: $errorCode");
     setUiMessage(UiMessage("Security error: $errorCode", Colors.red));
+  }
+
+  @override
+  void onCameraControlLost() {
+    debugPrint("example app: camera control lost");
+    setUiMessage(UiMessage("Camera control lost", Colors.red));
   }
 }
