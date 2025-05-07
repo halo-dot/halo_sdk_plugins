@@ -1,0 +1,229 @@
+<resources>
+    <string name="app_name">Halo Dot Go (Enabler)</string>
+
+    //ProfileActivity.kt
+    <string name="profile_name_error">This profile name already exists</string>
+    <string name="username_error_10_digits">Username must have 10 digits</string>
+    <string name="username_error_email">Username must be a valid email address</string>
+    <string name="password_error_4_digits">Password must be 4 digits long</string>
+
+    //ProfileCompletedActivity.kt
+    <string name="amount_value_textview">R %1$s</string>
+
+    //RequestActivity.kt
+    <string name="random_reference_source">ABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
+    <string name="request_name_error">This request name already exists</string>
+    <string name="id_number_error_13_digits">An ID Number must be 13 digits long</string>
+    <string name="debit_order_day_error_date">This must be a value of a day in a month</string>
+
+    //TransactionActivity.kt
+    <string name="halo_installed_error">Halo SoftPos Not Installed</string>
+    <string name="retrieve_transaction_error">Could not retrieve Transaction Id</string>
+    <string name="retrieve_deeplink_error">Could not retrieve URL</string>
+
+    //TransactionActivity.kt
+    <string name="transaction_successful">Payment Successful</string>
+    <string name="transaction_successful_reason">Your request has been processed successfully</string>
+    <string name="transaction_unsuccessful">Payment Unsuccessful</string>
+    <string name="transaction_unsuccessful_reason_cancelled">Cancelled</string>
+    <string name="transaction_unsuccessful_reason_declined">Declined</string>
+    <string name="transaction_unsuccessful_reason">Transaction Cancelled or Declined</string>
+
+    //activity_api_requests.xml
+    <string name="api_request_toolbar_title">API Requests</string>
+    <string name="api_request_header">API Requests</string>
+    <string name="api_request_button_request_1">Request 1</string>
+    <string name="api_request_button_add">Add API Request</string>
+    <string name="api_request_button_continue">Continue</string>
+    <string name="api_request_button_cancel">Cancel</string>
+
+    //activity_main.xml
+    <string name="main_button_create_profile">Create Profile</string>
+    <string name="main_button_continue">Continue</string>
+    <string name="main_button_edit_profile">Edit Profile</string>
+
+    //activity_profile.xml
+    <string name="profile_toolbar_title">Create Profile</string>
+    <string name="profile_textview_progress_bar_1">Profile</string>
+    <string name="profile_textview_progress_bar_2">Requests</string>
+    <string name="profile_textview_progress_bar_3">Complete</string>
+    <string name="profile_header">Profile</string>
+    <string name="profile_subheader">Please complete the required details below.</string>
+    <string name="profile_textview_prod">prod</string>
+    <string name="profile_textview_qa">qa</string>
+    <string name="profile_textview_dev">dev</string>
+    <string name="profile_textview_select_environment">Select Environment</string>
+    <string name="profile_textview_profile_name">Profile Name</string>
+    <string name="profile_name_hint">e.g. Test Dev</string>
+    <string name="profile_textview_merchant_id">Merchant ID</string>
+    <string name="profile_merchant_id_hint">e.g. 123</string>
+    <string name="profile_textview_api_key">API Key</string>
+    <string name="profile_api_key_hint">e.g. 12338484848</string>
+    <string name="profile_textview_uname_pass">Username and Passcode</string>
+    <string name="profile_username_hint">Username</string>
+    <string name="profile_password_hint">Passcode</string>
+    <string name="profile_button_next">Next</string>
+    <string name="profile_button_clear">Clear</string>
+    <string name="profile_button_delete">Delete</string>
+    <string name="profile_button_save">Save</string>
+    <string name="profile_button_cancel">Cancel</string>
+    <string name="profile_dialog_delete">Are you sure you want to delete \'%1$s\'?</string>
+
+<!--    <string name="profile_sub_header_1">Please enter your Merchant ID</string>-->
+<!--    <string name="profile_sub_header_2">Please enter your API KEY</string>-->
+<!--    <string name="profile_sub_header_3">Please enter your Username and Password</string>-->
+<!--    <string name="profile_dropdown_cd">Environment Dropdown</string>-->
+<!--    <string-array name="environment_array">-->
+<!--        <item>DEV</item>-->
+<!--        <item>QA</item>-->
+<!--        <item>PROD</item>-->
+<!--    </string-array>-->
+
+    //activity_profile_completed
+    <string name="profile_completed_toolbar_title">Create Profile</string>
+    <string name="profile_completed_textview_progress_bar_1">Profile</string>
+    <string name="profile_completed_textview_progress_bar_2">Requests</string>
+    <string name="profile_completed_textview_progress_bar_3">Complete</string>
+    <string name="profile_completed_header">Profile Completed</string>
+    <string name="profile_completed_subheader">Please confirm details below.</string>
+    <string name="profile_completed_imageview_description">Profile Environment</string>
+    <string name="profile_completed_textview_environment">Environment</string>
+    <string name="profile_completed_textview_merchant_id">Merchant ID</string>
+    <string name="profile_completed_textview_api_key">API Key</string>
+    <string name="profile_completed_textview_username">Username</string>
+    <string name="profile_completed_textview_passcode">Passcode</string>
+    <string name="profile_completed_textview_request_name">Request Name</string>
+    <string name="profile_completed_textview_transaction_type">Transaction Type</string>
+    <string name="profile_completed_textview_invoking_method">Invoking Method</string>
+    <string name="profile_completed_textview_amount">Amount</string>
+    <string name="profile_completed_textview_payment_reference">Payment Reference</string>
+    <string name="profile_completed_textview_account_number">Account Number</string>
+    <string name="profile_completed_textview_id_number">ID Number</string>
+    <string name="profile_completed_textview_max_collection_amount">Max Collection Amount</string>
+    <string name="profile_completed_textview_debit_order_day">Debit Order Day</string>
+    <string name="profile_completed_textview_creditor">Creditor</string>
+    <string name="profile_completed_textview_contract_reference_number">Contract Reference Number</string>
+    <string name="profile_completed_textview_instalment_amount">Instalment Amount</string>
+    <string name="profile_completed_textview_instalment_visibility">Instalment Visibility</string>
+    <string name="profile_completed_button_save">Save</string>
+
+    //activity_request.xml
+    <string name="requests_toolbar_title">Create Profile</string>
+    <string name="requests_header">API Requests</string>
+    <string name="requests_subheader">Please complete the required details below.</string>
+    <string name="requests_transaction_type_spinner">Transaction Type</string>
+    <string name="requests_invoking_method_spinner">Invoking Method</string>
+    <string-array name="transaction_type_array">
+        <item>Debicheck/TT3</item>
+        <item>Card Payments</item>
+    </string-array>
+    <string-array name="invoking_method_array">
+        <item>Android Intents</item>
+        <item>Deeplinking</item>
+    </string-array>
+    <string name="requests_button_skip"><u>Skip</u></string>
+    <string name="requests_button_next">Next</string>
+    <string name="requests_button_cancel">Cancel</string>
+    <string name="requests_name_hint">Request Name</string>
+    <string name="requests_prefill_checkbox">Generate pre-filled details</string>
+    <string name="requests_amount_hint">Amount</string>
+    <string name="requests_reference_hint">Payment Reference</string>
+    <string name="requests_account_number_hint">Account Number</string>
+    <string name="requests_id_number_hint">ID Number</string>
+    <string name="requests_max_coll_hint">Max Collection Amount</string>
+    <string name="requests_debit_order_day_hint">Debit Order Day</string>
+    <string name="requests_creditor_hint">Creditor</string>
+    <string name="requests_contract_reference_hint">Contract Reference Number</string>
+    <string name="requests_instalment_amount_hint">Instalment Amount</string>
+    <string name="requests_instalment_visibility_hint">Instalment Visibility</string>
+    <string name="requests_instalment_visibility_textview">Instalment Visibility</string>
+    <string name="requests_instalment_visibility_sub_textview">Please select one or both</string>
+    <string name="requests_instalment_amount_radio_button">Instalment Amount</string>
+    <string name="requests_max_instalment_amount_radio_button">Max Instalment Amount</string>
+    <string name="requests_button_save">Save</string>
+
+    //activity_transaction.xml
+    <string name="transaction_toolbar_title">API Requests</string>
+    <string name="transaction_start_button">Start</string>
+    <string name="transaction_cancel_button">Cancel</string>
+
+    //activity_transaction_completed.xml
+    <string name="transaction_completed_transaction_details_button">Transaction Details</string>
+    <string name="transaction_completed_done_button">Done</string>
+
+    //activity_transaction_details.xml
+    <string name="transaction_details_error_textview">Error fetching transaction details.</string>
+    <string name="transaction_details_error_sub_textview">(Unauthorised)</string>
+    <string name="transaction_details_header_textview">Transaction Details</string>
+    <string name="transaction_details_id_textview">id</string>
+    <string name="transaction_details_passthroughUserId_textview">passthroughUserId</string>
+    <string name="transaction_details_merchantTransactionReference_textview">merchantTransactionReference</string>
+    <string name="transaction_details_encryptedV2_textview">encryptedV2</string>
+    <string name="transaction_details_jwe_textview">jwe</string>
+    <string name="transaction_details_keyVersion_textview">keyVersion</string>
+    <string name="transaction_details_fingerprint_textview">fingerprint</string>
+    <string name="transaction_details_see_more_button">See more</string>
+    <string name="transaction_details_latitude_textview">latitude</string>
+    <string name="transaction_details_longitude_textview">longitude</string>
+    <string name="transaction_details_deviceinstallationId_textview">deviceinstallationId</string>
+    <string name="transaction_details_transactionstatusId_textview">transactionstatusId</string>
+    <string name="transaction_details_transactionDispositionId_textview">transactionDispositionId</string>
+    <string name="transaction_details_amount_textview">amount</string>
+    <string name="transaction_details_accountNumber_textview">accountNumber</string>
+    <string name="transaction_details_currency_textview">currency</string>
+    <string name="transaction_details_responseCode_textview">responseCode</string>
+    <string name="transaction_details_transactionTypeId_textview">transactionTypeId</string>
+    <string name="transaction_details_originalTransactionId_textview">originalTransactionId</string>
+    <string name="transaction_details_acquirerId_textview">acquirerId</string>
+    <string name="transaction_details_userId_textview">userId</string>
+    <string name="transaction_details_transactionFeesConfigId_textview">transactionFeesConfigId</string>
+    <string name="transaction_details_TransactionFee_textview">TransactionFee</string>
+    <string name="transaction_details_authorisationCode_textview">authorisationCode</string>
+    <string name="transaction_details_createdAt_textview">createdAt</string>
+    <string name="transaction_details_updatedAt_textview">updatedAt</string>
+    <string name="transaction_details_effectiveDate_textview">effectiveDate</string>
+    <string name="transaction_details_expiryDate_textview">expiryDate</string>
+    <string name="transaction_details_tid_textview">tid</string>
+    <string name="transaction_details_transactionReference_textview">transactionReference</string>
+    <string name="transaction_details_merchantName_textview">merchantName</string>
+    <string name="transaction_details_formattedMerchantAddress_textview">formattedMerchantAddress</string>
+    <string name="transaction_details_transactionType_textview">transactionType</string>
+    <string name="transaction_details_approvalText_textview">approvalText</string>
+    <string name="transaction_details_aid_textview">aid</string>
+    <string name="transaction_details_applicationLabel_textview">applicationLabel</string>
+    <string name="transaction_details_applicationPreferredName_textview">applicationPreferredName</string>
+    <string name="transaction_details_association_textview">association</string>
+    <string name="transaction_details_isoResponseCode_textview">isoResponseCode</string>
+    <string name="transaction_details_cryptogram_textview">cryptogram</string>
+    <string name="transaction_details_cryptogramType_textview">cryptogramType</string>
+    <string name="transaction_details_tvr_textview">tvr</string>
+    <string name="transaction_details_date_textview">date</string>
+    <string name="transaction_details_time_textview">time</string>
+    <string name="transaction_details_maskedPan_textview">maskedPan</string>
+    <string name="transaction_details_qrCodeState_textview">qrCodeState</string>
+    <string name="transaction_details_transactionId_textview">transactionId</string>
+    <string name="transaction_details_merchantTransactionReference_textview_2">merchantTransactionReference</string>
+    <string name="transaction_details_userId_textview_2">userId</string>
+    <string name="transaction_details_status_textview">status</string>
+    <string name="transaction_details_disposition_textview">disposition</string>
+    <string name="transaction_details_amount_textview_2">amount</string>
+    <string name="transaction_details_currency_textview_2">currency</string>
+    <string name="transaction_details_type_textview">type</string>
+    <string name="transaction_details_responseCode_textview_2">responseCode</string>
+    <string name="transaction_details_authorisationCode_textview_2">authorisationCode</string>
+    <string name="transaction_details_createdAt_textview_2">createdAt</string>
+    <string name="transaction_details_updatedAt_textview_2">updatedAt</string>
+    <string name="transaction_details_accountNumber_textview_2">accountNumber</string>
+    <string name="transaction_details_idNumber_textview">idNumber</string>
+    <string name="transaction_details_creditorABSN_textview">creditorABSN</string>
+    <string name="transaction_details_maxCollectionAmount_textview">maxCollectionAmount</string>
+    <string name="transaction_details_contractReference_textview">contractReference</string>
+    <string name="transaction_details_collectionDay_textview">collectionDay</string>
+    <string name="transaction_details_done_button">Done</string>
+
+    //custom_dialog.xml
+    <string name="dialog_delete">Are you sure you want to\ndelete this API Request?</string>
+    <string name="dialog_cancel_button">Cancel</string>
+    <string name="dialog_delete_button">Delete</string>
+
+</resources>
