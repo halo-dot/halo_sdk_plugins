@@ -65,7 +65,6 @@ abstract class HaloActivity: FlutterFragmentActivity() {
 
     override fun onDestroy() {
         Log.d(TAG, "onDestroy...")
-        HaloSDK.onDestroy()
         super.onDestroy()
     }
 
