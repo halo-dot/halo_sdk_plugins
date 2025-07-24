@@ -19,6 +19,7 @@ class TransactionActivity : AppCompatActivity() {
     lateinit var activeProfile: Profile
     lateinit var transactionType: String
     private var deeplinkReference: String = ""
+    private var applinkReference: String = ""
     private var intentReference: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -107,10 +108,14 @@ class TransactionActivity : AppCompatActivity() {
                 cardPaymentsIntent()
             } else if(activeProfile.activeRequest?.transactionType == "Card Payments" && activeProfile.activeRequest?.invokingMethod == "Deeplinking") {
                 cardPaymentsDeeplink()
+            } else if(activeProfile.activeRequest?.transactionType == "Card Payments" && activeProfile.activeRequest?.invokingMethod == "Applinks") {
+                cardPaymentsApplink()
             } else if(activeProfile.activeRequest?.transactionType == "Debicheck/TT3" && activeProfile.activeRequest?.invokingMethod == "Android Intents") {
                 debicheckIntent()
             } else if(activeProfile.activeRequest?.transactionType == "Debicheck/TT3" && activeProfile.activeRequest?.invokingMethod == "Deeplinking") {
                 debicheckDeeplink()
+            } else if(activeProfile.activeRequest?.transactionType == "Debicheck/TT3" && activeProfile.activeRequest?.invokingMethod == "Applinks") {
+                debicheckApplink()
             }
         }
 
@@ -170,6 +175,35 @@ class TransactionActivity : AppCompatActivity() {
             deeplinkReference = reference
             if(url.isNotEmpty()){
                 openHaloAppForTransaction(null, null, url, "cardPaymentsDeeplink")
+            } else {
+                Handler(Looper.getMainLooper()).post {
+                    Toast.makeText(
+                        this,
+                        resources.getString(R.string.retrieve_deeplink_error),
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+        }
+    }
+
+    private fun cardPaymentsApplink() {
+        if (!isHaloInstalled()) {
+            Toast.makeText(this, resources.getString(R.string.halo_installed_error), Toast.LENGTH_LONG).show()
+            return
+        }
+
+        api.postApplink(
+            activeProfile.merchantId!!,
+            activeProfile.activeRequest?.paymentReference!!,
+            activeProfile.activeRequest?.amount!!,
+            "ZAR",
+            false,
+            false
+        ) { url, reference ->
+            applinkReference = reference
+            if(url.isNotEmpty()){
+                openHaloAppForTransaction(null, null, url, "cardPaymentsApplink")
             } else {
                 Handler(Looper.getMainLooper()).post {
                     Toast.makeText(
@@ -247,7 +281,40 @@ class TransactionActivity : AppCompatActivity() {
                 }
             }
         }
+    }
 
+    private fun debicheckApplink() {
+        if (!isHaloInstalled()) {
+            Toast.makeText(this, resources.getString(R.string.halo_installed_error), Toast.LENGTH_LONG).show()
+            return
+        }
+
+        api.postTT3Applink(
+            activeProfile.merchantId!!,
+            activeProfile.activeRequest?.accountNumber!!,
+            activeProfile.activeRequest?.debitOrderDay.toString()!!,
+            activeProfile.activeRequest?.creditor!!,
+            activeProfile.activeRequest?.idNumber!!,
+            activeProfile.activeRequest?.maxCollectionAmount!!,
+            activeProfile.activeRequest?.contractReference!!,
+            activeProfile.activeRequest?.instalmentAmount.toString()!!,
+            activeProfile.activeRequest?.instalmentVisibility.toString()!!,
+            false,
+            false
+        ) { url, reference ->
+            applinkReference = reference
+            if(url.isNotEmpty()){
+                openHaloAppForTransaction(null, null, url, "debicheckApplink")
+            } else {
+                Handler(Looper.getMainLooper()).post {
+                    Toast.makeText(
+                        this,
+                        resources.getString(R.string.retrieve_deeplink_error),
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+        }
     }
 
     private fun openHaloAppForTransaction(transactionId: String?, jwt: String?, url: String?, type: String) {
@@ -262,7 +329,11 @@ class TransactionActivity : AppCompatActivity() {
         } else if (type == "cardPaymentsDeeplink") {
             transactionType = "cardPaymentsDeeplink"
             val uri = Uri.parse(url)
-//            startActivity(Intent(Intent.ACTION_VIEW, uri))
+            // startActivity(Intent(Intent.ACTION_VIEW, uri))
+            startActivityForResult(Intent(Intent.ACTION_VIEW, uri), HALO_REQUEST_CODE)
+        } else if (type == "cardPaymentsApplink") {
+            transactionType = "cardPaymentsApplink"
+            val uri = Uri.parse(url)
             startActivityForResult(Intent(Intent.ACTION_VIEW, uri), HALO_REQUEST_CODE)
         } else if (type == "debicheckIntent") {
             transactionType = "debicheckIntent"
@@ -284,7 +355,11 @@ class TransactionActivity : AppCompatActivity() {
         } else if (type == "debicheckDeeplink") {
             transactionType = "debicheckDeeplink"
             val uri = Uri.parse(url)
-//            startActivity(Intent(Intent.ACTION_VIEW, uri))
+            // startActivity(Intent(Intent.ACTION_VIEW, uri))
+            startActivityForResult(Intent(Intent.ACTION_VIEW, uri), HALO_REQUEST_CODE)
+        } else if (type == "debicheckApplink") {
+            transactionType = "debicheckApplink"
+            val uri = Uri.parse(url)
             startActivityForResult(Intent(Intent.ACTION_VIEW, uri), HALO_REQUEST_CODE)
         }
     }
@@ -346,6 +421,46 @@ class TransactionActivity : AppCompatActivity() {
                 } else if (transactionType == "debicheckDeeplink") {
                     api.getTT3TransactionDetails(
                         deeplinkReference
+                    ) { transactionDetail ->
+                        val tt3tdType = object : TypeToken<TT3TransactionDetails>() { }.type
+                        val tt3TransactionDetails = Gson().fromJson<TT3TransactionDetails>(transactionDetail, tt3tdType)
+
+                        if (tt3TransactionDetails.disposition == "Approved") {
+                            intent.putExtra("TransactionId", deeplinkReference)
+                            intent.putExtra("TransactionResult", "success")
+                            intent.putExtra("TransactionType", transactionType)
+                            startActivity(intent)
+                        } else {
+                            intent.putExtra("TransactionId", deeplinkReference)
+                            intent.putExtra("TransactionResult", tt3TransactionDetails.disposition)
+                            intent.putExtra("TransactionType", transactionType)
+                            startActivity(intent)
+                        }
+                    }
+                }
+            } else if (applinkReference != "") {
+                if (transactionType == "cardPaymentsApplink") {
+                    api.getTT3TransactionDetails(
+                        applinkReference
+                    ) { transactionDetail ->
+                        val tt3tdType = object : TypeToken<TT3TransactionDetails>() { }.type
+                        val tt3TransactionDetails = Gson().fromJson<TT3TransactionDetails>(transactionDetail, tt3tdType)
+
+                        if (tt3TransactionDetails.disposition == "Approved") {
+                            intent.putExtra("TransactionId", tt3TransactionDetails.transactionId)
+                            intent.putExtra("TransactionResult", "success")
+                            intent.putExtra("TransactionType", transactionType)
+                            startActivity(intent)
+                        } else {
+                            intent.putExtra("TransactionId", tt3TransactionDetails.transactionId)
+                            intent.putExtra("TransactionResult", tt3TransactionDetails.disposition)
+                            intent.putExtra("TransactionType", transactionType)
+                            startActivity(intent)
+                        }
+                    }
+                } else if (transactionType == "debicheckApplink") {
+                    api.getTT3TransactionDetails(
+                        applinkReference
                     ) { transactionDetail ->
                         val tt3tdType = object : TypeToken<TT3TransactionDetails>() { }.type
                         val tt3TransactionDetails = Gson().fromJson<TT3TransactionDetails>(transactionDetail, tt3tdType)
