@@ -84,7 +84,7 @@ android {
     }
 }
 
-def sdkVersion="4.0.7"
+def sdkVersion="4.0.9"
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"

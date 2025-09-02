@@ -41,3 +41,7 @@
 # 1.0.3
 
 * Update MPOC Halo.SDK version
+
+# 1.0.4
+
+* Update MPOC Halo.SDK version: performance improvements, bugfixes
