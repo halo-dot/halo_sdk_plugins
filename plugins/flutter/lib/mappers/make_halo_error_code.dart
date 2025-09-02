@@ -6,6 +6,10 @@ HaloErrorCode makeHaloErrorCode(String? value) {
       return HaloErrorCode.ok;
     case 'Declined':
       return HaloErrorCode.declined;
+    case 'DeclinedOffline':
+      return HaloErrorCode.declinedOffline;
+    case 'SingleTapAndPin':
+      return HaloErrorCode.singleTapAndPin;
     case 'Unauthorised':
       return HaloErrorCode.unauthorised;
     case 'Forbidden':
@@ -58,6 +62,26 @@ HaloErrorCode makeHaloErrorCode(String? value) {
       return HaloErrorCode.duplicateMerchantReference;
     case 'ReceiptSignatureInvalid':
       return HaloErrorCode.receiptSignatureInvalid;
+    case 'InvalidAlgorithm':
+      return HaloErrorCode.invalidAlgorithm;
+    case 'SiteIndentifierInvalid':
+      return HaloErrorCode.siteIdentifierInvalid;
+    case 'SiteIdentifierMissing':
+      return HaloErrorCode.siteIdentifierMissing;
+    case 'ErrorWithExternalRequest':
+      return HaloErrorCode.errorWithExternalRequest;
+    case 'IntegratorNotApproved':
+      return HaloErrorCode.integratorNotApproved;
+    case 'DataError':
+      return HaloErrorCode.dataError;
+    case 'UserInvalid':
+      return HaloErrorCode.userInvalid;
+    case 'UnknownDeviceInstallationId':
+      return HaloErrorCode.unknownDeviceInstallationId;
+    case 'RequestEncryptionUnsupportedCurve':
+      return HaloErrorCode.requestEncryptionUnsupportedCurve;
+    case 'BlockedDevice':
+      return HaloErrorCode.blockedDevice;
     case 'DatabaseIntegrityFailed':
       return HaloErrorCode.databaseIntegrityFailed;
     case 'DatabaseError':
@@ -66,6 +90,24 @@ HaloErrorCode makeHaloErrorCode(String? value) {
       return HaloErrorCode.decryptRequestError;
     case 'UnknownError':
       return HaloErrorCode.unknownError;
+    case 'CryptoError':
+      return HaloErrorCode.cryptoError;
+    case 'DukputTransactionCounterOverflow':
+      return HaloErrorCode.dukputTransactionCounterOverflow;
+    case 'InvalidPaymentProvider':
+      return HaloErrorCode.invalidPaymentProvider;
+    case 'DeclinedByPaymentProvider':
+      return HaloErrorCode.declinedByPaymentProvider;
+    case 'FailedToSubmitToAllPaymentProviders':
+      return HaloErrorCode.failedToSubmitToAllPaymentProviders;
+    case 'InvalidPinData':
+      return HaloErrorCode.invalidPinData;
+    case 'RefundTooLate':
+      return HaloErrorCode.refundTooLate;
+    case 'RefundAlreadyProcessed':
+      return HaloErrorCode.refundAlreadyProcessed;
+    case 'MissingPfsServerKey':
+      return HaloErrorCode.missingPfsServerKey;
     case 'NFCDisabled':
       return HaloErrorCode.nfcDisabled;
     case 'InvalidSystemState':
@@ -112,14 +154,30 @@ HaloErrorCode makeHaloErrorCode(String? value) {
       return HaloErrorCode.errorValidatingPinKey;
     case 'IntegrityCheckFailed':
       return HaloErrorCode.integrityCheckFailed;
+    case 'UseOfNfcStateBeforeConnect':
+      return HaloErrorCode.useOfNfcStateBeforeConnect;
+    case 'FailedToImportServerSigningCert':
+      return HaloErrorCode.failedToImportServerSigningCert;
+    case 'FailedToImportServerEncryptionKey':
+      return HaloErrorCode.failedToImportServerEncryptionKey;
+    case 'NotImplemented':
+      return HaloErrorCode.notImplemented;
+    case 'MissingSensors':
+      return HaloErrorCode.missingSensors;
+    case 'MicrophoneWasUnmuted':
+      return HaloErrorCode.microphoneWasUnmuted;
+    case 'NullAttestationHandle':
+      return HaloErrorCode.nullAttestationHandle;
+    case 'CryptographyError':
+      return HaloErrorCode.cryptographyError;
     case 'SystemNotInitialised':
       return HaloErrorCode.systemNotInitialised;
     case 'CameraPermissionNotGranted':
       return HaloErrorCode.cameraPermissionNotGranted;
     case 'AccessibilityServiceBlocksPin':
       return HaloErrorCode.accessibilityServiceBlocksPin;
-    case 'DeveloperOptionsBlockPin':
-      return HaloErrorCode.developerOptionsBlockPin;
+    case 'DeveloperOptionsEnabled':
+      return HaloErrorCode.developerOptionsEnabled;
     case 'MissingAttestationNonce':
       return HaloErrorCode.missingAttestationNonce;
     case 'ConfigFetchError':
@@ -130,6 +188,12 @@ HaloErrorCode makeHaloErrorCode(String? value) {
       return HaloErrorCode.invalidTransactionReference;
     case 'MissingSecureCardReaderImplementation':
       return HaloErrorCode.missingSecureCardReaderImplementation;
+    case 'FailedToGetRandomBytes':
+      return HaloErrorCode.failedToGetRandomBytes;
+    case 'MissingDataKek':
+      return HaloErrorCode.missingDataKek;
+    case 'PinError':
+      return HaloErrorCode.pinError;
     case 'BluetoothConnectPermissionsNotGranted':
       return HaloErrorCode.bluetoothConnectPermissionsNotGranted;
     case 'BluetoothScanPermissionNotGranted':

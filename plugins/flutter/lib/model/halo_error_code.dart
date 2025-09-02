@@ -3,6 +3,10 @@ enum HaloErrorCode {
 
   declined,
 
+  declinedOffline,
+
+  singleTapAndPin,
+
   unauthorised,
 
   forbidden,
@@ -55,6 +59,26 @@ enum HaloErrorCode {
 
   receiptSignatureInvalid,
 
+  invalidAlgorithm,
+
+  siteIdentifierInvalid,
+
+  siteIdentifierMissing,
+
+  errorWithExternalRequest,
+
+  integratorNotApproved,
+
+  dataError,
+
+  userInvalid,
+
+  unknownDeviceInstallationId,
+
+  requestEncryptionUnsupportedCurve,
+
+  blockedDevice,
+
   databaseIntegrityFailed,
 
   databaseError,
@@ -62,6 +86,24 @@ enum HaloErrorCode {
   decryptRequestError,
 
   unknownError,
+
+  cryptoError,
+
+  dukputTransactionCounterOverflow,
+
+  invalidPaymentProvider,
+
+  declinedByPaymentProvider,
+  
+  failedToSubmitToAllPaymentProviders,
+
+  invalidPinData,
+
+  refundTooLate,
+
+  refundAlreadyProcessed,
+
+  missingPfsServerKey,
 
   nfcDisabled,
 
@@ -109,13 +151,29 @@ enum HaloErrorCode {
 
   integrityCheckFailed,
 
+  useOfNfcStateBeforeConnect,
+
+  failedToImportServerSigningCert,
+
+  failedToImportServerEncryptionKey,
+
+  notImplemented,
+
+  missingSensors,
+
+  microphoneWasUnmuted,
+
+  nullAttestationHandle,
+
+  cryptographyError,
+
   systemNotInitialised,
 
   cameraPermissionNotGranted,
 
   accessibilityServiceBlocksPin,
 
-  developerOptionsBlockPin,
+  developerOptionsEnabled,
 
   missingAttestationNonce,
 
@@ -126,6 +184,12 @@ enum HaloErrorCode {
   invalidTransactionReference,
 
   missingSecureCardReaderImplementation,
+
+  failedToGetRandomBytes,
+
+  missingDataKek,
+
+  pinError,
 
   bluetoothConnectPermissionsNotGranted,
 

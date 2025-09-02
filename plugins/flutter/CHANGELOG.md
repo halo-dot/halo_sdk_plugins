@@ -45,3 +45,4 @@
 # 1.0.4
 
 * Update MPOC Halo.SDK version: performance improvements, bugfixes
+* Update Halo.SDK error codes
