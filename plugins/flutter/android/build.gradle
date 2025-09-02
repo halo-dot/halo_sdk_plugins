@@ -1,26 +1,14 @@
-ext {
-    kotlin_version = '2.0.21'
+plugins {
+  id "com.android.library"
+  id "kotlin-android"
 }
+
 group 'za.co.synthesis.halo.sdkflutterplugin'
 version '1.0-SNAPSHOT'
 
 Properties properties = new Properties()
 if (rootProject.file("local.properties").exists()) {
     properties.load(project.rootProject.file("local.properties").newDataInputStream())
-}
-
-buildscript {
-    ext.kotlin_version = '2.0.21'
-    repositories {
-        google()
-        mavenCentral()
-        maven { url 'https://jitpack.io' }
-    }
-
-    dependencies {
-        classpath 'com.android.tools.build:gradle:8.2.1'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-    }
 }
 
 rootProject.allprojects {
@@ -50,7 +38,7 @@ rootProject.allprojects {
                     accessKey = localAccessKey != null ? localAccessKey : systemEnvAccessKey
                     secretKey = localSecretKey != null ? localSecretKey : systemEnvSecretKey
 
-                    if (systemEnvToken != null){
+                    if (systemEnvToken != null) {
                         sessionToken = systemEnvToken
                     }
                 }
@@ -58,9 +46,6 @@ rootProject.allprojects {
         }
     }
 }
-
-apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
 
 android {
     compileSdk 35
@@ -87,7 +72,6 @@ android {
 def sdkVersion="4.0.9"
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     implementation 'androidx.core:core-ktx:1.9.0'
 
