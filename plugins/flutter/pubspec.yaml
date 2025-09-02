@@ -9,7 +9,7 @@ topics:
   - card
 
 environment:
-  sdk: ">=2.16.2"
+  sdk: ">=2.16.2 < 3.10.0"
   flutter: ">=3.0.0"
 
 dependencies:
