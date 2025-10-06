@@ -1,0 +1,1 @@
+-dontwarn com.mobiiot.common.service.MobiIotManager

@@ -2,14 +2,14 @@ group = "za.co.synthesis.halo.printlib"
 version = "1.0-SNAPSHOT"
 
 buildscript {
-    ext.kotlin_version = "1.8.22"
+    ext.kotlin_version = "2.0.21"
     repositories {
         google()
         mavenCentral()
     }
 
     dependencies {
-        classpath("com.android.tools.build:gradle:8.1.0")
+        classpath("com.android.tools.build:gradle:8.1.4")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version")
     }
 }
@@ -28,8 +28,7 @@ allprojects {
         google()
         mavenCentral()
         maven {
-            name = "synthesis-third-party-libs/Mobi-pos-printer"
-            url = "s3://$name"
+            url = "s3://synthesis-third-party-libs/Mobi-pos-printer"
             credentials(AwsCredentials){
 
                 def localAccessKey = properties.getProperty('aws.accesskey')
