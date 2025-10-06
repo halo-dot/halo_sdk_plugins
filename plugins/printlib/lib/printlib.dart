@@ -16,17 +16,8 @@ class Printlib {
     return res;
   }
 
-  Future<void> printText(
-      {required String text,
-      Int? textSize,
-      bool? isBold,
-      bool? isUnderlined}) async {
-    await _channel.invokeMethod("printText", {
-      "text": text,
-      "textSize": textSize,
-      "isBold": isBold,
-      "isUnderlined": isUnderlined
-    });
+  Future<void> printText(String text) async {
+    await _channel.invokeMethod("printText", {"text": text});
   }
 
   Future<void> printHTML(String html) async {

@@ -1,9 +1,7 @@
 import android.content.Context
 import com.mobiiot.api.exception.MobiIotException
 import com.mobiiot.sdk.MobiiotAPI
-import com.mobiiot.sdk.printer.CsPrinterBuffer
 
-import android.graphics.Typeface
 import com.mobiiot.sdk.printer.CsPrinter
 import za.co.synthesis.halo.printlib.Printer
 
@@ -31,13 +29,6 @@ enum class MobiPosPrintingError(val code: Int, val message: String) {
             }
         }
     }
-
-    fun toMap(): Map<String, Any> {
-        return mapOf(
-            "code" to code,
-            "message" to message
-        )
-    }
 }
 
 
@@ -53,8 +44,7 @@ class MobiPosPrinter : Printer() {
                 isInitialized = true
             };
         }catch (err: MobiIotException){
-            // throw the exception
-            isInitialized = false;
+            throw IllegalStateException("Failed to initialize printer: ${err.message}.")
         }
     }
 
@@ -63,31 +53,24 @@ class MobiPosPrinter : Printer() {
      */
     override fun close() {
         if(isInitialized && appContext != null){
-            try {
                 MobiiotAPI.unbind(appContext)
-            }catch (e: Exception){
-
-            }finally {
                 appContext = null
                 isInitialized = false
-            }
         }
     }
 
-    override fun printText(
-        text: String,
-        textSize: Int?,
-        isBold: Boolean?,
-        isUnderlined: Boolean?,
-    ) {
+    override fun printText(text: String) {
         if(!isInitialized){
             throw IllegalStateException("Printer not initialized. Call initialize() first.")
         }
-        val buffer = CsPrinterBuffer()
-        buffer.clear()
-        buffer.addTextToPrint(text, textSize ?: 24, isBold == true,
-            isUnderlined == true, 1, Typeface.DEFAULT)
-        buffer.clear()
+
+        val successful=  CsPrinter.printText(text);
+
+        if(!successful){
+            val errorCode =  CsPrinter.getLastError()
+            val errorStatus = MobiPosPrintingError.fromCode(errorCode)
+            throw Exception("Could not print text: $errorStatus")
+        }
     }
 
     override fun printHTML(html: String) {
@@ -95,7 +78,7 @@ class MobiPosPrinter : Printer() {
             throw IllegalStateException("Printer not initialized. Call initialize() first.")
         }
 
-        val successful=  CsPrinter.printTextHTML(appContext, html);
+        val successful = CsPrinter.printTextHTML(appContext, html);
 
         if(!successful){
             val errorCode =  CsPrinter.getLastError()

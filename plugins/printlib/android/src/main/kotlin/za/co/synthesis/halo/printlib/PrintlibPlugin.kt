@@ -59,11 +59,7 @@ class PrintlibPlugin: FlutterPlugin, MethodCallHandler{
       val text = call.argument<String>("text")
         ?: return result.error("MISSING_ARGUMENT", "Argument 'text' is required", null)
 
-      val textSize = call.argument<Int>("textSize")
-      val isBold = call.argument<Boolean>("isBold")
-      val isUnderlined = call.argument<Boolean>("isUnderlined")
-
-      printer?.printText(text, textSize, isBold, isUnderlined)
+      printer?.printText(text)
       result.success(mapOf("status" to "printed"))
     } catch (e: Exception) {
       result.error("PRINT_ERROR", e.message, null)

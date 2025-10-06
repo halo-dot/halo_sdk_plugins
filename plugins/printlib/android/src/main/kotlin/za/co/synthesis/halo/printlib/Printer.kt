@@ -23,9 +23,9 @@ abstract class Printer: Closeable {
      * 
      * This method handles printing of plain text strings.
      * 
-     * @param text The plain text content to be printed. Must not be null.
+     * @param text The plain text content to be printed.
      */
-    abstract fun printText(text: String, textSize: Int?, isBold: Boolean?, isUnderlined: Boolean?)
+    abstract fun printText(text: String)
 
     /**
      * Prints HTML content to the printer.
