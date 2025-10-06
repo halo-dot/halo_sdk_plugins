@@ -60,7 +60,7 @@ class PrintlibPlugin: FlutterPlugin, MethodCallHandler{
         ?: return result.error("MISSING_ARGUMENT", "Argument 'text' is required", null)
 
       printer?.printText(text)
-      result.success(mapOf("status" to "printed"))
+      result.success(true)
     } catch (e: Exception) {
       result.error("PRINT_ERROR", e.message, null)
     }
@@ -76,7 +76,7 @@ class PrintlibPlugin: FlutterPlugin, MethodCallHandler{
         ?: return result.error("MISSING_ARGUMENT", "Argument 'html' is required", null)
 
       printer!!.printHTML(html)
-      result.success(mapOf("status" to "printed"))
+      result.success(true)
     } catch (e: NotImplementedError) {
       result.error("NOT_IMPLEMENTED", "HTML printing not yet supported", null)
     } catch (e: Exception) {
