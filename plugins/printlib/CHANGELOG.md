@@ -1,3 +1,5 @@
 ## 0.0.1
 
-* TODO: Describe initial release.
+* Initial development realease 
+* Can print text and HTML 
+* Supports MobiPrint 5
