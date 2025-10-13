@@ -1,0 +1,83 @@
+group = "za.co.synthesis.halo.printlib"
+version = "1.0-SNAPSHOT"
+
+buildscript {
+    ext.kotlin_version = "2.0.21"
+    repositories {
+        google()
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath("com.android.tools.build:gradle:8.1.4")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version")
+    }
+}
+
+def properties = new Properties()
+def propertiesFile = rootProject.file('local.properties')
+if (propertiesFile.exists()) {
+    propertiesFile.withReader('UTF-8') { reader ->
+        properties.load(reader)
+    }
+}
+
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+        maven {
+            url = "s3://synthesis-third-party-libs/Mobi-pos-printer"
+            credentials(AwsCredentials){
+
+                def localAccessKey = properties.getProperty('aws.accesskey')
+                def systemEnvAccessKey = System.getenv('AWS_ACCESS_KEY_ID')
+
+                def localSecretKey = properties.getProperty('aws.secretkey')
+                def systemEnvSecretKey = System.getenv('AWS_SECRET_ACCESS_KEY')
+
+                def localtoken = properties.getProperty('aws.token')
+                def systemEnvToken = System.getenv('AWS_SESSION_TOKEN')
+
+                accessKey = localAccessKey != null ? localAccessKey : systemEnvAccessKey
+                secretKey = localSecretKey != null ? localSecretKey : systemEnvSecretKey
+
+                if (systemEnvToken != null){
+                    sessionToken = systemEnvToken
+                }
+            }
+        }
+    }
+}
+
+apply plugin: "com.android.library"
+apply plugin: "kotlin-android"
+
+android {
+    namespace = "za.co.synthesis.halo.printlib"
+
+    compileSdk = 35
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_11
+    }
+
+    sourceSets {
+        main.java.srcDirs += "src/main/kotlin"
+        test.java.srcDirs += "src/test/kotlin"
+    }
+
+    defaultConfig {
+        minSdk = 29
+    }
+
+    dependencies {
+        implementation('com.mobiiot:mobiiot-api:2.4.0@aar') { transitive = true}
+    }
+}
