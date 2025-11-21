@@ -22,10 +22,10 @@ class Api (private val context: Context) {
             connectTimeout(60, TimeUnit.SECONDS)
             readTimeout(60, TimeUnit.SECONDS)
             writeTimeout(60, TimeUnit.SECONDS)
-//            sslSocketFactory(
-//                sslContext.socketFactory,
-//                trustManagers.single { tm -> tm is X509TrustManager } as X509TrustManager
-//            )
+            // sslSocketFactory(
+            //     sslContext.socketFactory,
+            //     trustManagers.single { tm -> tm is X509TrustManager } as X509TrustManager
+            // )
             build()
         }
     }
@@ -141,7 +141,7 @@ class Api (private val context: Context) {
                 )
                 method("POST", requestBody)
                 header("x-api-key", activeProfile.apiKey)
-//                .addHeader("Authorization", "Bearer $token")
+                // .addHeader("Authorization", "Bearer $token")
                 build()
             }
 
@@ -224,7 +224,7 @@ class Api (private val context: Context) {
                         actualBody
                     )
                     method("POST", requestBody)
-//                    header("x-api-key", API_KEY)
+                    // header("x-api-key", API_KEY)
                         .addHeader("Authorization", "Bearer $token")
                     build()
                 }
@@ -321,7 +321,7 @@ class Api (private val context: Context) {
                 )
                 method("POST", requestBody)
                 header("x-api-key", activeProfile.apiKey)
-//                .addHeader("Authorization", "Bearer $token")
+                // .addHeader("Authorization", "Bearer $token")
                 build()
             }
 
@@ -396,7 +396,7 @@ class Api (private val context: Context) {
                         actualBody
                     )
                     method("POST", requestBody)
-//                    header("x-api-key", API_KEY)
+                    // header("x-api-key", API_KEY)
                 .addHeader("Authorization", "Bearer $token")
                     build()
                 }
@@ -476,7 +476,7 @@ class Api (private val context: Context) {
                 )
                 method("POST", requestBody)
                 header("x-api-key", activeProfile.apiKey)
-//                .addHeader("Authorization", "Bearer $token")
+                // .addHeader("Authorization", "Bearer $token")
                 build()
             }
 
@@ -544,7 +544,7 @@ class Api (private val context: Context) {
                         actualBody
                     )
                     method("POST", requestBody)
-//                    header("x-api-key", API_KEY)
+                    // header("x-api-key", API_KEY)
                         .addHeader("Authorization", "Bearer $token")
                     build()
                 }
@@ -629,7 +629,7 @@ class Api (private val context: Context) {
                  )
                  method("POST", requestBody)
                  header("x-api-key", activeProfile.apiKey)
-//                     .addHeader("Authorization", "Bearer $token")
+                    //  .addHeader("Authorization", "Bearer $token")
                  build()
              }
 
@@ -702,7 +702,7 @@ class Api (private val context: Context) {
                         actualBody
                     )
                     method("POST", requestBody)
-//            header("x-api-key", API_KEY)
+            // header("x-api-key", API_KEY)
                         .addHeader("Authorization", "Bearer $token")
                     build()
                 }
@@ -765,7 +765,7 @@ class Api (private val context: Context) {
                 url("https://kernelserver.${env}.haloplus.io/transactions/${transactionId}")
                 method("GET", null)
                     header("x-api-key", activeProfile.apiKey)
-//                    .addHeader("Authorization", "Bearer $token")
+                    // .addHeader("Authorization", "Bearer $token")
                 build()
             }
 
@@ -835,7 +835,7 @@ class Api (private val context: Context) {
                 request = Request.Builder().run {
                     url("https://kernelserver.${env}.haloplus.io/transactions/${transactionId}")
                     method("GET", null)
-//                    header("x-api-key", API_KEY)
+                    // header("x-api-key", API_KEY)
                         .addHeader("Authorization", "Bearer $token")
                     build()
                 }
@@ -1055,6 +1055,328 @@ class Api (private val context: Context) {
         }
     }
 
+    fun postApplink(
+        merchantId: String,
+        paymentReference: String,
+        amount: Double,
+        currencyCode: String,
+        isConsumerApp: Boolean,
+        imageRequired: Boolean,
+        callback: (String, String) -> Unit
+    ) {
+        var request: Request? = null
+
+        val isImageRequired: JSONObject = JSONObject().apply {
+            put("required", imageRequired)
+        }
+
+        if(activeProfile.authPreference == "apikey"){
+            request = Request.Builder().run {
+                url("https://kernelserver.${env}.haloplus.io/consumer/applink")
+                val actualBody: String = JSONObject().apply {
+                    put("merchantId", merchantId)
+                    put("paymentReference", paymentReference)
+                    put("amount", amount)
+                    put("currencyCode", currencyCode)
+                    put("timestamp", SimpleDateFormat("E MMM d yyyy HH:mm:ss 'GMT'Z", Locale.US).format(Date()))
+                    put("isConsumerApp", isConsumerApp)
+                    put("image", isImageRequired)
+                }.toString(JSONStyle.NO_COMPRESS)
+                var requestBody = RequestBody.create(
+                    MediaType.parse("application/json"),
+                    actualBody
+                )
+                method("POST", requestBody)
+                header("x-api-key", activeProfile.apiKey)
+                build()
+            }
+
+            okHttpClient.newCall(request).enqueue(object : Callback {
+                override fun onFailure(call: Call, e: IOException) {
+                    println("Error generate applink -> $e")
+                    Handler(Looper.getMainLooper()).post {
+                        Toast.makeText(
+                            context,
+                            "Generate applink failed $e",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                    callback("", "")
+                }
+
+                override fun onResponse(call: Call, response: Response) {
+                    val responseBody = response.body()?.string() ?: ""
+                    val responseCode = response.code()
+                    response.body()?.close()
+
+                    when {
+                        responseBody.isEmpty() -> {
+                            println("Error generate applink -> EMPTY RESPONSE")
+                            Handler(Looper.getMainLooper()).post {
+                                Toast.makeText(
+                                    context,
+                                    "Generate applink request has failed: EMPTY RESPONSE",
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            }
+                            callback("", "")
+                        }
+                        responseCode != 201 -> {
+                            println("Generate applink failed")
+                            println("responseCode = $responseCode")
+                            println("responseBody = $responseBody")
+                            callback("", "")
+                        }
+                        else -> {
+                            println("FULL RESPONSE BODY = $responseBody")
+                            val postQRCode = responseBody.parseBodyWithTwoElements("responseBody", "url", "reference")
+                            println("Generated applink url = ${postQRCode[0]}")
+                            println("Reference = ${postQRCode[1]}")
+                            callback(postQRCode[0], postQRCode[1])
+                        }
+                    }
+                }
+            })
+        } else {
+            loginForJWT(activeProfile.username.toString(), activeProfile.password.toString()){ jwt ->
+                request = Request.Builder().run {
+                    url("https://kernelserver.${env}.haloplus.io/consumer/applink")
+                    val actualBody: String = JSONObject().apply {
+                        put("merchantId", merchantId)
+                        put("paymentReference", paymentReference)
+                        put("amount", amount)
+                        put("currencyCode", currencyCode)
+                        put("timestamp", SimpleDateFormat("E MMM d yyyy HH:mm:ss 'GMT'Z", Locale.US).format(Date()))
+                        put("isConsumerApp", isConsumerApp)
+                        put("image", isImageRequired)
+                    }.toString(JSONStyle.NO_COMPRESS)
+                    var requestBody = RequestBody.create(
+                        MediaType.parse("application/json"),
+                        actualBody
+                    )
+                    method("POST", requestBody)
+                        .addHeader("Authorization", "Bearer $token")
+                    build()
+                }
+
+                okHttpClient.newCall(request).enqueue(object : Callback {
+                    override fun onFailure(call: Call, e: IOException) {
+                        println("Error generate applink -> $e")
+                        Handler(Looper.getMainLooper()).post {
+                            Toast.makeText(
+                                context,
+                                "Generate applink failed $e",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
+                        callback("", "")
+                    }
+
+                    override fun onResponse(call: Call, response: Response) {
+                        val responseBody = response.body()?.string() ?: ""
+                        val responseCode = response.code()
+                        response.body()?.close()
+
+                        when {
+                            responseBody.isEmpty() -> {
+                                println("Error generate applink -> EMPTY RESPONSE")
+                                Handler(Looper.getMainLooper()).post {
+                                    Toast.makeText(
+                                        context,
+                                        "Generate applink request has failed: EMPTY RESPONSE",
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                }
+                                callback("", "")
+                            }
+                            responseCode != 201 -> {
+                                println("Generate applink failed")
+                                println("responseCode = $responseCode")
+                                println("responseBody = $responseBody")
+                                callback("", "")
+                            }
+                            else -> {
+                                println("FULL RESPONSE BODY = $responseBody")
+                                val postQRCode = responseBody.parseBodyWithTwoElements("responseBody", "url", "reference")
+                                println("Generated applink url = ${postQRCode[0]}")
+                                println("Reference = ${postQRCode[1]}")
+                                callback(postQRCode[0], postQRCode[1])
+                            }
+                        }
+                    }
+                })
+            }
+        }
+    }
+
+    fun postTT3Applink(
+        merchantId: String,
+        accountNumber: String,
+        collectionDay: String,
+        creditorABSN: String,
+        id: String,
+        maxCollectionAmount: String,
+        contractReference: String,
+        instalmentAmount: String,
+        instalmentVisibility: String,
+        isConsumerApp: Boolean,
+        imageRequired: Boolean,
+        callback: (String, String) -> Unit
+    ){
+        var request: Request? = null
+
+        val isImageRequired: JSONObject = JSONObject().apply {
+            put("required", imageRequired)
+        }
+
+        if(activeProfile.authPreference == "apikey"){
+             request = Request.Builder().run {
+                 url("https://kernelserver.${env}.haloplus.io/consumer/tt3Applink")
+                 val actualBody: String = JSONObject().apply {
+                     put("merchantId", merchantId)
+                     put("accountNumber", accountNumber)
+                     put("collectionDay", collectionDay)
+                     put("creditorABSN", creditorABSN)
+                     put("id", id)
+                     put("maxCollectionAmount", maxCollectionAmount)
+                     put("contractReference", contractReference)
+                     put("instalmentAmount", instalmentAmount)
+                     put("instalmentVisibility", instalmentVisibility)
+                     put("timestamp", SimpleDateFormat("E MMM d yyyy HH:mm:ss 'GMT'Z", Locale.US).format(Date()))
+                     put("isConsumerApp", isConsumerApp)
+                     put("image", isImageRequired)
+                 }.toString(JSONStyle.NO_COMPRESS)
+                 var requestBody = RequestBody.create(
+                     MediaType.parse("application/json"),
+                     actualBody
+                 )
+                 method("POST", requestBody)
+                 header("x-api-key", activeProfile.apiKey)
+                 build()
+             }
+
+            okHttpClient.newCall(request).enqueue(object : Callback {
+                override fun onFailure(call: Call, e: IOException) {
+                    println("Error generate tt3Applink -> $e")
+                    Handler(Looper.getMainLooper()).post {
+                        Toast.makeText(
+                            context,
+                            "Generate tt3Applink failed $e",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                    callback("", "")
+                }
+
+                override fun onResponse(call: Call, response: Response) {
+                    val responseBody = response.body()?.string() ?: ""
+                    val responseCode = response.code()
+                    response.body()?.close()
+
+                    when {
+                        responseBody.isEmpty() -> {
+                            println("Error generate tt3Applink -> EMPTY RESPONSE")
+                            Handler(Looper.getMainLooper()).post {
+                                Toast.makeText(
+                                    context,
+                                    "Generate tt3Applink request has failed: EMPTY RESPONSE",
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            }
+                            callback("", "")
+                        }
+                        responseCode != 201 -> {
+                            println("Generate tt3Applink failed")
+                            println("responseCode = $responseCode")
+                            println("responseBody = $responseBody")
+                            callback("", "")
+                        }
+                        else -> {
+                            println("FULL RESPONSE BODY = $responseBody")
+                            val postTT3QrCode = responseBody.parseBodyWithTwoElements("responseBody","url", "reference")
+                            println("Generated tt3Applink url = ${postTT3QrCode[0]}")
+                            println("Reference = ${postTT3QrCode[1]}")
+                            callback(postTT3QrCode[0], postTT3QrCode[1])
+                        }
+                    }
+                }
+            })
+        } else {
+            loginForJWT(activeProfile.username.toString(), activeProfile.password.toString()){ jwt ->
+                request = Request.Builder().run {
+                    url("https://kernelserver.${env}.haloplus.io/consumer/tt3Applink")
+                    val actualBody: String = JSONObject().apply {
+                        put("merchantId", merchantId)
+                        put("accountNumber", accountNumber)
+                        put("collectionDay", collectionDay)
+                        put("creditorABSN", creditorABSN)
+                        put("id", id)
+                        put("maxCollectionAmount", maxCollectionAmount)
+                        put("contractReference", contractReference)
+                        put("instalmentAmount", instalmentAmount)
+                        put("instalmentVisibility", instalmentVisibility)
+                        put("timestamp", SimpleDateFormat("E MMM d yyyy HH:mm:ss 'GMT'Z", Locale.US).format(Date()))
+                        put("isConsumerApp", isConsumerApp)
+                        put("image", isImageRequired)
+                    }.toString(JSONStyle.NO_COMPRESS)
+                    var requestBody = RequestBody.create(
+                        MediaType.parse("application/json"),
+                        actualBody
+                    )
+                    method("POST", requestBody)
+                        .addHeader("Authorization", "Bearer $token")
+                    build()
+                }
+
+                okHttpClient.newCall(request).enqueue(object : Callback {
+                    override fun onFailure(call: Call, e: IOException) {
+                        println("Error generate tt3Applink -> $e")
+                        Handler(Looper.getMainLooper()).post {
+                            Toast.makeText(
+                                context,
+                                "Generate tt3Applink failed $e",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
+                        callback("", "")
+                    }
+
+                    override fun onResponse(call: Call, response: Response) {
+                        val responseBody = response.body()?.string() ?: ""
+                        val responseCode = response.code()
+                        response.body()?.close()
+
+                        when {
+                            responseBody.isEmpty() -> {
+                                println("Error generate tt3Applink -> EMPTY RESPONSE")
+                                Handler(Looper.getMainLooper()).post {
+                                    Toast.makeText(
+                                        context,
+                                        "Generate tt3Applink request has failed: EMPTY RESPONSE",
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                }
+                                callback("", "")
+                            }
+                            responseCode != 201 -> {
+                                println("Generate tt3Applink failed")
+                                println("responseCode = $responseCode")
+                                println("responseBody = $responseBody")
+                                callback("", "")
+                            }
+                            else -> {
+                                println("FULL RESPONSE BODY = $responseBody")
+                                val postTT3QrCode = responseBody.parseBodyWithTwoElements("responseBody","url", "reference")
+                                println("Generated tt3Applink url = ${postTT3QrCode[0]}")
+                                println("Reference = ${postTT3QrCode[1]}")
+                                callback(postTT3QrCode[0], postTT3QrCode[1])
+                            }
+                        }
+                    }
+                })
+            }
+        }
+    }
 }
 
 fun String.parseBodyWithOneElement(elementName: String) : String {

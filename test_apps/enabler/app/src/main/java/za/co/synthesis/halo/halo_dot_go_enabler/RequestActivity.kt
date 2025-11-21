@@ -30,6 +30,7 @@ class RequestActivity : AppCompatActivity() {
     private var invokingMethodList: List<Dropdown> = listOf(
         Dropdown("Android Intents", R.drawable.ic_link),
         Dropdown("Deeplinking", R.drawable.ic_link),
+        Dropdown("Applinks", R.drawable.ic_link),
         Dropdown("Invoking Method", R.drawable.ic_link)
     )
 
