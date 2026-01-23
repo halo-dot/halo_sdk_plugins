@@ -48,3 +48,6 @@
 * Update Halo.SDK error codes
 * Update Flutter plugin application to declarative approach
 * Update support for latest Flutter version
+
+# 1.0.5
+* Update MPOC Halo.SDK version: performance improvements, bugfixes

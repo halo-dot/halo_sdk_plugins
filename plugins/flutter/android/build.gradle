@@ -69,7 +69,7 @@ android {
     }
 }
 
-def sdkVersion="4.0.9"
+def sdkVersion="4.0.12"
 
 dependencies {
 
