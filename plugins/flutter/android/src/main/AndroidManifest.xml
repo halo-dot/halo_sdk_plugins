@@ -1,3 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
   package="za.co.synthesis.halo.sdkflutterplugin">
+    <application>
+        <activity
+            android:name=".AnimationActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:screenOrientation="portrait" />
+    </application>
 </manifest>

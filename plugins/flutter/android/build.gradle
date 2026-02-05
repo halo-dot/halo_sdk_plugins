@@ -20,6 +20,11 @@ rootProject.allprojects {
             'releases',
             'snapshots'
         ]
+
+        flatDir {
+            dirs project(':halo_sdk_flutter_plugin').file('libs')
+        }
+
         repos.each {repo ->
             maven {
                 name = repo
@@ -78,4 +83,8 @@ dependencies {
     // Halo SDK
     releaseImplementation group: "za.co.synthesis.halo", name: "sdk", version: "$sdkVersion", changing: true
     debugImplementation group: "za.co.synthesis.halo", name: "sdk", version: "$sdkVersion-debug", changing: true
+
+    implementation(name: 'VisaSensoryBranding', ext: 'aar')
+    implementation(name: 'sonic-sdk-release-1.5.0', ext: 'aar')
+
 }

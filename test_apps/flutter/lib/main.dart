@@ -90,7 +90,7 @@ class _MyAppState extends State<MyApp> {
     var haloCallbacks = HaloCallbacks(setUiMessage);
     try {
       Sdkflutterplugin.initializeHaloSDK(haloCallbacks,
-          "za.co.synthesis.halo.sdkflutterplugin_example", "0.0.1", 300000);
+          "za.co.synthesis.halo.sdkflutterplugin_example", "0.0.1", 300000, true);
     } on PlatformException catch (e) {
       setUiMessage(UiMessage(
           "SDK initialisation error: ${e.code} ${e.message}", Colors.red));

@@ -31,6 +31,9 @@ class HaloSdkImplementation(messanger: BinaryMessenger) {
             args[Const.APPLICATION_VERSION] as String
           )
         )
+
+        UIContext.enableSchemeAnimations((args[Const.ENABLE_SCHEME_ANIMATIONS] as Boolean?) ?: false)
+
         result.success(null)
       } catch (e: Exception) {
         if (e is HaloException) {
