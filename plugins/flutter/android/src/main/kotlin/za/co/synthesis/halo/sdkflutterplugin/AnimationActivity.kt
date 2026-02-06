@@ -4,6 +4,12 @@ import android.os.Bundle
 import android.util.Log
 import android.os.Handler
 import android.os.Looper
+import android.graphics.Color
+import android.media.MediaPlayer
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.view.Gravity
+import android.view.HapticFeedbackConstants
 import androidx.appcompat.app.AppCompatActivity
 import com.mastercard.sonic.controller.SonicController
 import com.mastercard.sonic.controller.SonicType
@@ -22,6 +28,8 @@ class AnimationActivity : AppCompatActivity() {
 
     private lateinit var sonicView: SonicView
     private var sonicController: SonicController? = null
+    private lateinit var amexView: ImageView
+    private var mediaPlayer: MediaPlayer? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,12 +59,14 @@ class AnimationActivity : AppCompatActivity() {
                     gravity = android.view.Gravity.CENTER
                 }
 
+                setContentView(animationView)
+
                 animationView.setConstrainedFlags(true)
                 animationView.isSoundEnabled = true
                 animationView.isHapticFeedbackEnabled = true
                 animationView.isCheckMarkShown = true
 
-                setContentView(animationView)
+                animationView.setBackdropColor(Color.parseColor("#FFFFFF"))
 
                 animationView.post {
                     animationView.animate { error ->
@@ -100,7 +110,28 @@ class AnimationActivity : AppCompatActivity() {
 
                 setContentView(sonicView)
             }
+            CardAssociations.AMEX -> {
+                val layout = LinearLayout(this).apply {
+                    orientation = LinearLayout.VERTICAL
+                    gravity = Gravity.CENTER
+                }
 
+                amexView = ImageView(this).apply {
+                    layoutParams = LinearLayout.LayoutParams(500, 500)
+                    setImageResource(R.drawable.amex)
+                }
+                layout.addView(amexView)
+                setContentView(layout)
+
+                mediaPlayer = MediaPlayer.create(this, R.raw.amex_confirm)
+                mediaPlayer?.isLooping = false
+                mediaPlayer?.start()
+                mediaPlayer?.setOnCompletionListener {
+                    mediaPlayer?.release()
+                    amexView.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                    closeAnimation()
+                }
+            }
             else -> {finish()}
         }
     }
@@ -118,7 +149,7 @@ class AnimationActivity : AppCompatActivity() {
     fun closeAnimation(){
         Handler(Looper.getMainLooper()).postDelayed({
             finish()
-        }, 3500)
+        }, 3000)
     }
 
     private fun getCardTypeFromPan(maskedPan: String?): CardAssociations {
