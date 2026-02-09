@@ -7,6 +7,8 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 import android.os.Process
 
+import za.co.synthesis.halo.haloCommonInterface.TransactionType
+
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 import android.app.Activity
@@ -41,6 +43,7 @@ class SdkflutterpluginPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
       when (call.method) {
         "initializeHaloSDK" -> haloSdkImplementation.initializeHaloSDK(result, call.arguments<HashMap<String, Any>>())
         "startTransaction" -> haloSdkImplementation.startTransaction(result, call.arguments<HashMap<String, Any>>())
+        "cardRefundTransaction" -> haloSdkImplementation.startTransaction(result, call.arguments<HashMap<String, Any>>(), TransactionType.Refund)
         "jwtCallback" -> haloSdkImplementation.jwtCallback(result, call.arguments<String>())
         "cancelTransaction" -> haloSdkImplementation.cancelTransaction(result)
         else -> result.notImplemented()

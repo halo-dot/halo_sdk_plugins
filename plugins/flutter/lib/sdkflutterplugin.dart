@@ -91,6 +91,22 @@ class Sdkflutterplugin {
     return makeHaloStartTransactionResult(transationStartResultMap);
   }
 
+  static Future<HaloStartTransactionResult> cardRefundTransaction(
+      double transactionAmount,
+      String merchantTransactionReference,
+      String transactionCurrency) async {
+    Map<String, dynamic> args = {
+      MethodArgs.transactionAmount: transactionAmount,
+      MethodArgs.merchantTransactionReference: merchantTransactionReference,
+      MethodArgs.transactionCurrency: transactionCurrency
+    };
+
+    var transactionStartResultMap =
+    await _channel.invokeMethod(MethodTypes.cardRefundTransaction, args);
+
+    return makeHaloStartTransactionResult(transactionStartResultMap);
+  }
+
   static Future<void> cancelTransaction() async {
     await _channel.invokeMethod(MethodTypes.cancelTransaction);
   }

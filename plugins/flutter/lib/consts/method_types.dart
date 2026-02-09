@@ -1,6 +1,7 @@
 class MethodTypes {
   static const initializeHaloSDK = "initializeHaloSDK";
   static const startTransaction = "startTransaction";
+  static const cardRefundTransaction = "cardRefundTransaction";
   static const cancelTransaction = "cancelTransaction";
   static const jwtCallback = "jwtCallback";
 }

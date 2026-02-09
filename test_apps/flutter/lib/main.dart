@@ -125,6 +125,28 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
+  void cardRefundTransaction() async {
+    if (!isValidAmount(amount)) {
+      setUiMessage(
+          UiMessage("Invalid amount, please provide amount", Colors.orange));
+    } else if (textFieldController.text.isEmpty) {
+      setUiMessage(UiMessage(
+          "Invalid merchant reference, please provide merchant reference",
+          Colors.orange));
+    } else {
+      try {
+
+        var startTransactionResult = await Sdkflutterplugin.cardRefundTransaction(
+            double.parse(amount), textFieldController.text, 'ZAR');
+        setUiMessage(UiMessage(
+            "Transaction start state: ${startTransactionResult.resultType} ${startTransactionResult.errorCode}",
+            Colors.black));
+      } on PlatformException catch (e) {
+        setUiMessage(UiMessage(
+            "Transaction start error: ${e.code} ${e.message}", Colors.red));
+      }
+    }
+  }
   void cancelTransaction() {
     Sdkflutterplugin.cancelTransaction();
   }
@@ -182,6 +204,12 @@ class _MyAppState extends State<MyApp> {
                   child: const Text('Cancel',
                       style:
                           TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                ),
+                ElevatedButton(
+                  onPressed: cardRefundTransaction,
+                  child: const Text('CP Refund',
+                      style:
+                      TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                 )
               ])
             ])),
