@@ -22,6 +22,7 @@ import com.mastercard.sonic.model.SonicMerchant
 import com.mastercard.sonic.widget.SonicView
 import com.visa.SensoryBrandingView
 import android.view.ViewGroup
+import com.mastercard.sonic.widget.SonicBackground
 
 class AnimationActivity : AppCompatActivity() {
     private val TAG = "AnimationActivity"
@@ -108,6 +109,7 @@ class AnimationActivity : AppCompatActivity() {
                         }
                     })
 
+                sonicView.background = SonicBackground.WHITE
                 setContentView(sonicView)
             }
             CardAssociations.AMEX -> {
