@@ -51,3 +51,7 @@
 
 # 1.0.5
 * Update MPOC Halo.SDK version: performance improvements, bugfixes
+
+# 1.0.6
+* Add scheme animations
+* Add card present refunds

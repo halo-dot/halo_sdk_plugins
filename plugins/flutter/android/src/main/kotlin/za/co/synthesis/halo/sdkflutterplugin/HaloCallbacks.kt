@@ -6,10 +6,14 @@ import io.flutter.plugin.common.BinaryMessenger
 import io.flutter.plugin.common.EventChannel
 import za.co.synthesis.halo.haloCommonInterface.HaloErrorCode
 import za.co.synthesis.halo.haloCommonInterface.HaloTransactionResult
+import za.co.synthesis.halo.haloCommonInterface.HaloTransactionResultType
 import za.co.synthesis.halo.sdk.model.HaloAttestationHealthResult
 import za.co.synthesis.halo.sdk.model.HaloInitializationResult
 import za.co.synthesis.halo.sdk.model.HaloUIMessage
 import za.co.synthesis.halo.sdk.model.IHaloCallbacks
+
+import android.app.Activity
+import android.content.Intent
 
 enum class EventTypes (val eventType: String) {
     ATTESTATION("attestation"),
@@ -56,8 +60,21 @@ class HaloCallbacks(
 
     override fun onHaloTransactionResult(result: HaloTransactionResult) {
         Log.d(TAG, "onHaloTransactionResult: $result")
+        val association = "" + result?.receipt?.association
+        val maskedPAN = "" + result?.receipt?.maskedPAN
+        val transactionApproved: Boolean = result?.resultType == HaloTransactionResultType.Approved
         val map = hashMapOf<String, Any>(Pair("eventType", EventTypes.TRANSACTION.eventType), Pair("data", makeMap(result)))
         handler.post {
+            val context = UIContext.getActivity()
+            val showSchemeAnimations = UIContext.areSchemeAnimationsEnabled()
+            if(context != null && transactionApproved && showSchemeAnimations) {
+                val intent = Intent(context, AnimationActivity::class.java)
+                intent.putExtra(Const.CARD_ASSOCIATION, association)
+                intent.putExtra(Const.MASKED_PAN, maskedPAN)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                context.startActivity(intent)
+            }
+
             eventSink?.success(map)
         }
     }

@@ -5,4 +5,5 @@ class MethodArgs {
   static const transactionAmount = "transactionAmount";
   static const merchantTransactionReference = "merchantTransactionReference";
   static const transactionCurrency = "transactionCurrency";
+  static const enableSchemeAnimations = "enableSchemeAnimations";
 }

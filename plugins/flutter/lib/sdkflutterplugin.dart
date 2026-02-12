@@ -62,13 +62,15 @@ class Sdkflutterplugin {
     String applicationPackageName,
     String applicationVersion,
     int? onStartTransactionTimeOut,
+    bool? enableSchemeAnimations
   ) async {
     _haloClientCallbacks = haloCallbacks;
     setCallbackListener(haloCallbacks);
     Map<dynamic, dynamic> args = {
       MethodArgs.applicationPackageName: applicationPackageName,
       MethodArgs.applicationVersion: applicationVersion,
-      MethodArgs.onStartTransactionTimeOut: onStartTransactionTimeOut
+      MethodArgs.onStartTransactionTimeOut: onStartTransactionTimeOut,
+      MethodArgs.enableSchemeAnimations: enableSchemeAnimations
     };
     await _channel.invokeMethod(MethodTypes.initializeHaloSDK, args);
   }
@@ -87,6 +89,22 @@ class Sdkflutterplugin {
         await _channel.invokeMethod(MethodTypes.startTransaction, args);
 
     return makeHaloStartTransactionResult(transationStartResultMap);
+  }
+
+  static Future<HaloStartTransactionResult> cardRefundTransaction(
+      double transactionAmount,
+      String merchantTransactionReference,
+      String transactionCurrency) async {
+    Map<String, dynamic> args = {
+      MethodArgs.transactionAmount: transactionAmount,
+      MethodArgs.merchantTransactionReference: merchantTransactionReference,
+      MethodArgs.transactionCurrency: transactionCurrency
+    };
+
+    var transactionStartResultMap =
+    await _channel.invokeMethod(MethodTypes.cardRefundTransaction, args);
+
+    return makeHaloStartTransactionResult(transactionStartResultMap);
   }
 
   static Future<void> cancelTransaction() async {

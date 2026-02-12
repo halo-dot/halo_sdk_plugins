@@ -7,8 +7,14 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 import android.os.Process
 
+import za.co.synthesis.halo.haloCommonInterface.TransactionType
+
+import io.flutter.embedding.engine.plugins.activity.ActivityAware
+import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
+import android.app.Activity
+
 /** SdkflutterpluginPlugin */
-class SdkflutterpluginPlugin: FlutterPlugin, MethodCallHandler {
+class SdkflutterpluginPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
   /// The MethodChannel that will handle the communication between Flutter and native Android
   ///
   /// This local reference serves to register the plugin with the Flutter Engine and unregister it
@@ -24,11 +30,20 @@ class SdkflutterpluginPlugin: FlutterPlugin, MethodCallHandler {
     haloSdkImplementation = HaloSdkImplementation(flutterPluginBinding.binaryMessenger)
   }
 
+  override fun onAttachedToActivity(binding: ActivityPluginBinding) {
+    UIContext.updateActivity(binding.activity)
+  }
+
+  override fun onDetachedFromActivity() { UIContext.updateActivity(null) }
+  override fun onDetachedFromActivityForConfigChanges() { UIContext.updateActivity(null) }
+  override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) { UIContext.updateActivity(binding.activity) }
+
   override fun onMethodCall(call: MethodCall, result: Result) {
     try {
       when (call.method) {
         "initializeHaloSDK" -> haloSdkImplementation.initializeHaloSDK(result, call.arguments<HashMap<String, Any>>())
         "startTransaction" -> haloSdkImplementation.startTransaction(result, call.arguments<HashMap<String, Any>>())
+        "cardRefundTransaction" -> haloSdkImplementation.startTransaction(result, call.arguments<HashMap<String, Any>>(), TransactionType.Refund)
         "jwtCallback" -> haloSdkImplementation.jwtCallback(result, call.arguments<String>())
         "cancelTransaction" -> haloSdkImplementation.cancelTransaction(result)
         else -> result.notImplemented()

@@ -7,6 +7,7 @@ import za.co.synthesis.halo.sdk.model.HaloInitializationParameters
 import io.flutter.plugin.common.MethodChannel.Result
 import za.co.synthesis.halo.haloCommonInterface.HaloErrorCode
 import za.co.synthesis.halo.haloCommonInterface.HaloException
+import za.co.synthesis.halo.haloCommonInterface.TransactionType
 import kotlin.reflect.typeOf
 
 class HaloSdkImplementation(messanger: BinaryMessenger) {
@@ -31,6 +32,9 @@ class HaloSdkImplementation(messanger: BinaryMessenger) {
             args[Const.APPLICATION_VERSION] as String
           )
         )
+
+        UIContext.enableSchemeAnimations((args[Const.ENABLE_SCHEME_ANIMATIONS] as Boolean?) ?: false)
+
         result.success(null)
       } catch (e: Exception) {
         if (e is HaloException) {
@@ -50,7 +54,7 @@ class HaloSdkImplementation(messanger: BinaryMessenger) {
     result.success(null)
   }
 
-  fun startTransaction(result: Result, args: HashMap<String, Any>?) {
+  fun startTransaction(result: Result, args: HashMap<String, Any>?,  transactionType: TransactionType = TransactionType.Purchase) {
     if (args != null) {
       Log.d(TAG, "startTransaction: $args")
 
@@ -65,7 +69,9 @@ class HaloSdkImplementation(messanger: BinaryMessenger) {
           (args[Const.TRANSACTION_AMOUNT] as Double).toBigDecimal(),
           args[Const.MERCHANT_TRANSACTION_REFERENCE] as String,
           args[Const.TRANSACTION_CURRENCY] as String,
-          extraFields
+          extraFields,
+          null,
+          transactionType
         )
 
         result.success(makeMap(startTransactionResult))
