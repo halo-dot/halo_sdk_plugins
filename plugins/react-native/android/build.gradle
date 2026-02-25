@@ -1,0 +1,91 @@
+plugins {
+    id "com.android.library"
+    id "kotlin-android"
+}
+
+group 'za.co.synthesis.halo.sdkreactnativeplugin'
+version '1.0-SNAPSHOT'
+
+Properties properties = new Properties()
+if (rootProject.file("local.properties").exists()) {
+    properties.load(project.rootProject.file("local.properties").newDataInputStream())
+}
+
+rootProject.allprojects {
+    repositories {
+        google()
+        mavenCentral()
+        maven { url 'https://jitpack.io' }
+
+        def repos = [
+            'releases',
+            'snapshots'
+        ]
+
+        flatDir {
+            dirs project(':halo_sdk_react_native_plugin').file('libs')
+        }
+
+        repos.each { repo ->
+            maven {
+                name = repo
+                url = "s3://synthesis-halo-artifacts/$repo"
+                credentials(AwsCredentials) {
+                    def localAccessKey = properties.getProperty('aws.accesskey')
+                    def systemEnvAccessKey = System.getenv('AWS_ACCESS_KEY_ID')
+
+                    def localSecretKey = properties.getProperty('aws.secretkey')
+                    def systemEnvSecretKey = System.getenv('AWS_SECRET_ACCESS_KEY')
+
+                    def localToken = properties.getProperty('aws.token')
+                    def systemEnvToken = System.getenv('AWS_SESSION_TOKEN')
+
+                    accessKey = localAccessKey != null ? localAccessKey : systemEnvAccessKey
+                    secretKey = localSecretKey != null ? localSecretKey : systemEnvSecretKey
+
+                    if (systemEnvToken != null) {
+                        sessionToken = systemEnvToken
+                    }
+                }
+            }
+        }
+    }
+}
+
+android {
+    compileSdk 35
+    namespace 'za.co.synthesis.halo.sdkreactnativeplugin'
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_21
+        targetCompatibility JavaVersion.VERSION_21
+    }
+
+    kotlinOptions {
+        jvmTarget = '21'
+    }
+
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+    }
+
+    defaultConfig {
+        minSdkVersion 29
+    }
+}
+
+def sdkVersion = "4.0.12"
+
+dependencies {
+    // React Native is provided by the host app — do not bundle it
+    compileOnly 'com.facebook.react:react-native:+'
+    implementation 'androidx.core:core-ktx:1.9.0'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+
+    // Halo SDK
+    releaseImplementation group: "za.co.synthesis.halo", name: "sdk", version: "$sdkVersion", changing: true
+    debugImplementation group: "za.co.synthesis.halo", name: "sdk", version: "$sdkVersion-debug", changing: true
+
+    implementation(name: 'VisaSensoryBranding', ext: 'aar')
+    implementation(name: 'sonic-sdk-release-1.5.0', ext: 'aar')
+}
