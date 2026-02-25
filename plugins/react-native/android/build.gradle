@@ -1,7 +1,5 @@
-plugins {
-    id "com.android.library"
-    id "kotlin-android"
-}
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
 
 group 'za.co.synthesis.halo.sdkreactnativeplugin'
 version '1.0-SNAPSHOT'
@@ -57,12 +55,12 @@ android {
     namespace 'za.co.synthesis.halo.sdkreactnativeplugin'
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_21
-        targetCompatibility JavaVersion.VERSION_21
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 
     kotlinOptions {
-        jvmTarget = '21'
+        jvmTarget = '17'
     }
 
     sourceSets {

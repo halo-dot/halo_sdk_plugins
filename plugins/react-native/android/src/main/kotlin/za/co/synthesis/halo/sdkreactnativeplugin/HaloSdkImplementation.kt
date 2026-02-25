@@ -19,7 +19,7 @@ class HaloSdkImplementation(reactContext: ReactApplicationContext) {
             HaloSDK.initialize(
                 HaloInitializationParameters(
                     haloCallbacks,
-                    (args[Const.ON_START_TRANSACTION_TIME_OUT] as Int?)?.toLong()
+                    (args[Const.ON_START_TRANSACTION_TIME_OUT] as? Number)?.toLong()
                         ?: ON_START_TRANSACTION_TIME_OUT,
                     args[Const.APPLICATION_PACKAGE_NAME] as String,
                     args[Const.APPLICATION_VERSION] as String

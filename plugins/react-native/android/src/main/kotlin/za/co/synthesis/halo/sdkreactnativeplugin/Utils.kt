@@ -1,5 +1,6 @@
 package za.co.synthesis.halo.sdkreactnativeplugin
 
+import android.util.Base64
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.WritableArray
 import com.facebook.react.bridge.WritableMap
@@ -41,7 +42,7 @@ internal fun makeWritableMap(data: HaloTransactionResult): WritableMap {
         putString("haloTransactionReference", data.haloTransactionReference)
         putString("paymentProviderReference", data.paymentProviderReference)
         putString("errorCode", data.errorCode.name)
-        putString("errorDetails", data.errorDetails)
+        putArray("errorDetails", data.errorDetails.toWritableArray())
         putMap("receipt", makeWritableMap(data.receipt))
         putMap("customTags", data.customTags?.toWritableMap())
     }
@@ -50,7 +51,7 @@ internal fun makeWritableMap(data: HaloTransactionResult): WritableMap {
 internal fun makeWritableMap(data: HaloTransactionReceipt?): WritableMap? {
     if (data == null) return null
     return Arguments.createMap().apply {
-        putString("signature", data.signature)
+        putString("signature", Base64.encodeToString(data.signature, Base64.NO_WRAP))
         putString("transactionDate", data.transactionDate)
         putString("transactionTime", data.transactionTime)
         putString("aid", data.aid)
@@ -74,9 +75,9 @@ internal fun makeWritableMap(data: HaloTransactionReceipt?): WritableMap? {
         putString("panSequenceNumber", data.panSequenceNumber)
         putString("effectiveDate", data.effectiveDate)
         putString("disposition", data.disposition)
-        putString("currencyCode", data.currencyCode)
-        putString("amountAuthorised", data.amountAuthorised)
-        putString("amountOther", data.amountOther)
+        putString("currencyCode", data.currencyCode?.toString())
+        putString("amountAuthorised", data.amountAuthorised?.toString())
+        putString("amountOther", data.amountOther?.toString())
     }
 }
 
@@ -84,7 +85,7 @@ internal fun makeWritableMap(data: HaloUIMessage): WritableMap {
     return Arguments.createMap().apply {
         putString("msgID", data.msgID.name)
         putInt("holdTimeMS", data.holdTimeMS)
-        putString("languagePreference", data.languagePreference)
+        putArray("languagePreference", data.languagePreference?.toWritableArray())
         putMap("offlineBalance", makeWritableMap(data.offlineBalance))
         putMap("transactionAmount", makeWritableMap(data.transactionAmount))
     }
@@ -122,7 +123,7 @@ internal fun makeWritableMap(data: HaloInitializationResult): WritableMap {
 internal fun makeWritableMap(data: HaloWarning): WritableMap {
     return Arguments.createMap().apply {
         putString("errorCode", data.errorCode.name)
-        putString("details", data.details)
+        putArray("details", data.details?.toWritableArray())
     }
 }
 
@@ -144,6 +145,7 @@ private fun List<String>.toWritableArray(): WritableArray {
         this@toWritableArray.forEach { pushString(it) }
     }
 }
+
 
 private fun <T> List<T>.toWritableArray(transform: (T) -> WritableMap): WritableArray {
     return Arguments.createArray().apply {
