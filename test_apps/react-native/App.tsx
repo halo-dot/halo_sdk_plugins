@@ -21,6 +21,7 @@ import {
   type IHaloCallbacks,
 } from "halo-sdk-react-native";
 import { getJwt } from "./src/jwt/JwtToken";
+import { Config } from "./src/config";
 
 interface Message {
   id: string;
@@ -101,10 +102,10 @@ export default function App() {
 
     HaloSdk.initialize(
       callbacks,
-      "za.co.synthesis.halo.rnexample",
-      "0.0.1",
-      300000,
-      true,
+      Config.applicationPackageName,
+      Config.applicationVersion,
+      Config.onStartTransactionTimeOut,
+      Config.enableSchemeAnimations,
     ).catch((e: any) => {
       setIsInitializing(false);
       addMessage(`SDK initialisation error: ${e.message}`, "red");

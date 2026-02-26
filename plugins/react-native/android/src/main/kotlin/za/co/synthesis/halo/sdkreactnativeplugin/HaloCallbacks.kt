@@ -85,12 +85,7 @@ class HaloCallbacks(
     override fun onInitializationResult(result: HaloInitializationResult) {
         Log.d(TAG, "onInitializationResult resultType: ${result.resultType}")
         Log.d(TAG, "onInitializationResult errorCode: ${result.errorCode}")
-        Log.d(TAG, "onInitializationResult terminalCurrency: ${result.terminalCurrency}")
-        Log.d(TAG, "onInitializationResult terminalCountryCode: ${result.terminalCountryCode}")
-        Log.d(TAG, "onInitializationResult terminalLanguageCodes: ${result.terminalLanguageCodes}")
-        result.warnings.forEach { Log.d(TAG, "onInitializationResult warning: ${it.errorCode} ${it.details}") }
 
-    
         val params = Arguments.createMap().apply {
             putString("eventType", "initialization")
             putMap("data", makeWritableMap(result))
