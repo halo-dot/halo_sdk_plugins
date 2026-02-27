@@ -1,10 +1,7 @@
 package za.co.synthesis.halo.sdkreactnativeplugin
 
-import android.app.PendingIntent
-import android.content.Intent
 import android.nfc.NfcAdapter
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.util.Log
 import com.facebook.react.ReactActivity
 import za.co.synthesis.halo.sdk.HaloSDK
@@ -20,8 +17,8 @@ import za.co.synthesis.halo.sdk.HaloSDK
  * }
  * ```
  *
- * This class handles the full HaloSDK lifecycle (onCreate, onStart, onResume, onPause, onStop)
- * and NFC foreground dispatch, mirroring the Flutter plugin's HaloActivity.
+ * This class handles the full HaloSDK lifecycle (onCreate, onStart, onResume, onPause, onStop),
+ * mirroring the Flutter plugin's HaloActivity.
  */
 abstract class HaloReactActivity : ReactActivity() {
     private val TAG = "HaloReactActivity"
@@ -47,14 +44,12 @@ abstract class HaloReactActivity : ReactActivity() {
     override fun onResume() {
         Log.d(TAG, "onResume")
         super.onResume()
-        enableNfcForegroundDispatch()
         HaloSDK.onResume()
     }
 
     override fun onPause() {
         Log.d(TAG, "onPause")
         HaloSDK.onPause()
-        disableNfcForegroundDispatch()
         super.onPause()
     }
 
@@ -62,41 +57,5 @@ abstract class HaloReactActivity : ReactActivity() {
         Log.d(TAG, "onStop")
         HaloSDK.onStop()
         super.onStop()
-    }
-
-    override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
-        Log.d(TAG, "onSaveInstanceState")
-        super.onSaveInstanceState(outState, outPersistentState)
-        HaloSDK.onSaveInstanceState(outState, outPersistentState)
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        Log.d(TAG, "onSaveInstanceState")
-        super.onSaveInstanceState(outState)
-        HaloSDK.onSaveInstanceState(outState)
-    }
-
-    private fun enableNfcForegroundDispatch() {
-        try {
-            val intent = Intent(applicationContext, javaClass)
-            intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-            val pendingIntent = PendingIntent.getActivity(
-                applicationContext,
-                0,
-                intent,
-                PendingIntent.FLAG_IMMUTABLE
-            )
-            nfcAdapter?.enableForegroundDispatch(this, pendingIntent, null, null)
-        } catch (ex: IllegalStateException) {
-            Log.e(TAG, "Error enabling NFC foreground dispatch: ${ex.message}", ex)
-        }
-    }
-
-    private fun disableNfcForegroundDispatch() {
-        try {
-            nfcAdapter?.disableForegroundDispatch(this)
-        } catch (ex: IllegalStateException) {
-            Log.e(TAG, "Error disabling NFC foreground dispatch: ${ex.message}", ex)
-        }
     }
 }

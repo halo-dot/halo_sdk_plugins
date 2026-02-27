@@ -10,24 +10,19 @@ React Native plugin for the Halo SDK, enabling Android NFC card-present payment 
 
 ## Installation
 
-### 1. Copy the plugin
+### 1. Install the package
 
-Place the plugin source alongside your app (or publish it to a registry). In your app's `package.json`, link it:
+Add the package to your project using npm or yarn:
 
-```json
-"dependencies": {
-  "halo-sdk-react-native": "file:../path/to/plugins/react-native"
-}
+```bash
+npm install halo-sdk-react-native
 ```
 
-### 2. Add the Halo AAR libraries
+```bash
+yarn add halo-sdk-react-native
+```
 
-Copy the following AARs into your Android project's `android/libs/` folder:
-
-- `VisaSensoryBranding.aar`
-- `sonic-sdk-release-1.5.0.aar`
-
-### 3. Configure AWS credentials for the Halo Maven repository
+### 2. Configure AWS credentials for the Halo Maven repository
 
 The plugin fetches the Halo SDK from an S3-backed Maven repo. Provide credentials in `android/local.properties`:
 
@@ -39,7 +34,7 @@ aws.token=YOUR_SESSION_TOKEN   # optional
 
 Or set environment variables `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, and `AWS_SESSION_TOKEN`.
 
-### 4. Register the native module
+### 3. Register the native module
 
 In your `MainApplication`, add `HaloSdkPackage` to `getPackages()`:
 
@@ -50,7 +45,7 @@ override fun getPackages(): List<ReactPackage> = listOf(
 )
 ```
 
-### 5. Extend HaloReactActivity
+### 4. Extend HaloReactActivity
 
 In `MainActivity`, extend `HaloReactActivity` instead of `ReactActivity`:
 
@@ -64,7 +59,7 @@ class MainActivity : HaloReactActivity() {
 }
 ```
 
-This ensures Halo SDK lifecycle management and NFC foreground dispatch work correctly.
+This ensures Halo SDK lifecycle management works correctly.
 
 ## Usage
 

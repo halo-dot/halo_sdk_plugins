@@ -47,9 +47,26 @@ export default function App() {
 
   async function requestPermissionsThenInit() {
     if (Platform.OS === "android") {
-      await PermissionsAndroid.requestMultiple([
-        PermissionsAndroid.PERMISSIONS.CAMERA,
-      ]);
+      const sdkVersion = typeof Platform.Version === "number" ? Platform.Version : parseInt(Platform.Version, 10);
+      const permissions: typeof PermissionsAndroid.PERMISSIONS[keyof typeof PermissionsAndroid.PERMISSIONS][] = [PermissionsAndroid.PERMISSIONS.CAMERA];
+
+      const message = `Android SDK version: ${sdkVersion}.`;
+      addMessage(message, "blue");
+      if (sdkVersion >= 31) {
+        // Android 12+
+        permissions.push(
+          PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN,
+          PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT,
+          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        );
+      } else {
+        // Below Android 12: request location (required for Bluetooth LE scanning)
+        permissions.push(
+          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        );
+      }
+
+      await PermissionsAndroid.requestMultiple(permissions);
     }
     initializeSdk();
   }
