@@ -1,0 +1,59 @@
+# Dependencies
+node_modules/
+.bundle/
+
+# Android build
+android/.gradle/
+android/app/.gradle/
+android/app/build/
+android/build/
+android/.cxx/
+android/app/src/main/assets/index.android.bundle
+android/app/src/main/assets/index.android.bundle.meta
+*.keystore
+!debug.keystore
+
+# Android secrets
+android/local.properties
+
+# JS secrets
+src/config.ts
+
+# Metro
+.metro-health-check*
+
+# Expo
+.expo/
+dist/
+
+# Logs
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+
+# macOS
+.DS_Store
+*.pbxuser
+!default.pbxuser
+*.mode1v2
+!default.mode1v2
+*.mode2v2
+!default.mode2v2
+*.perspectivev3
+!default.perspectivev3
+xcuserdata
+*.xccheckout
+*.moved-to-trash
+project.xcworkspace
+.xcode.env.local
+
+# IntelliJ / Android Studio
+*.iml
+.idea/
+.classpath
+.project
+.settings/
+bin/
+
+# iOS
+ios/

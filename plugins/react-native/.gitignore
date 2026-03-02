@@ -1,0 +1,8 @@
+# Android build output
+android/build/
+android/.gradle/
+android/.cxx/
+android/**/*.iml
+
+# Node
+node_modules/

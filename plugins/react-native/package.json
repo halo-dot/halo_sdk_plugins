@@ -1,0 +1,24 @@
+{
+  "name": "halo-sdk-react-native",
+  "version": "1.0.0",
+  "description": "React Native plugin for Halo SDK",
+  "main": "src/index",
+  "types": "src/index",
+  "scripts": {
+    "build": "tsc"
+  },
+  "keywords": [
+    "halo",
+    "sdk",
+    "react-native",
+    "nfc",
+    "payment"
+  ],
+  "peerDependencies": {
+    "react-native": "*"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "@types/react-native": "^0.73.0"
+  }
+}
