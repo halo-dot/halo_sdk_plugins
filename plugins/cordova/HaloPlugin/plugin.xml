@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='utf-8'?>
+<plugin id="cordovapluginhalo" version="2.0.1"
+	xmlns="http://apache.org/cordova/ns/plugins/1.0"
+	xmlns:android="http://schemas.android.com/apk/res/android">
+	<name>HaloPlugin</name>
+	<js-module name="HaloPlugin" src="www/HaloPlugin.js">
+		<clobbers target="cordova.plugins.HaloPlugin" />
+	</js-module>
+	<platform name="android">
+        <config-file after="uses-permission" target="AndroidManifest.xml" parent="/manifest">
+			<uses-permission android:name="android.permission.INTERNET" />
+			<uses-permission android:name="android.permission.NFC" />
+			<uses-permission android:name="android.permission.CAMERA" />
+			<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+			<uses-permission android:name="android.permission.BLUETOOTH" />
+			<uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+			<uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
+			<uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+			<uses-feature android:name="android.hardware.nfc" android:required="true" />
+			<uses-feature android:name="android.hardware.camera" android:required="true" />
+        </config-file>
+
+		<config-file parent="/*" target="res/xml/config.xml">
+			<feature name="HaloPlugin">
+				<param name="android-package" value="cordovapluginhalo.HaloPlugin" />
+			</feature>
+			<preference name="android-minSdkVersion" value="26" />
+		</config-file>
+		
+		<!-- <config-file parent="/*" target="AndroidManifest.xml"></config-file> -->
+        <hook type="after_plugin_add" src="hooks/override_activity.js" />
+        <hook type="after_platform_add" src="hooks/override_activity.js" />
+        <hook type="before_plugin_rm" src="hooks/replace_activity.js" />
+        <framework custom="true" src="src/android/HaloPlugin.gradle" type="gradleReference" />
+		<source-file src="src/android/HaloPlugin.java" target-dir="src/cordovapluginhalo" />
+		<source-file src="src/android/HaloCallbacks.java" target-dir="src/cordovapluginhalo" />
+	</platform>
+</plugin>

@@ -1,0 +1,39 @@
+repositories {
+
+    def repos = [
+            'releases',
+            'snapshots'
+    ]
+
+    Properties properties = new Properties()
+    def propertiesFile = project.rootProject.file('local.properties')
+    if (propertiesFile.exists()) {
+        println "Properties file does exist"
+        properties.load(propertiesFile.newDataInputStream())
+    }
+
+    def localAccessKey = properties.getProperty('aws.accesskey')
+    def systemEnvAccessKey = System.getenv('AWS_ACCESS_KEY_ID')
+
+    def localSecretKey = properties.getProperty('aws.secretkey')
+    def systemEnvSecretKey = System.getenv('AWS_SECRET_ACCESS_KEY')
+
+
+    repos.each {repo ->
+        maven {
+            name = repo
+            url = "s3://synthesis-halo-artifacts/$repo"
+
+            credentials(AwsCredentials) {
+                accessKey = localAccessKey != null ? localAccessKey : systemEnvAccessKey
+                secretKey = localSecretKey != null ? localSecretKey : systemEnvSecretKey
+            }
+        }
+    }
+}
+
+dependencies {
+    implementation 'com.google.code.gson:gson:2.8.9'
+    releaseImplementation group: "za.co.synthesis.halo", name: "sdk", version: "4.0.10-rc", changing: true
+    debugImplementation group: "za.co.synthesis.halo", name: "sdk", version: "4.0.10-debug-rc", changing: true
+}
