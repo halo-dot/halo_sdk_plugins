@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-  package="za.co.synthesis.halo.sdkreactnativeplugin">
+  xmlns:tools="http://schemas.android.com/tools">
     <application>
         <activity
             android:name=".AnimationActivity"

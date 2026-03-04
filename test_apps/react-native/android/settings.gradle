@@ -3,7 +3,4 @@ apply from: file("../node_modules/@react-native-community/cli-platform-android/n
 include ':app'
 includeBuild('../node_modules/@react-native/gradle-plugin')
 
-// Halo SDK React Native plugin (local source to matche npm package name)
-include ':halo-sdk-react-native'
-project(':halo-sdk-react-native').projectDir = new File(rootDir, '../../../plugins/react-native/android')
 

@@ -131,9 +131,21 @@ if (localPropertiesFile.exists()) {
 }
 ```
 
+**4.** Add the following `packagingOptions` block inside the `android { }` closure in `android/app/build.gradle`. This prevents a duplicate-file error caused by OSGI metadata bundled in the SDK's transitive dependencies:
+
+```gradle
+android {
+    // ... your existing config ...
+
+    packagingOptions {
+        resources.excludes.add("META-INF/versions/9/OSGI-INF/MANIFEST.MF")
+    }
+}
+```
+
 ### Native Module Setup
 
-**4.** Open `android/app/src/main/kotlin/.../MainActivity.kt` and extend `HaloReactActivity` instead of `ReactActivity`:
+**5.** Open `android/app/src/main/kotlin/.../MainActivity.kt` and extend `HaloReactActivity` instead of `ReactActivity`:
 
 ```kotlin
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint.fabricEnabled
@@ -150,40 +162,6 @@ class MainActivity : HaloReactActivity() {
 ```
 
 This replaces `ReactActivity` so that NFC foreground dispatch and the Halo SDK lifecycle are managed automatically.
-
-**5.** Open `android/app/src/main/kotlin/.../MainApplication.kt` and register `HaloSdkPackage`:
-
-```kotlin
-import android.app.Application
-import com.facebook.react.PackageList
-import com.facebook.react.ReactApplication
-import com.facebook.react.ReactNativeHost
-import com.facebook.react.ReactPackage
-import com.facebook.react.defaults.DefaultReactNativeHost
-import com.facebook.soloader.SoLoader
-import za.co.synthesis.halo.sdkreactnativeplugin.HaloSdkPackage  // <-- add this import
-
-class MainApplication : Application(), ReactApplication {
-
-    override val reactNativeHost: ReactNativeHost =
-        object : DefaultReactNativeHost(this) {
-            override fun getPackages(): List<ReactPackage> =
-                PackageList(this).packages.apply {
-                    add(HaloSdkPackage())  // <-- add this line
-                }
-
-            override fun getJSMainModuleName(): String = "index"
-            override fun getUseDeveloperSupport(): Boolean = BuildConfig.DEBUG
-            override val isNewArchEnabled: Boolean = false
-            override val isHermesEnabled: Boolean = true
-        }
-
-    override fun onCreate() {
-        super.onCreate()
-        SoLoader.init(this, false)
-    }
-}
-```
 
 ### AndroidManifest Permissions
 
@@ -218,7 +196,14 @@ class MainApplication : Application(), ReactApplication {
 
     <uses-feature android:name="android.hardware.nfc" android:required="true" />
 
-    <application ...>
+    <!--
+        tools:replace is required because the Halo SDK (and its bundled Visa library)
+        declare android:label and android:allowBackup in their own manifests.
+        Without these overrides the manifest merger will refuse to build.
+    -->
+    <application
+        ...
+        tools:replace="android:label,android:allowBackup">
         <activity
             android:name=".MainActivity"
             ...>
@@ -440,7 +425,7 @@ Below is a minimal but complete payment screen taken directly from the example a
 
 ```tsx
 // App.tsx
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   Text,
@@ -682,7 +667,6 @@ compileSdkVersion localProperties.getProperty('compileSdkVersion').toInteger()
 **Q: I get a build error about `HaloReactActivity` or `HaloSdkPackage` not found.**
 
 - Confirm the npm package is installed: `npm install halo-sdk-react-native`
-- Confirm `HaloSdkPackage()` is added in `MainApplication.kt`
 - Confirm `MainActivity` extends `HaloReactActivity` (not `ReactActivity`)
 - Run a Gradle sync in Android Studio
 
@@ -700,6 +684,45 @@ compileSdkVersion localProperties.getProperty('compileSdkVersion').toInteger()
 **Q: How do I get a JWT for testing?**
 
 A JWT must be generated using your RSA private key and the credentials from the [developer portal](https://go.developerportal.qa.haloplus.io/). See the [Halo developer documentation](https://halo-dot-developer-docs.gitbook.io/halo-dot/sdk) for the required claims and signing algorithm. Once you have a valid token, paste it into `Config.tempJwt` in your `config.ts`.
+
+---
+
+**Q: Manifest merger fails with an attribute conflict (e.g. `android:label`, `android:allowBackup`).**
+
+The Halo SDK bundles several sub-libraries (Visa Sensory Branding, etc.), each with their own `AndroidManifest.xml`. Any `processDebugMainManifest` failure caused by an attribute clash is fixed by adding the conflicting attribute name to `tools:replace` on your `<application>` element:
+
+```xml
+<application
+    ...
+    tools:replace="android:label,android:allowBackup">
+```
+
+If you add a new attribute to `tools:replace` and the **same error persists on the very next build**, Gradle may have cached the previously failed manifest merge. Run a clean build and try again:
+
+```bash
+cd android && ./gradlew clean
+```
+
+Then re run your normal build (`npx react-native run-android` or Android Studio).
+
+---
+
+**Q: TypeScript build errors about `customConditions` or `moduleResolution` after editing `tsconfig.json`.**
+
+Do not override `moduleResolution` in your project's `tsconfig.json`. The base `@react-native/typescript-config` sets `"moduleResolution": "bundler"`, which is the only value compatible with its `customConditions` setting. Overriding it to `"node"` causes a TypeScript error.
+
+Instead, extend the base config and only add project specific overrides:
+
+```json
+{
+  "extends": "@react-native/typescript-config/tsconfig.json",
+  "compilerOptions": {
+    "skipLibCheck": true
+  }
+}
+```
+
+`skipLibCheck: true` suppresses spurious type errors that originate inside `node_modules` (e.g. phantom `@types/react` v19 conflicts) without changing how your own code is compiled.
 
 ---
 

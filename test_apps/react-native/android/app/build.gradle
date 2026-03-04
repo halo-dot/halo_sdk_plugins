@@ -63,9 +63,6 @@ dependencies {
         implementation("com.facebook.react:hermes-android")
     }
 
-    // Halo SDK React Native plugin (local source)
-    implementation project(':halo-sdk-react-native')
-
 }
 
 apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)
