@@ -1,6 +1,6 @@
 # halo-sdk-react-native
 
-A React Native implementation of the [Halo Dot SDK](https://halo-dot-developer-docs.gitbook.io/halo-dot/sdk/1.-getting-started).
+A React Native plugin of the [Halo Dot SDK](https://halo-dot-developer-docs.gitbook.io/halo-dot/sdk/1.-getting-started).
 
 The Halo Dot SDK is an Isolating MPoC SDK payment processing software with Attestation & Monitoring Capabilities. It turns an NFC-capable Android phone into a card-present payment terminal, no extra hardware required.
 
@@ -642,7 +642,7 @@ You can simulate card taps using a virtual NFC card app such as [Visa Mobile CDE
 You can define them in `android/local.properties` and read them in Gradle:
 
 ```properties
-sdk.dir=C\:\\Users\\yourname\\Library\\Android/Sdk
+sdk.dir=C\:\\Users\\yourname\\Library\\Android\\Sdk
 aws.accesskey=YOUR_ACCESS_KEY
 aws.secretkey=YOUR_SECRET_KEY
 compileSdkVersion=34
