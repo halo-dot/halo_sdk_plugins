@@ -24,17 +24,20 @@ class HaloSdkModule(reactContext: ReactApplicationContext) :
 
     @ReactMethod
     fun initializeHaloSDK(args: ReadableMap, promise: Promise) {
-        haloSdkImplementation.initializeHaloSDK(promise, args.toHashMap())
+        @Suppress("UNCHECKED_CAST")
+        haloSdkImplementation.initializeHaloSDK(promise, args.toHashMap() as HashMap<String, Any>)
     }
 
     @ReactMethod
     fun startTransaction(args: ReadableMap, promise: Promise) {
-        haloSdkImplementation.startTransaction(promise, args.toHashMap())
+        @Suppress("UNCHECKED_CAST")
+        haloSdkImplementation.startTransaction(promise, args.toHashMap() as HashMap<String, Any>)
     }
 
     @ReactMethod
     fun cardRefundTransaction(args: ReadableMap, promise: Promise) {
-        haloSdkImplementation.startTransaction(promise, args.toHashMap(), TransactionType.Refund)
+        @Suppress("UNCHECKED_CAST")
+        haloSdkImplementation.startTransaction(promise, args.toHashMap() as HashMap<String, Any>, TransactionType.Refund)
     }
 
     @ReactMethod
@@ -57,7 +60,7 @@ class HaloSdkModule(reactContext: ReactApplicationContext) :
     // Keep UIContext activity reference up to date
     override fun onHostResume() {
         Log.d(TAG, "onHostResume")
-        UIContext.updateActivity(currentActivity)
+        UIContext.updateActivity(reactApplicationContext.currentActivity)
     }
 
     override fun onHostPause() {

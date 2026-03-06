@@ -95,7 +95,14 @@ export default function App() {
       onInitializationResult(result: HaloInitializationResult) {
         console.log("onInitializationResult", result);
         setIsInitializing(false);
-        addMessage(`Initialisation result: ${result.resultType}`);
+        if (result.resultType === "Initialized") {
+          addMessage("SDK ready", "green");
+        } else {
+          addMessage(
+            `Initialisation failed: ${result.resultType} (${result.errorCode})`,
+            "red",
+          );
+        }
       },
       onRequestJWT(jwtCallback: (jwt: string) => void) {
         console.log("onRequestJWT");

@@ -21,7 +21,7 @@ rootProject.allprojects {
         ]
 
         flatDir {
-            dirs project(':halo_sdk_react_native_plugin').file('libs')
+            dirs "${project(':halo-sdk-react-native').projectDir}/libs"
         }
 
         repos.each { repo ->
@@ -81,8 +81,8 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.6.1'
 
     // Halo SDK
-    releaseImplementation group: "za.co.synthesis.halo", name: "sdk", version: "$sdkVersion", changing: true
-    debugImplementation group: "za.co.synthesis.halo", name: "sdk", version: "$sdkVersion-debug", changing: true
+    releaseApi group: "za.co.synthesis.halo", name: "sdk", version: "$sdkVersion", changing: true
+    debugApi group: "za.co.synthesis.halo", name: "sdk", version: "$sdkVersion-debug", changing: true
 
     implementation(name: 'VisaSensoryBranding', ext: 'aar')
     implementation(name: 'sonic-sdk-release-1.5.0', ext: 'aar')
