@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;">
+        <meta name="format-detection" content="telephone=no">
+        <meta name="msapplication-tap-highlight" content="no">
+        <meta name="viewport" content="initial-scale=1, width=device-width, viewport-fit=cover">
+        <meta name="color-scheme" content="light dark">
+        <link rel="stylesheet" href="css/index.css">
+        <title>Halo Cordova Platform Sample</title>
+    </head>
+    <body>
+        <div class="app" id="appID">
+            <h3>Halo Sample for Cordova</h3>
+
+            <button type="button" id="btnInitialize">Initialize!</button>
+
+            <h3>Please Enter Transaction Amount:</h3>
+
+            <input type="number" name="amount" id="amountField" placeholder="e.g. R700.00">
+
+            <h3>Please Enter Merchant Reference:</h3>
+
+            <input type="text" name="merchantReference" id="merchantReferenceField" placeholder="e.g. Transaction13">
+
+            <h3>Please Select a Currency:</h3>
+
+            <select name="currency" id="currencyDropdown">
+                <option value="zar">South African Rand</option>
+                <option value="usd" selected>United States Dollar</option>
+                <option value="eur">Euro</option>
+                <option value="nad">Namibian Dollar</option>
+            </select>
+
+            <!-- <h3 id="uiMessageID">UI Messages</h3>
+            <h3 id="resultID">Result</h3> -->
+
+            <button type="button" id="btnTransact">Transact!</button>
+
+            <button type="button" id="btnCancel">Cancel!</button>
+            
+            <!-- <button type="button" id="btnClearUI">Clear UI Messages!</button> -->
+        </div>
+        <script src="cordova.js"></script>
+        <script src="js/index.js"></script>
+    </body>
+</html>
