@@ -1,0 +1,35 @@
+{
+  "name": "za.co.synthesis.halo.mpos.halocordovaexample",
+  "displayName": "Halo Cordova Example",
+  "version": "1.0.0",
+  "description": "Demonstrates how to use the cordova HaloPlugin plugin.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "ecosystem:cordova"
+  ],
+  "author": "Apache Cordova Team",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "cordova-android": "^14.0.1",
+    "cordova-plugin-advanced-http": "^3.3.1",
+    "cordova-plugin-file": "^8.1.3",
+    "cordovapluginhalo": "file:../../plugins/cordova/HaloPlugin"
+  },
+  "cordova": {
+    "plugins": {
+      "cordova-plugin-advanced-http": {},
+      "cordovapluginhalo": {}
+    },
+    "platforms": [
+      "android"
+    ]
+  },
+  "dependencies": {
+    "cordova": "^12.0.0",
+    "q": "^2.0.3",
+    "xml2js": "^0.6.2"
+  }
+}
