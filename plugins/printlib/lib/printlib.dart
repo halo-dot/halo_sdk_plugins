@@ -9,6 +9,16 @@ enum Providers {
   MOBIPOS
 }
 
+class PrinterData {
+  late String title;
+  late Map<int, Map<String, String>> sections;
+
+  Map<String, dynamic> toJson() => {
+    'title': title,
+    'sections': sections,
+  };
+}
+
 /// A Flutter plugin for integrating with POS devices that have printing capabilities.
 ///
 /// The Printlib class provides a unified interface for printing text and HTML content
@@ -131,5 +141,14 @@ class Printlib {
   /// ```
   Future<void> printHTML(String html) async {
     await _channel.invokeMethod("printHTML", {"html": html});
+  }
+
+  Future<bool> printCustom(PrinterData printerData) async {
+    try{
+      var result = await _channel.invokeMethod("printCustom", {"printerData": printerData.toJson()});
+      return(result as bool);
+    }catch(e){
+      return false;
+    }
   }
 }

@@ -29,7 +29,7 @@ allprojects {
         mavenCentral()
         maven {
             url = "s3://synthesis-third-party-libs/Mobi-pos-printer"
-            credentials(AwsCredentials){
+            credentials(AwsCredentials) {
 
                 def localAccessKey = properties.getProperty('aws.accesskey')
                 def systemEnvAccessKey = System.getenv('AWS_ACCESS_KEY_ID')
@@ -43,7 +43,7 @@ allprojects {
                 accessKey = localAccessKey != null ? localAccessKey : systemEnvAccessKey
                 secretKey = localSecretKey != null ? localSecretKey : systemEnvSecretKey
 
-                if (systemEnvToken != null){
+                if (systemEnvToken != null) {
                     sessionToken = systemEnvToken
                 }
             }
@@ -78,6 +78,6 @@ android {
     }
 
     dependencies {
-        implementation('com.mobiiot:mobiiot-api:2.4.0@aar') { transitive = true}
+        implementation('com.mobiiot:mobiiot-api:2.4.0@aar') { transitive = true }
     }
 }

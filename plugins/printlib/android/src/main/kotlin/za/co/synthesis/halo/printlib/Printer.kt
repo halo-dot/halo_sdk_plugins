@@ -1,5 +1,9 @@
 package za.co.synthesis.halo.printlib
 import android.content.Context
+import android.graphics.BitmapFactory
+import android.graphics.Typeface
+import android.util.Base64
+import com.mobiiot.sdk.printer.CsPrinterBuffer
 import java.io.Closeable
 
 
@@ -40,4 +44,12 @@ abstract class Printer: Closeable {
      * @param html The HTML content to be printed. Must be valid HTML markup.
      */
     abstract fun printHTML(html: String)
+
+    abstract fun addBitmap(base64Image: String, centered: Boolean = true): CsPrinterBuffer?;
+
+    abstract fun addText(text: String, textSize: Int = 24, isBold: Boolean = false, align: Int = 1): CsPrinterBuffer?;
+
+    abstract fun addHSpacing(): CsPrinterBuffer?;
+
+    abstract fun print();
 }
