@@ -55,3 +55,6 @@
 # 1.0.6
 * Add scheme animations
 * Add card present refunds
+
+# 1.0.7
+* Update Halo.SDK to 4.0.17 which includes performance and stability changes
