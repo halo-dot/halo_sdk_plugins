@@ -57,4 +57,18 @@
 * Add card present refunds
 
 # 1.0.7
-* Update Halo.SDK to 4.0.17 which includes performance and stability changes
+* Update Halo.SDK to 4.0.15
+
+# 1.0.8
+* Update Halo.SDK to 4.0.17
+    + Add extra security checks
+    + Properly terminate NFC on old activity when switching activities
+    + Fix transaction errors on onResume
+    + Config logging updates
+    + Http logging updates
+    + Turn off security checks debug builds
+    + Update discover kernel to 1.0.4
+    + Update SDK logging
+    + Fix PIN being cancellation issues
+    + Fix transactions failing for ISO Currency Codes with leading zeroes
+    + Refactor caching
