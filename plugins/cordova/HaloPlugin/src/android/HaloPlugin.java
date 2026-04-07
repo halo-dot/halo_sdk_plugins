@@ -28,6 +28,7 @@ import za.co.synthesis.halo.sdk.HaloSDK;
 import za.co.synthesis.halo.sdk.model.AttestationHealthResultType;
 import za.co.synthesis.halo.sdk.model.HaloAttestationHealthResult;
 import za.co.synthesis.halo.sdk.model.HaloCurrencyValue;
+import za.co.synthesis.halo.haloCommonInterface.CardType;
 import za.co.synthesis.halo.haloCommonInterface.HaloErrorCode;
 import za.co.synthesis.halo.haloCommonInterface.TransactionType;
 import za.co.synthesis.halo.sdk.model.HaloInitializationParameters;
@@ -96,14 +97,17 @@ public class HaloPlugin extends CordovaPlugin {
                 }
                 break;
 
-            case "startTransaction":
+            case "startTransaction": {
                 JSONObject obj = args.getJSONObject(0);
                 this.startTransaction(callbackContext, obj);
                 return true;
+            }
 
-            case "requestTransactionCancellation":
-                this.requestTransactionCancellation(callbackContext);
+            case "requestTransactionCancellation": {
+                JSONObject obj = args.getJSONObject(0);
+                this.requestTransactionCancellation(callbackContext, obj);
                 return true;
+            }
 
             case "onRequestJWTCallback":
                 String jwt = args.getString(0);
@@ -149,20 +153,23 @@ public class HaloPlugin extends CordovaPlugin {
         Double transactionValue = obj.has("transactionValue") ? obj.getDouble("transactionValue") : null;
         String currency = obj.has("currency") ? obj.getString("currency") : "zar";
         TransactionType transactionType = obj.has("transactionType") ? TransactionType.valueOf(obj.getString("transactionType")) : TransactionType.Purchase;
+        CardType cardType = obj.has("cardType") ? CardType.valueOf(obj.getString("cardType")) : null;
 
         callbackContextId = callbacks.getCallbackId();
 
         cordova.getActivity().runOnUiThread(new Runnable() {
             public void run() {
-                HaloSDK.Companion.startTransaction(BigDecimal.valueOf(transactionValue), merchantReference, currency, null, null, transactionType);
+                HaloSDK.Companion.startTransaction(BigDecimal.valueOf(transactionValue), merchantReference, currency, null, null, transactionType, cardType);
             }
         });
     }
 
-    private void requestTransactionCancellation(CallbackContext callbackContext){
+    private void requestTransactionCancellation(CallbackContext callbackContext, JSONObject obj)  throws JSONException {
+        boolean onPause = obj.has("onPause") && obj.getBoolean("onPause");
+
         cordova.getActivity().runOnUiThread(new Runnable() {
             public void run() {
-                HaloSDK.Companion.requestTransactionCancellation();
+                HaloSDK.Companion.requestTransactionCancellation(onPause);
             }
         });
     }
