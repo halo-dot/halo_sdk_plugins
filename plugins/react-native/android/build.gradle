@@ -72,7 +72,8 @@ android {
     }
 }
 
-def sdkVersion = "4.0.12"
+def sdkVersion = "4.0.18"
+def sdkDebugVersion = "4.0.18-debug-rc"
 
 dependencies {
     // React Native is provided by the host app — do not bundle it
@@ -82,7 +83,7 @@ dependencies {
 
     // Halo SDK
     releaseApi group: "za.co.synthesis.halo", name: "sdk", version: "$sdkVersion", changing: true
-    debugApi group: "za.co.synthesis.halo", name: "sdk", version: "$sdkVersion-debug", changing: true
+    debugApi group: "za.co.synthesis.halo", name: "sdk", version: "$sdkDebugVersion", changing: true
 
     implementation(name: 'VisaSensoryBranding', ext: 'aar')
     implementation(name: 'sonic-sdk-release-1.5.0', ext: 'aar')
