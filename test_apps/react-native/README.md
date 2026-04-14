@@ -56,6 +56,29 @@ export AWS_SECRET_ACCESS_KEY=...
 export AWS_SESSION_TOKEN=...
 ```
 
+## Switching Between Local and Published Plugin
+By default the app uses whichever plugin version was last installed. Use these scripts to switch:
+
+```bash
+# To test the local plugin
+npm run plugin:local
+
+# To test the published plugin
+npm run plugin:npm
+```
+
+> **Note:** npm caches `file:` dependencies and may not pick up changes to the local plugin. If the wrong version is being used after switching, force a refresh:
+>
+> ```bash
+> rm -rf node_modules/halo-sdk-react-native && npm install
+> ```
+>
+> Verify which version is active:
+>
+> ```bash
+> grep "sdkVersion\|sdkDebugVersion" node_modules/halo-sdk-react-native/android/build.gradle
+> ```
+
 ## Running
 
 Connect an Android device (with NFC) or start an emulator, then:
