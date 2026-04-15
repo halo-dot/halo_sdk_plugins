@@ -73,10 +73,10 @@ android {
 }
 
 def sdkVersion = "4.0.18"
-def sdkDebugVersion = "4.0.18-debug-rc"
+def sdkDebugVersion = "4.0.18-debug"
 
 dependencies {
-    // React Native is provided by the host app — do not bundle it
+    // React Native is provided by the host app
     compileOnly 'com.facebook.react:react-native:+'
     implementation 'androidx.core:core-ktx:1.9.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
