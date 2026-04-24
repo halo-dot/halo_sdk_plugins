@@ -6,3 +6,6 @@ android/**/*.iml
 
 # Node
 node_modules/
+
+# npm credentials
+.npmrc

@@ -4,6 +4,13 @@ All notable changes to `halo-sdk-react-native` will be documented here.
 
 ---
 
+## [1.0.5] - 2026-04-22
+
+### Changed
+- Updated Halo SDK to 4.0.18
+
+---
+
 ## [1.0.4] - 2026-03-04
 
 ### Fixed

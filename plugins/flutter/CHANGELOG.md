@@ -72,3 +72,6 @@
     + Fix PIN being cancellation issues
     + Fix transactions failing for ISO Currency Codes with leading zeroes
     + Refactor caching
+
+# 1.0.9
+* Update Halo.SDK to 4.0.18
