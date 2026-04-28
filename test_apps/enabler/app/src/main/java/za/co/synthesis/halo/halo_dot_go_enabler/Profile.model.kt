@@ -1,6 +1,6 @@
 package za.co.synthesis.halo.halo_dot_go_enabler
 
-class Profile(name: String, merchantId: String?, haloEnvironment: String, username: String, password: String, apiKey: String, authPreference: String, apiRequests: MutableList<ApiRequest>?, activeRequest: ApiRequest?) {
+class Profile(name: String, merchantId: String?, haloEnvironment: String, username: String, password: String, apiKey: String, authPreference: String, apiRequests: MutableList<ApiRequest>?, activeRequest: ApiRequest?, acquirer: String?) {
     var name = name
     var merchantId = merchantId
     var haloEnvironment = haloEnvironment
@@ -10,4 +10,5 @@ class Profile(name: String, merchantId: String?, haloEnvironment: String, userna
     var authPreference = authPreference
     var apiRequests = apiRequests
     var activeRequest = activeRequest
+    var acquirer = acquirer
 }
