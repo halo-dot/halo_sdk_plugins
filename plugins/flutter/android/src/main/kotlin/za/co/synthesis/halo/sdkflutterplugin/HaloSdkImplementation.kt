@@ -50,7 +50,7 @@ class HaloSdkImplementation(messanger: BinaryMessenger) {
 
   fun cancelTransaction(result: Result) {
     Log.d(TAG, "cancelTransaction")
-    HaloSDK.requestTransactionCancellation()
+    HaloSDK.requestTransactionCancellation(false)
     result.success(null)
   }
 
