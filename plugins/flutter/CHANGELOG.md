@@ -75,3 +75,10 @@
 
 # 1.0.9
 * Update Halo.SDK to 4.0.18
+    + Reduce Halo.SDK size
+    + Update debugging config
+    + Make sure HaloCamera uses correct context 
+    + Update logging in random number generation
+
+# 1.0.10
+* Update requestTransactionCancellation call to match available signature   
