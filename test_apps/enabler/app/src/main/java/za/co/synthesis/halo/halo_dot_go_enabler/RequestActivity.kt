@@ -696,7 +696,7 @@ class RequestActivity : AppCompatActivity() {
         val sharedPreferences = getSharedPreferences("za.co.synthesis.halo.halo_dot_go_enabler", MODE_PRIVATE)
         val gson = Gson()
         val jsonActiveProfile: String? = sharedPreferences.getString("ActiveProfile", "")
-        var activeProfile: Profile = Profile("", "", "", "", "", "", "", null, null)
+        var activeProfile: Profile = Profile("", "", "", "", "", "", "", null, null, null)
         if (jsonActiveProfile != null && jsonActiveProfile != ""){
             activeProfile = gson.fromJson(jsonActiveProfile, Profile::class.java)
         }

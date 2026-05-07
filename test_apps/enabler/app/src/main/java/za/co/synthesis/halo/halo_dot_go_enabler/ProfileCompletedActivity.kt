@@ -39,6 +39,8 @@ class ProfileCompletedActivity : AppCompatActivity() {
         val usernameValueTextView = findViewById<TextView>(R.id.profile_username_value_tv)
         val passwordTextView = findViewById<TextView>(R.id.profile_password_tv)
         val passwordValueTextView = findViewById<TextView>(R.id.profile_password_value_tv)
+        val acquirerTextView = findViewById<TextView>(R.id.profile_acquirer_tv)
+        val acquirerValueTextView = findViewById<TextView>(R.id.profile_acquirer_value_tv)
 
         when (tempProfile.haloEnvironment) {
             "dev" -> {
@@ -67,6 +69,15 @@ class ProfileCompletedActivity : AppCompatActivity() {
             apiKeyValueTextView.visibility = View.GONE
             usernameValueTextView.text = tempProfile.username
             passwordValueTextView.text = tempProfile.password
+        }
+
+        if (tempProfile.acquirer.isNullOrBlank()) {
+            acquirerTextView.visibility = View.GONE
+            acquirerValueTextView.visibility = View.GONE
+        } else {
+            acquirerTextView.visibility = View.VISIBLE
+            acquirerValueTextView.visibility = View.VISIBLE
+            acquirerValueTextView.text = tempProfile.acquirer
         }
 
         val requestNameTextView = findViewById<TextView>(R.id.profile_request_name_tv)

@@ -5,9 +5,24 @@
     <queries>
         <package android:name="za.co.synthesis.halo.mpos.white" />
         <package android:name="za.co.synthesis.halo.mpos.green" />
+        <package android:name="za.co.synthesis.halo.mpos.qlink" />
         <package android:name="za.co.synthesis.halo.mpos.go" />
         <package android:name="za.co.synthesis.halo.mpos.go.link" />
+        <package android:name="za.co.synthesis.halo.mpos.iveri" />
         <package android:name="za.co.synthesis.halo.mpos.clientele" />
+        <package android:name="za.co.synthesis.halo.mpos.vodacom" />
+        <package android:name="za.co.synthesis.halo.mpos.ezaga" />
+        <package android:name="za.co.synthesis.halo.mpos.exipay" />
+        <package android:name="za.co.synthesis.halo.mpos.slicpay" />
+        <package android:name="za.co.synthesis.halo.mpos.pnp" />
+        <package android:name="za.co.synthesis.halo.mpos.howler" />
+        <package android:name="za.co.synthesis.halo.mpos.peach" />
+        <package android:name="za.co.synthesis.halo.mpos.paiment" />
+        <package android:name="za.co.synthesis.halo.mpos.quinnpay" />
+        <package android:name="za.co.synthesis.halo.mpos.nightsbridge" />
+        <package android:name="za.co.synthesis.halo.mpos.go.brazil" />
+        <package android:name="za.co.synthesis.halo.mpos.a2pay" />
+        <package android:name="za.co.synthesis.halo.mpos.glimmer" />
     </queries>
 
     <uses-permission android:name="android.permission.INTERNET" />

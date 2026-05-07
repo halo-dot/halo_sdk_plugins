@@ -57,6 +57,8 @@
     <string name="profile_name_hint">e.g. Test Dev</string>
     <string name="profile_textview_merchant_id">Merchant ID</string>
     <string name="profile_merchant_id_hint">e.g. 123</string>
+    <string name="profile_textview_acquirer_id">Acquirer</string>
+    <string name="profile_acquirer_hint">e.g. go</string>
     <string name="profile_textview_api_key">API Key</string>
     <string name="profile_api_key_hint">e.g. 12338484848</string>
     <string name="profile_textview_uname_pass">Username and Passcode</string>
@@ -90,6 +92,7 @@
     <string name="profile_completed_textview_environment">Environment</string>
     <string name="profile_completed_textview_merchant_id">Merchant ID</string>
     <string name="profile_completed_textview_api_key">API Key</string>
+    <string name="profile_completed_textview_acquirer">Acquirer</string>
     <string name="profile_completed_textview_username">Username</string>
     <string name="profile_completed_textview_passcode">Passcode</string>
     <string name="profile_completed_textview_request_name">Request Name</string>

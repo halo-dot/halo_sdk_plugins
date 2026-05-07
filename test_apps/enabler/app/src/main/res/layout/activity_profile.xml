@@ -425,6 +425,34 @@
                 app:layout_constraintTop_toBottomOf="@+id/password_et"
                 app:layout_constraintStart_toStartOf="parent" />
 
+            <TextView
+                android:id="@+id/acquirer_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="10dp"
+                android:text="@string/profile_textview_acquirer_id"
+                android:textColor="#000000"
+                app:layout_constraintTop_toBottomOf="@+id/password_error_tv"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <EditText
+                android:id="@+id/acquirer_et"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="10dp"
+                android:hint="@string/profile_acquirer_hint"
+                android:textColorHint="#808080"
+                android:inputType="text"
+                android:textColor="#000000"
+                android:background="@drawable/edit_text_border_grey"
+                android:padding="15dp"
+                app:layout_constraintTop_toBottomOf="@+id/acquirer_tv"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
             <Button
                 android:id="@+id/next_btn"
                 android:layout_width="0dp"
@@ -439,7 +467,7 @@
                 android:textColor="#FFFFFF"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/password_error_tv" />
+                app:layout_constraintTop_toBottomOf="@+id/acquirer_et" />
 
             <Button
                 android:id="@+id/clear_btn"

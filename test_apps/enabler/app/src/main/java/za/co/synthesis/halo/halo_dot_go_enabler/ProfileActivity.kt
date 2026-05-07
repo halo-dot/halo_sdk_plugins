@@ -124,6 +124,7 @@ class ProfileActivity : AppCompatActivity() {
         val apiKeyEditText = findViewById<EditText>(R.id.api_key_et)
         val usernameEditText = findViewById<EditText>(R.id.username_et)
         val passwordEditText = findViewById<EditText>(R.id.password_et)
+        val acquirerEditText = findViewById<EditText>(R.id.acquirer_et)
 
         profileNameEditText.doOnTextChanged { text, start, before, count ->
             profileNameTouched = true
@@ -161,6 +162,11 @@ class ProfileActivity : AppCompatActivity() {
                 "unamepass"
             }
 
+            var acquirer = acquirerEditText.text.trim().toString()
+            if (acquirer.isNullOrBlank()){
+                acquirer = ""
+            }
+
             val tempProfile = Profile(
                 profileNameEditText.text.trim().toString(),
                 merchantIDEditText.text.trim().toString(),
@@ -170,7 +176,8 @@ class ProfileActivity : AppCompatActivity() {
                 apiKeyEditText.text.trim().toString(),
                 auth,
                 null,
-                null
+                null,
+                acquirer
             )
 
             val tempProfileGson = gson.toJson(tempProfile)
@@ -202,6 +209,8 @@ class ProfileActivity : AppCompatActivity() {
             findViewById<EditText>(R.id.api_key_et).text.clear()
             findViewById<EditText>(R.id.username_et).text.clear()
             findViewById<EditText>(R.id.password_et).text.clear()
+
+            findViewById<EditText>(R.id.acquirer_et).text.clear()
         }
 
         val deleteButton = findViewById<Button>(R.id.delete_btn)
@@ -224,8 +233,13 @@ class ProfileActivity : AppCompatActivity() {
                 "unamepass"
             }
 
+            var acquirer = acquirerEditText.text.trim().toString()
+            if (acquirer.isNullOrBlank()){
+                acquirer = ""
+            }
+
             val jsonActiveProfile: String? = sharedPreferences.getString("ActiveProfile", "")
-            var activeProfile = Profile("", "", "", "", "", "", "", null, null)
+            var activeProfile = Profile("", "", "", "", "", "", "", null, null, null)
             if (jsonActiveProfile != null && jsonActiveProfile != ""){
                 activeProfile = gson.fromJson(jsonActiveProfile, Profile::class.java)
             }
@@ -239,7 +253,8 @@ class ProfileActivity : AppCompatActivity() {
                 apiKeyEditText.text.trim().toString(),
                 auth,
                 activeProfile.apiRequests,
-                activeProfile.activeRequest
+                activeProfile.activeRequest,
+                acquirer
             )
 
             val jsonProfile: String? = sharedPreferences.getString("Profiles", "")
@@ -328,6 +343,8 @@ class ProfileActivity : AppCompatActivity() {
             apiKeyEditText.setText(profileValues.apiKey)
             usernameEditText.setText(profileValues.username)
             passwordEditText.setText(profileValues.password)
+
+            acquirerEditText.setText((profileValues.acquirer))
 
             nextButton.visibility = View.GONE
             clearButton.visibility = View.GONE
@@ -548,7 +565,7 @@ class ProfileActivity : AppCompatActivity() {
     private fun handleDelete(): Boolean {
         var sharedPreferences = getSharedPreferences("za.co.synthesis.halo.halo_dot_go_enabler", MODE_PRIVATE)
         val jsonActiveProfile: String? = sharedPreferences.getString("ActiveProfile", "")
-        var activeProfile: Profile = Profile("", "", "", "", "", "", "", null, null)
+        var activeProfile: Profile = Profile("", "", "", "", "", "", "", null, null, null)
         if (jsonActiveProfile != null && jsonActiveProfile != ""){
             activeProfile = Gson().fromJson(jsonActiveProfile, Profile::class.java)
         }

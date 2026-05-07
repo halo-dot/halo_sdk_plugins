@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity() {
         var continueButton = findViewById<View>(R.id.continue_btn)
 
         val jsonActiveProfile: String? = sharedPreferences.getString("ActiveProfile", "")
-        var activeProfile: Profile = Profile("", "", "", "", "", "", "", null, null)
+        var activeProfile: Profile = Profile("", "", "", "", "", "", "", null, null, null)
         if (jsonActiveProfile != null && jsonActiveProfile != ""){
             activeProfile = gson.fromJson(jsonActiveProfile, Profile::class.java)
         } else {
@@ -207,7 +207,7 @@ class MainActivity : AppCompatActivity() {
     private fun handleClicks(view: View, profiles: MutableList<Profile>) {
         var sharedPreferences = getSharedPreferences("za.co.synthesis.halo.halo_dot_go_enabler", MODE_PRIVATE)
         val jsonActiveProfile: String? = sharedPreferences.getString("ActiveProfile", "")
-        var activeProfile: Profile = Profile("", "", "", "", "", "", "", null, null)
+        var activeProfile: Profile = Profile("", "", "", "", "", "", "", null, null, null)
         if (jsonActiveProfile != null && jsonActiveProfile != ""){
             activeProfile = Gson().fromJson(jsonActiveProfile, Profile::class.java)
         }

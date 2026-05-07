@@ -7,6 +7,10 @@ import android.os.Looper
 import android.util.Log
 import android.widget.Toast
 import com.google.gson.Gson
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.suspendCancellableCoroutine
 import net.minidev.json.JSONObject
 import net.minidev.json.JSONStyle
 import okhttp3.*
@@ -15,6 +19,8 @@ import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 class Api (private val context: Context) {
     private val okHttpClient: OkHttpClient by lazy {
@@ -35,18 +41,21 @@ class Api (private val context: Context) {
 
     val jsonActiveProfile: String? = sharedPreferences.getString("ActiveProfile", "")
     var activeProfile: Profile = gson.fromJson(jsonActiveProfile, Profile::class.java)
-    val env = setEnv(activeProfile.haloEnvironment)
+    val subdomain = buildSubdomain(activeProfile.haloEnvironment, activeProfile.acquirer)
 
-    fun setEnv(haloEnv: String): String {
-        if(haloEnv == "dev") {
-            return "za.dev"
-        } else if(haloEnv == "qa") {
-            return "qa"
-        } else if(haloEnv == "prod") {
-            return "prod"
+    fun buildSubdomain(haloEnv: String, acquirer: String?): String {
+        val envPart = when (haloEnv) {
+            "dev" -> "dev"
+            "qa" -> "qa"
+            "prod" -> "prod"
+            else -> ""
         }
-
-        return ""
+        
+        return if (!acquirer.isNullOrBlank()) {
+            "$acquirer.$envPart"
+        } else {
+            if (envPart == "dev") "za.dev" else envPart
+        }
     }
 
     private var lastTokenTime: Long? = null
@@ -56,14 +65,16 @@ class Api (private val context: Context) {
         this.token = token
     }
 
-    fun loginForJWT(userName: String, password: String, callback: (String) -> Unit) {
+    private suspend fun loginForJWT(userName: String, password: String, callback: (String) -> Unit) = suspendCancellableCoroutine<String?> { continuation ->
         val nowMillis = Calendar.getInstance().timeInMillis
         if (token != null && lastTokenTime != null && (nowMillis - lastTokenTime!! < 14 * 60 * 1000L)) {
-            callback(token!!)
-            return
+            if (continuation.isActive) {
+                continuation.resume(token!!)
+                callback(token!!)
+            }
         }
         val request = Request.Builder().run {
-            url("https://authserver.${env}.haloplus.io/login")
+            url("https://authserver.${subdomain}.haloplus.io/login")
             val actualBody: String = JSONObject().apply {
                 put("username", userName)
                 put("password", password)
@@ -85,6 +96,7 @@ class Api (private val context: Context) {
                         Toast.LENGTH_LONG
                     ).show()
                 }
+                continuation.resume("")
                 callback("")
             }
 
@@ -103,11 +115,13 @@ class Api (private val context: Context) {
                                 Toast.LENGTH_LONG
                             ).show()
                         }
+                        continuation.resume("")
                         callback("")
                     }
                     responseCode != 200 -> {
                         println("responseCode = $responseCode")
                         println("responseBody = $responseBody")
+                        continuation.resume("")
                         callback("")
                     }
                     else -> {
@@ -115,7 +129,10 @@ class Api (private val context: Context) {
                         println("New token = $token")
                         lastTokenTime = Calendar.getInstance().timeInMillis
                         this@Api.token = token
-                        callback(token)
+                        if (continuation.isActive) {
+                            continuation.resume(token)
+                            callback(token)
+                        }
                     }
                 }
             }
@@ -125,26 +142,37 @@ class Api (private val context: Context) {
     fun postIntentTransaction(merchantId: String, paymentReference: String, amount: Double, currencyCode: String, callback: (String, String) -> Unit) {
         var request: Request? = null
 
-        if(activeProfile.authPreference == "apikey"){
+        val url: String = "https://kernelserver.${subdomain}.haloplus.io/consumer/intentTransaction"
+        val actualBody: String = JSONObject().apply {
+            put("merchantId", merchantId)
+            put("paymentReference", paymentReference)
+            put("amount", amount)
+            put("timestamp", SimpleDateFormat("E MMM d yyyy HH:mm:ss 'GMT'Z", Locale.US).format(Date()))
+            put("currencyCode", currencyCode)
+        }.toString(JSONStyle.NO_COMPRESS)
+        var requestBody = RequestBody.create(
+            MediaType.parse("application/json"),
+            actualBody
+        )
+
+        try {
             request = Request.Builder().run {
-                url("https://kernelserver.${env}.haloplus.io/1.0.10/consumer/intentTransaction")
-                val actualBody: String = JSONObject().apply {
-                    put("merchantId", merchantId)
-                    put("paymentReference", paymentReference)
-                    put("amount", amount)
-                    put("timestamp", SimpleDateFormat("E MMM d yyyy HH:mm:ss 'GMT'Z", Locale.US).format(Date()))
-                    put("currencyCode", currencyCode)
-                }.toString(JSONStyle.NO_COMPRESS)
-                var requestBody = RequestBody.create(
-                    MediaType.parse("application/json"),
-                    actualBody
-                )
+                url(url)
                 method("POST", requestBody)
-                header("x-api-key", activeProfile.apiKey)
-                // .addHeader("Authorization", "Bearer $token")
                 build()
             }
-
+            if(activeProfile.authPreference == "apikey"){
+                request = request.newBuilder().addHeader("x-api-key", activeProfile.apiKey).build()
+            } else{
+                runBlocking {
+                    loginForJWT(activeProfile.username.toString(), activeProfile.password.toString()) { jwt ->
+                        request = request!!.newBuilder().addHeader("Authorization", "Bearer $jwt").build()
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            println("Error postIntentTransaction -> $e")
+        } finally {
             okHttpClient.newCall(request).enqueue(object : Callback {
                 override fun onFailure(call: Call, e: IOException) {
                     println("Error postIntentTransaction -> $e")
@@ -206,125 +234,51 @@ class Api (private val context: Context) {
                     }
                 }
             })
-        } else{
-            loginForJWT(activeProfile.username.toString(), activeProfile.password.toString()) { jwt ->
-                Log.v("JWT AFTER LOGIN",jwt.toString())
-                Log.v("TOKEN AFTER LOGIN", token.toString())
-                request = Request.Builder().run {
-                    url("https://kernelserver.${env}.haloplus.io/1.0.10/consumer/intentTransaction")
-                    val actualBody: String = JSONObject().apply {
-                        put("merchantId", merchantId)
-                        put("paymentReference", paymentReference)
-                        put("amount", amount)
-                        put("timestamp", SimpleDateFormat("E MMM d yyyy HH:mm:ss 'GMT'Z", Locale.US).format(Date()))
-                        put("currencyCode", currencyCode)
-                    }.toString(JSONStyle.NO_COMPRESS)
-                    var requestBody = RequestBody.create(
-                        MediaType.parse("application/json"),
-                        actualBody
-                    )
-                    method("POST", requestBody)
-                    // header("x-api-key", API_KEY)
-                        .addHeader("Authorization", "Bearer $token")
-                    build()
-                }
-
-                okHttpClient.newCall(request).enqueue(object : Callback {
-                    override fun onFailure(call: Call, e: IOException) {
-                        println("Error postIntentTransaction -> $e")
-                        Handler(Looper.getMainLooper()).post {
-                            Toast.makeText(
-                                context,
-                                "Post Intent Transaction failed $e",
-                                Toast.LENGTH_LONG
-                            ).show()
-                        }
-                        callback("", "")
-                    }
-
-                    override fun onResponse(call: Call, response: Response) {
-                        val responseBody = response.body()?.string() ?: ""
-                        val responseCode = response.code()
-                        response.body()?.close()
-
-                        when {
-                            responseBody.isEmpty() -> {
-                                println("Error postIntentTransaction -> EMPTY RESPONSE")
-                                Handler(Looper.getMainLooper()).post {
-                                    Toast.makeText(
-                                        context,
-                                        "Post Intent Transaction request has failed: EMPTY RESPONSE",
-                                        Toast.LENGTH_LONG
-                                    ).show()
-                                }
-                                callback("", "")
-                            }
-                            responseCode != 201 -> {
-                                val errorBody = responseBody.parseBodyWithThreeElements("responseBody","httpStatusCode", "errorCode", "message")
-                                println("httpStatusCode = ${errorBody[0]}")
-                                println("errorCode = ${errorBody[1]}")
-                                println("message = ${errorBody[2]}")
-                                if (errorBody[0].toInt() == 403){
-                                    Handler(Looper.getMainLooper()).post {
-                                        Toast.makeText(
-                                            context,
-                                            "${errorBody[2]}",
-                                            Toast.LENGTH_LONG
-                                        ).show()
-                                    }
-                                    callback("", "")
-                                } else {
-                                    println("Post intent transaction failed")
-                                    println("responseCode = $responseCode")
-                                    println("responseBody = $responseBody")
-                                    callback("", "")
-                                }
-                            }
-                            else -> {
-                                println("FULL RESPONSE BODY = $responseBody")
-                                val postIntentTransaction = responseBody.parseBodyWithTwoElements("responseBody","id", "token")
-                                println("Intent transaction id = ${postIntentTransaction[0]}")
-                                println("Intent token id = ${postIntentTransaction[1]}")
-                                callback(postIntentTransaction[0],postIntentTransaction[1])
-                            }
-                        }
-                    }
-                })
-            }
         }
     }
 
     fun postIntentTT3Transaction(merchantId: String, accountNumber: String, id: String, maxCollectionAmount: String, contractReference: String, isConsumerApp: Boolean, collectionDay: String, creditorABSN: String, instalmentAmount: String, instalmentVisibility: String, callback: (String, String) -> Unit) {
         var request: Request? = null
 
-        if (activeProfile.authPreference == "apikey"){
+        val url: String = "https://kernelserver.${subdomain}.haloplus.io/consumer/tt3IntentTransaction"
+        val actualBody: String = JSONObject().apply {
+            put("merchantId", merchantId)
+            put("accountNumber", accountNumber)
+            put("id", id)
+            put("maxCollectionAmount", maxCollectionAmount)
+            put("contractReference", contractReference)
+            put("collectionDay", collectionDay)
+            put("creditorABSN", creditorABSN)
+            put("instalmentAmount", instalmentAmount)
+            put("instalmentVisibility", instalmentVisibility)
+            put("timestamp", SimpleDateFormat("E MMM d yyyy HH:mm:ss 'GMT'Z", Locale.US).format(
+                Date()
+            ))
+            put("isConsumerApp", isConsumerApp)
+        }.toString(JSONStyle.NO_COMPRESS)
+        var requestBody = RequestBody.create(
+            MediaType.parse("application/json"),
+            actualBody
+        )
+
+        try {
             request = Request.Builder().run {
-                url("https://kernelserver.${env}.haloplus.io/1.0.5/consumer/tt3IntentTransaction")
-                val actualBody: String = JSONObject().apply {
-                    put("merchantId", merchantId)
-                    put("accountNumber", accountNumber)
-                    put("id", id)
-                    put("maxCollectionAmount", maxCollectionAmount)
-                    put("contractReference", contractReference)
-                    put("collectionDay", collectionDay)
-                    put("creditorABSN", creditorABSN)
-                    put("instalmentAmount", instalmentAmount)
-                    put("instalmentVisibility", instalmentVisibility)
-                    put("timestamp", SimpleDateFormat("E MMM d yyyy HH:mm:ss 'GMT'Z", Locale.US).format(
-                        Date()
-                    ))
-                    put("isConsumerApp", isConsumerApp)
-                }.toString(JSONStyle.NO_COMPRESS)
-                var requestBody = RequestBody.create(
-                    MediaType.parse("application/json"),
-                    actualBody
-                )
+                url(url)
                 method("POST", requestBody)
-                header("x-api-key", activeProfile.apiKey)
-                // .addHeader("Authorization", "Bearer $token")
                 build()
             }
-
+            if(activeProfile.authPreference == "apikey"){
+                request = request.newBuilder().addHeader("x-api-key", activeProfile.apiKey).build()
+            } else{
+                runBlocking {
+                    loginForJWT(activeProfile.username.toString(), activeProfile.password.toString()) { jwt ->
+                        request = request!!.newBuilder().addHeader("Authorization", "Bearer $jwt").build()
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            println("Error postIntentTT3Transaction -> $e")
+        } finally {
             okHttpClient.newCall(request).enqueue(object : Callback {
                 override fun onFailure(call: Call, e: IOException) {
                     println("Error postIntentTransaction -> $e")
@@ -372,114 +326,47 @@ class Api (private val context: Context) {
                 }
             })
         }
-        else{
-            loginForJWT(activeProfile.username.toString(), activeProfile.password.toString()) { jwt ->
-                request = Request.Builder().run {
-                    url("https://kernelserver.${env}.haloplus.io/1.0.5/consumer/tt3IntentTransaction")
-                    val actualBody: String = JSONObject().apply {
-                        put("merchantId", merchantId)
-                        put("accountNumber", accountNumber)
-                        put("id", id)
-                        put("maxCollectionAmount", maxCollectionAmount)
-                        put("contractReference", contractReference)
-                        put("collectionDay", collectionDay)
-                        put("creditorABSN", creditorABSN)
-                        put("instalmentAmount", instalmentAmount)
-                        put("instalmentVisibility", instalmentVisibility)
-                        put("timestamp", SimpleDateFormat("E MMM d yyyy HH:mm:ss 'GMT'Z", Locale.US).format(
-                            Date()
-                        ))
-                        put("isConsumerApp", isConsumerApp)
-                    }.toString(JSONStyle.NO_COMPRESS)
-                    var requestBody = RequestBody.create(
-                        MediaType.parse("application/json"),
-                        actualBody
-                    )
-                    method("POST", requestBody)
-                    // header("x-api-key", API_KEY)
-                .addHeader("Authorization", "Bearer $token")
-                    build()
-                }
-
-                okHttpClient.newCall(request).enqueue(object : Callback {
-                    override fun onFailure(call: Call, e: IOException) {
-                        println("Error postIntentTransaction -> $e")
-                        Handler(Looper.getMainLooper()).post {
-                            Toast.makeText(
-                                context,
-                                "Post Intent Transaction failed $e",
-                                Toast.LENGTH_LONG
-                            ).show()
-                        }
-                        callback("", "")
-                    }
-
-                    override fun onResponse(call: Call, response: Response) {
-                        val responseBody = response.body()?.string() ?: ""
-                        val responseCode = response.code()
-                        response.body()?.close()
-
-                        when {
-                            responseBody.isEmpty() -> {
-                                println("Error postIntentTransaction -> EMPTY RESPONSE")
-                                Handler(Looper.getMainLooper()).post {
-                                    Toast.makeText(
-                                        context,
-                                        "Post Intent Transaction request has failed: EMPTY RESPONSE",
-                                        Toast.LENGTH_LONG
-                                    ).show()
-                                }
-                                callback("", "")
-                            }
-                            responseCode != 201 -> {
-                                println("Post intent transaction failed")
-                                println("responseCode = $responseCode")
-                                println("responseBody = $responseBody")
-                                callback("", "")
-                            }
-                            else -> {
-                                println("FULL RESPONSE BODY = $responseBody")
-                                val postIntentTransaction = responseBody.parseBodyWithTwoElements("responseBody","id", "token")
-                                println("Intent transaction id = ${postIntentTransaction[0]}")
-                                println("Intent token id = ${postIntentTransaction[1]}")
-                                callback(postIntentTransaction[0],postIntentTransaction[1])
-                            }
-                        }
-                    }
-                })
-            }
-        }
     }
 
     fun postQrCode(merchantId: String, paymentReference: String, amount: Double, currencyCode: String, isConsumerApp: Boolean, imageRequired: Boolean, callback: (String, String) -> Unit){
         var request: Request? = null
 
+        val url: String = "https://kernelserver.${subdomain}.haloplus.io/consumer/qrCode"
         val isImageRequired: JSONObject = JSONObject().apply {
             put("required", imageRequired)
         }
+        val actualBody: String = JSONObject().apply {
+            put("merchantId", merchantId)
+            put("paymentReference", paymentReference)
+            put("amount", amount)
+            put("currencyCode", currencyCode)
+            put("timestamp", SimpleDateFormat("E MMM d yyyy HH:mm:ss 'GMT'Z", Locale.US).format(Date()))
+            put("isConsumerApp", isConsumerApp)
+            put("image", isImageRequired)
+        }.toString(JSONStyle.NO_COMPRESS)
+        var requestBody = RequestBody.create(
+            MediaType.parse("application/json"),
+            actualBody
+        )
 
-        if(activeProfile.authPreference == "apikey"){
+        try {
             request = Request.Builder().run {
-                url("https://kernelserver.${env}.haloplus.io/1.0.10/consumer/qrCode")
-                val actualBody: String = JSONObject().apply {
-                    put("merchantId", merchantId)
-                    put("paymentReference", paymentReference)
-                    put("amount", amount)
-                    put("currencyCode", currencyCode)
-                    put("timestamp", SimpleDateFormat("E MMM d yyyy HH:mm:ss 'GMT'Z", Locale.US).format(Date()))
-                    put("isConsumerApp", isConsumerApp)
-                    put("image", isImageRequired)
-                }.toString(JSONStyle.NO_COMPRESS)
-                var requestBody = RequestBody.create(
-                    MediaType.parse("application/json"),
-                    actualBody
-                )
+                url(url)
                 method("POST", requestBody)
-                header("x-api-key", activeProfile.apiKey)
-                // .addHeader("Authorization", "Bearer $token")
                 build()
             }
-
+            if(activeProfile.authPreference == "apikey"){
+                request = request.newBuilder().addHeader("x-api-key", activeProfile.apiKey).build()
+            } else{
+                runBlocking {
+                    loginForJWT(activeProfile.username.toString(), activeProfile.password.toString()) { jwt ->
+                        request = request!!.newBuilder().addHeader("Authorization", "Bearer $jwt").build()
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            println("Error postQRCode -> $e")
+        } finally {
             okHttpClient.newCall(request).enqueue(object : Callback {
                 override fun onFailure(call: Call, e: IOException) {
                     println("Error generate qrCode -> $e")
@@ -526,113 +413,53 @@ class Api (private val context: Context) {
                     }
                 }
             })
-        } else {
-            loginForJWT(activeProfile.username.toString(), activeProfile.password.toString()){ jwt ->
-                request = Request.Builder().run {
-                    url("https://kernelserver.${env}.haloplus.io/1.0.10/consumer/qrCode")
-                    val actualBody: String = JSONObject().apply {
-                        put("merchantId", merchantId)
-                        put("paymentReference", paymentReference)
-                        put("amount", amount)
-                        put("currencyCode", currencyCode)
-                        put("timestamp", SimpleDateFormat("E MMM d yyyy HH:mm:ss 'GMT'Z", Locale.US).format(Date()))
-                        put("isConsumerApp", isConsumerApp)
-                        put("image", isImageRequired)
-                    }.toString(JSONStyle.NO_COMPRESS)
-                    var requestBody = RequestBody.create(
-                        MediaType.parse("application/json"),
-                        actualBody
-                    )
-                    method("POST", requestBody)
-                    // header("x-api-key", API_KEY)
-                        .addHeader("Authorization", "Bearer $token")
-                    build()
-                }
-
-                okHttpClient.newCall(request).enqueue(object : Callback {
-                    override fun onFailure(call: Call, e: IOException) {
-                        println("Error generate qrCode -> $e")
-                        Handler(Looper.getMainLooper()).post {
-                            Toast.makeText(
-                                context,
-                                "Generate QR Code failed $e",
-                                Toast.LENGTH_LONG
-                            ).show()
-                        }
-                        callback("", "")
-                    }
-
-                    override fun onResponse(call: Call, response: Response) {
-                        val responseBody = response.body()?.string() ?: ""
-                        val responseCode = response.code()
-                        response.body()?.close()
-
-                        when {
-                            responseBody.isEmpty() -> {
-                                println("Error generate qrCode -> EMPTY RESPONSE")
-                                Handler(Looper.getMainLooper()).post {
-                                    Toast.makeText(
-                                        context,
-                                        "Generate QR Code request has failed: EMPTY RESPONSE",
-                                        Toast.LENGTH_LONG
-                                    ).show()
-                                }
-                                callback("", "")
-                            }
-                            responseCode != 201 -> {
-                                println("Generate qr code failed")
-                                println("responseCode = $responseCode")
-                                println("responseBody = $responseBody")
-                                callback("", "")
-                            }
-                            else -> {
-                                println("FULL RESPONSE BODY = $responseBody")
-                                val postQRCode = responseBody.parseBodyWithTwoElements("responseBody", "url", "reference")
-                                println("Generated QR Code url = ${postQRCode[0]}")
-                                println("Reference = ${postQRCode[1]}")
-                                callback(postQRCode[0], postQRCode[1])
-                            }
-                        }
-                    }
-                })
-            }
         }
     }
 
     fun postTT3QrCode(merchantId: String, accountNumber: String, collectionDay: String, creditorABSN: String, id: String, maxCollectionAmount: String, contractReference: String, instalmentAmount: String, instalmentVisibility: String, isConsumerApp: Boolean, imageRequired: Boolean, callback: (String, String) -> Unit){
         var request: Request? = null
 
+        val url: String = "https://kernelserver.${subdomain}.haloplus.io/consumer/tt3QRCode"
         val isImageRequired: JSONObject = JSONObject().apply {
             put("required", imageRequired)
         }
+        val actualBody: String = JSONObject().apply {
+            put("merchantId", merchantId)
+            put("accountNumber", accountNumber)
+            put("collectionDay", collectionDay)
+            put("creditorABSN", creditorABSN)
+            put("id", id)
+            put("maxCollectionAmount", maxCollectionAmount)
+            put("contractReference", contractReference)
+            put("instalmentAmount", instalmentAmount)
+            put("instalmentVisibility", instalmentVisibility)
+            put("timestamp", SimpleDateFormat("E MMM d yyyy HH:mm:ss 'GMT'Z", Locale.US).format(Date()))
+            put("isConsumerApp", isConsumerApp)
+            put("image", isImageRequired)
+        }.toString(JSONStyle.NO_COMPRESS)
+        var requestBody = RequestBody.create(
+            MediaType.parse("application/json"),
+            actualBody
+        )
 
-        if(activeProfile.authPreference == "apikey"){
-             request = Request.Builder().run {
-                 url("https://kernelserver.${env}.haloplus.io/1.0.10/consumer/tt3QRCode")
-                 val actualBody: String = JSONObject().apply {
-                     put("merchantId", merchantId)
-                     put("accountNumber", accountNumber)
-                     put("collectionDay", collectionDay)
-                     put("creditorABSN", creditorABSN)
-                     put("id", id)
-                     put("maxCollectionAmount", maxCollectionAmount)
-                     put("contractReference", contractReference)
-                     put("instalmentAmount", instalmentAmount)
-                     put("instalmentVisibility", instalmentVisibility)
-                     put("timestamp", SimpleDateFormat("E MMM d yyyy HH:mm:ss 'GMT'Z", Locale.US).format(Date()))
-                     put("isConsumerApp", isConsumerApp)
-                     put("image", isImageRequired)
-                 }.toString(JSONStyle.NO_COMPRESS)
-                 var requestBody = RequestBody.create(
-                     MediaType.parse("application/json"),
-                     actualBody
-                 )
-                 method("POST", requestBody)
-                 header("x-api-key", activeProfile.apiKey)
-                    //  .addHeader("Authorization", "Bearer $token")
-                 build()
-             }
-
+        try {
+            request = Request.Builder().run {
+                url(url)
+                method("POST", requestBody)
+                build()
+            }
+            if(activeProfile.authPreference == "apikey"){
+                request = request.newBuilder().addHeader("x-api-key", activeProfile.apiKey).build()
+            } else{
+                runBlocking {
+                    loginForJWT(activeProfile.username.toString(), activeProfile.password.toString()) { jwt ->
+                        request = request!!.newBuilder().addHeader("Authorization", "Bearer $jwt").build()
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            println("Error postTT3QrCode -> $e")
+        } finally {
             okHttpClient.newCall(request).enqueue(object : Callback {
                 override fun onFailure(call: Call, e: IOException) {
                     println("Error generate qrCode -> $e")
@@ -679,96 +506,32 @@ class Api (private val context: Context) {
                     }
                 }
             })
-        } else {
-            loginForJWT(activeProfile.username.toString(), activeProfile.password.toString()){ jwt ->
-                request = Request.Builder().run {
-                    url("https://kernelserver.${env}.haloplus.io/1.0.10/consumer/tt3QRCode")
-                    val actualBody: String = JSONObject().apply {
-                        put("merchantId", merchantId)
-                        put("accountNumber", accountNumber)
-                        put("collectionDay", collectionDay)
-                        put("creditorABSN", creditorABSN)
-                        put("id", id)
-                        put("maxCollectionAmount", maxCollectionAmount)
-                        put("contractReference", contractReference)
-                        put("instalmentAmount", instalmentAmount)
-                        put("instalmentVisibility", instalmentVisibility)
-                        put("timestamp", SimpleDateFormat("E MMM d yyyy HH:mm:ss 'GMT'Z", Locale.US).format(Date()))
-                        put("isConsumerApp", isConsumerApp)
-                        put("image", isImageRequired)
-                    }.toString(JSONStyle.NO_COMPRESS)
-                    var requestBody = RequestBody.create(
-                        MediaType.parse("application/json"),
-                        actualBody
-                    )
-                    method("POST", requestBody)
-            // header("x-api-key", API_KEY)
-                        .addHeader("Authorization", "Bearer $token")
-                    build()
-                }
-
-                okHttpClient.newCall(request).enqueue(object : Callback {
-                    override fun onFailure(call: Call, e: IOException) {
-                        println("Error generate qrCode -> $e")
-                        Handler(Looper.getMainLooper()).post {
-                            Toast.makeText(
-                                context,
-                                "Generate QR Code failed $e",
-                                Toast.LENGTH_LONG
-                            ).show()
-                        }
-                        callback("", "")
-                    }
-
-                    override fun onResponse(call: Call, response: Response) {
-                        val responseBody = response.body()?.string() ?: ""
-                        val responseCode = response.code()
-                        response.body()?.close()
-
-                        when {
-                            responseBody.isEmpty() -> {
-                                println("Error generate qrCode -> EMPTY RESPONSE")
-                                Handler(Looper.getMainLooper()).post {
-                                    Toast.makeText(
-                                        context,
-                                        "Generate QR Code request has failed: EMPTY RESPONSE",
-                                        Toast.LENGTH_LONG
-                                    ).show()
-                                }
-                                callback("", "")
-                            }
-                            responseCode != 201 -> {
-                                println("Generate qr code failed")
-                                println("responseCode = $responseCode")
-                                println("responseBody = $responseBody")
-                                callback("", "")
-                            }
-                            else -> {
-                                println("FULL RESPONSE BODY = $responseBody")
-                                val postTT3QrCode = responseBody.parseBodyWithTwoElements("responseBody","url", "reference")
-                                println("Generated QR Code url = ${postTT3QrCode[0]}")
-                                println("Reference = ${postTT3QrCode[1]}")
-                                callback(postTT3QrCode[0], postTT3QrCode[1])
-                            }
-                        }
-                    }
-                })
-            }
         }
     }
 
-    fun postTransactionDetails(transactionId: String, callback: (String) -> Unit) {
+    fun getTransactionDetails(transactionId: String, callback: (String) -> Unit) {
         var request: Request? = null
 
-        if(activeProfile.authPreference == "apikey"){
+        val url: String = "https://kernelserver.${subdomain}.haloplus.io/transactions/${transactionId}"
+
+        try {
             request = Request.Builder().run {
-                url("https://kernelserver.${env}.haloplus.io/transactions/${transactionId}")
+                url(url)
                 method("GET", null)
-                    header("x-api-key", activeProfile.apiKey)
-                    // .addHeader("Authorization", "Bearer $token")
                 build()
             }
-
+            if(activeProfile.authPreference == "apikey"){
+                request = request.newBuilder().addHeader("x-api-key", activeProfile.apiKey).build()
+            } else{
+                runBlocking {
+                    loginForJWT(activeProfile.username.toString(), activeProfile.password.toString()) { jwt ->
+                        request = request!!.newBuilder().addHeader("Authorization", "Bearer $jwt").build()
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            println("Error getTransactionDetails -> $e")
+        } finally {
             okHttpClient.newCall(request).enqueue(object : Callback {
                 override fun onFailure(call: Call, e: IOException) {
                     println("Error postTransactionDetails -> $e")
@@ -830,94 +593,32 @@ class Api (private val context: Context) {
                     }
                 }
             })
-        } else{
-            loginForJWT(activeProfile.username.toString(), activeProfile.password.toString()) { jwt ->
-                request = Request.Builder().run {
-                    url("https://kernelserver.${env}.haloplus.io/transactions/${transactionId}")
-                    method("GET", null)
-                    // header("x-api-key", API_KEY)
-                        .addHeader("Authorization", "Bearer $token")
-                    build()
-                }
-
-                okHttpClient.newCall(request).enqueue(object : Callback {
-                    override fun onFailure(call: Call, e: IOException) {
-                        println("Error postTransactionDetails -> $e")
-                        Handler(Looper.getMainLooper()).post {
-                            Toast.makeText(
-                                context,
-                                "Post Transaction Details failed $e",
-                                Toast.LENGTH_LONG
-                            ).show()
-                        }
-                        callback("")
-                    }
-
-                    override fun onResponse(call: Call, response: Response) {
-                        val responseBody = response.body()?.string() ?: ""
-                        val responseCode = response.code()
-                        response.body()?.close()
-                        println("responseBody = ${responseBody}")
-                        println("responseCode = ${responseCode}")
-
-                        when {
-                            responseBody.isEmpty() -> {
-                                println("Error postTransactionDetails -> EMPTY RESPONSE")
-                                Handler(Looper.getMainLooper()).post {
-                                    Toast.makeText(
-                                        context,
-                                        "Post Transaction Details request has failed: EMPTY RESPONSE",
-                                        Toast.LENGTH_LONG
-                                    ).show()
-                                }
-                                callback("")
-                            }
-                            responseCode == 401 -> {
-                                callback("401")
-                            }
-                            responseCode != 200 -> {
-                                val errorBody = responseBody.parseBodyWithThreeElements("responseBody","httpStatusCode", "errorCode", "message")
-                                println("httpStatusCode = ${errorBody[0]}")
-                                println("errorCode = ${errorBody[1]}")
-                                println("message = ${errorBody[2]}")
-                                if (errorBody[0].toInt() == 403){
-                                    Handler(Looper.getMainLooper()).post {
-                                        Toast.makeText(
-                                            context,
-                                            "${errorBody[2]}",
-                                            Toast.LENGTH_LONG
-                                        ).show()
-                                    }
-                                    callback("")
-                                } else {
-                                    println("Post transaction details failed")
-                                    println("responseCode = $responseCode")
-                                    println("responseBody = $responseBody")
-                                    callback("")
-                                }
-                            }
-                            else -> {
-                                println("FULL RESPONSE BODY = $responseBody")
-                                callback(responseBody)
-                            }
-                        }
-                    }
-                })
-            }
         }
     }
 
     fun getTT3TransactionDetails(transactionId: String, callback: (String) -> Unit) {
         var request: Request? = null
 
-        if(activeProfile.authPreference == "apikey"){
+        val url: String = "https://kernelserver.${subdomain}.haloplus.io/consumer/tt3QRCode/${transactionId}"
+
+        try {
             request = Request.Builder().run {
-                url("https://kernelserver.${env}.haloplus.io/1.0.12/consumer/tt3QRCode/${transactionId}")
+                url(url)
                 method("GET", null)
-                header("x-api-key", activeProfile.apiKey)
                 build()
             }
-
+            if(activeProfile.authPreference == "apikey"){
+                request = request.newBuilder().addHeader("x-api-key", activeProfile.apiKey).build()
+            } else{
+                runBlocking {
+                    loginForJWT(activeProfile.username.toString(), activeProfile.password.toString()) { jwt ->
+                        request = request!!.newBuilder().addHeader("Authorization", "Bearer $jwt").build()
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            println("Error getTT3TransactionDetails -> $e")
+        } finally {
             okHttpClient.newCall(request).enqueue(object : Callback {
                 override fun onFailure(call: Call, e: IOException) {
                     println("Error postTransactionDetails -> $e")
@@ -979,79 +680,6 @@ class Api (private val context: Context) {
                     }
                 }
             })
-        } else{
-            loginForJWT(activeProfile.username.toString(), activeProfile.password.toString()) { jwt ->
-                request = Request.Builder().run {
-                    url("https://kernelserver.${env}.haloplus.io/1.0.12/consumer/tt3QRCode/${transactionId}")
-                    method("GET", null)
-                        .addHeader("Authorization", "Bearer $token")
-                    build()
-                }
-
-                okHttpClient.newCall(request).enqueue(object : Callback {
-                    override fun onFailure(call: Call, e: IOException) {
-                        println("Error postTransactionDetails -> $e")
-                        Handler(Looper.getMainLooper()).post {
-                            Toast.makeText(
-                                context,
-                                "Post Transaction Details failed $e",
-                                Toast.LENGTH_LONG
-                            ).show()
-                        }
-                        callback("")
-                    }
-
-                    override fun onResponse(call: Call, response: Response) {
-                        val responseBody = response.body()?.string() ?: ""
-                        val responseCode = response.code()
-                        response.body()?.close()
-                        println("responseBody = ${responseBody}")
-                        println("responseCode = ${responseCode}")
-
-                        when {
-                            responseBody.isEmpty() -> {
-                                println("Error postTransactionDetails -> EMPTY RESPONSE")
-                                Handler(Looper.getMainLooper()).post {
-                                    Toast.makeText(
-                                        context,
-                                        "Post Transaction Details request has failed: EMPTY RESPONSE",
-                                        Toast.LENGTH_LONG
-                                    ).show()
-                                }
-                                callback("")
-                            }
-                            responseCode == 401 -> {
-                                callback("401")
-                            }
-                            responseCode != 200 -> {
-                                val errorBody = responseBody.parseBodyWithThreeElements("responseBody","httpStatusCode", "errorCode", "message")
-                                println("httpStatusCode = ${errorBody[0]}")
-                                println("errorCode = ${errorBody[1]}")
-                                println("message = ${errorBody[2]}")
-                                if (errorBody[0].toInt() == 403){
-                                    Handler(Looper.getMainLooper()).post {
-                                        Toast.makeText(
-                                            context,
-                                            "${errorBody[2]}",
-                                            Toast.LENGTH_LONG
-                                        ).show()
-                                    }
-                                    callback("")
-                                } else {
-                                    println("Post transaction details failed")
-                                    println("responseCode = $responseCode")
-                                    println("responseBody = $responseBody")
-                                    callback("")
-                                }
-                            }
-                            else -> {
-                                println("FULL RESPONSE BODY = $responseBody")
-                                callback(responseBody)
-                            }
-                        }
-                    }
-                })
-            }
         }
     }
 
@@ -1066,38 +694,49 @@ class Api (private val context: Context) {
     ) {
         var request: Request? = null
 
+        val url: String = "https://kernelserver.${subdomain}.haloplus.io/consumer/applink"
         val isImageRequired: JSONObject = JSONObject().apply {
             put("required", imageRequired)
         }
+        val actualBody: String = JSONObject().apply {
+            put("merchantId", merchantId)
+            put("paymentReference", paymentReference)
+            put("amount", amount)
+            put("currencyCode", currencyCode)
+            put("timestamp", SimpleDateFormat("E MMM d yyyy HH:mm:ss 'GMT'Z", Locale.US).format(Date()))
+            put("isConsumerApp", isConsumerApp)
+            put("image", isImageRequired)
+        }.toString(JSONStyle.NO_COMPRESS)
+        var requestBody = RequestBody.create(
+            MediaType.parse("application/json"),
+            actualBody
+        )
 
-        if(activeProfile.authPreference == "apikey"){
+        try {
             request = Request.Builder().run {
-                url("https://kernelserver.${env}.haloplus.io/consumer/applink")
-                val actualBody: String = JSONObject().apply {
-                    put("merchantId", merchantId)
-                    put("paymentReference", paymentReference)
-                    put("amount", amount)
-                    put("currencyCode", currencyCode)
-                    put("timestamp", SimpleDateFormat("E MMM d yyyy HH:mm:ss 'GMT'Z", Locale.US).format(Date()))
-                    put("isConsumerApp", isConsumerApp)
-                    put("image", isImageRequired)
-                }.toString(JSONStyle.NO_COMPRESS)
-                var requestBody = RequestBody.create(
-                    MediaType.parse("application/json"),
-                    actualBody
-                )
+                url(url)
                 method("POST", requestBody)
-                header("x-api-key", activeProfile.apiKey)
                 build()
             }
-
+            if(activeProfile.authPreference == "apikey"){
+                request = request.newBuilder().addHeader("x-api-key", activeProfile.apiKey).build()
+            } else{
+                runBlocking {
+                    loginForJWT(activeProfile.username.toString(), activeProfile.password.toString()) { jwt ->
+                        request = request!!.newBuilder().addHeader("Authorization", "Bearer $jwt").build()
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            println("Error postQRCode -> $e")
+        } finally {
             okHttpClient.newCall(request).enqueue(object : Callback {
                 override fun onFailure(call: Call, e: IOException) {
                     println("Error generate applink -> $e")
                     Handler(Looper.getMainLooper()).post {
                         Toast.makeText(
                             context,
-                            "Generate applink failed $e",
+                            "Generate Applink failed $e",
                             Toast.LENGTH_LONG
                         ).show()
                     }
@@ -1115,7 +754,7 @@ class Api (private val context: Context) {
                             Handler(Looper.getMainLooper()).post {
                                 Toast.makeText(
                                     context,
-                                    "Generate applink request has failed: EMPTY RESPONSE",
+                                    "Generate Applink request has failed: EMPTY RESPONSE",
                                     Toast.LENGTH_LONG
                                 ).show()
                             }
@@ -1129,83 +768,14 @@ class Api (private val context: Context) {
                         }
                         else -> {
                             println("FULL RESPONSE BODY = $responseBody")
-                            val postQRCode = responseBody.parseBodyWithTwoElements("responseBody", "url", "reference")
-                            println("Generated applink url = ${postQRCode[0]}")
-                            println("Reference = ${postQRCode[1]}")
-                            callback(postQRCode[0], postQRCode[1])
+                            val postApplink = responseBody.parseBodyWithTwoElements("responseBody", "url", "reference")
+                            println("Generated Applink url = ${postApplink[0]}")
+                            println("Reference = ${postApplink[1]}")
+                            callback(postApplink[0], postApplink[1])
                         }
                     }
                 }
             })
-        } else {
-            loginForJWT(activeProfile.username.toString(), activeProfile.password.toString()){ jwt ->
-                request = Request.Builder().run {
-                    url("https://kernelserver.${env}.haloplus.io/consumer/applink")
-                    val actualBody: String = JSONObject().apply {
-                        put("merchantId", merchantId)
-                        put("paymentReference", paymentReference)
-                        put("amount", amount)
-                        put("currencyCode", currencyCode)
-                        put("timestamp", SimpleDateFormat("E MMM d yyyy HH:mm:ss 'GMT'Z", Locale.US).format(Date()))
-                        put("isConsumerApp", isConsumerApp)
-                        put("image", isImageRequired)
-                    }.toString(JSONStyle.NO_COMPRESS)
-                    var requestBody = RequestBody.create(
-                        MediaType.parse("application/json"),
-                        actualBody
-                    )
-                    method("POST", requestBody)
-                        .addHeader("Authorization", "Bearer $token")
-                    build()
-                }
-
-                okHttpClient.newCall(request).enqueue(object : Callback {
-                    override fun onFailure(call: Call, e: IOException) {
-                        println("Error generate applink -> $e")
-                        Handler(Looper.getMainLooper()).post {
-                            Toast.makeText(
-                                context,
-                                "Generate applink failed $e",
-                                Toast.LENGTH_LONG
-                            ).show()
-                        }
-                        callback("", "")
-                    }
-
-                    override fun onResponse(call: Call, response: Response) {
-                        val responseBody = response.body()?.string() ?: ""
-                        val responseCode = response.code()
-                        response.body()?.close()
-
-                        when {
-                            responseBody.isEmpty() -> {
-                                println("Error generate applink -> EMPTY RESPONSE")
-                                Handler(Looper.getMainLooper()).post {
-                                    Toast.makeText(
-                                        context,
-                                        "Generate applink request has failed: EMPTY RESPONSE",
-                                        Toast.LENGTH_LONG
-                                    ).show()
-                                }
-                                callback("", "")
-                            }
-                            responseCode != 201 -> {
-                                println("Generate applink failed")
-                                println("responseCode = $responseCode")
-                                println("responseBody = $responseBody")
-                                callback("", "")
-                            }
-                            else -> {
-                                println("FULL RESPONSE BODY = $responseBody")
-                                val postQRCode = responseBody.parseBodyWithTwoElements("responseBody", "url", "reference")
-                                println("Generated applink url = ${postQRCode[0]}")
-                                println("Reference = ${postQRCode[1]}")
-                                callback(postQRCode[0], postQRCode[1])
-                            }
-                        }
-                    }
-                })
-            }
         }
     }
 
@@ -1222,46 +792,57 @@ class Api (private val context: Context) {
         isConsumerApp: Boolean,
         imageRequired: Boolean,
         callback: (String, String) -> Unit
-    ){
+    ) {
         var request: Request? = null
 
+        val url: String = "https://kernelserver.${subdomain}.haloplus.io/consumer/tt3Applink"
         val isImageRequired: JSONObject = JSONObject().apply {
             put("required", imageRequired)
         }
+        val actualBody: String = JSONObject().apply {
+            put("merchantId", merchantId)
+            put("accountNumber", accountNumber)
+            put("collectionDay", collectionDay)
+            put("creditorABSN", creditorABSN)
+            put("id", id)
+            put("maxCollectionAmount", maxCollectionAmount)
+            put("contractReference", contractReference)
+            put("instalmentAmount", instalmentAmount)
+            put("instalmentVisibility", instalmentVisibility)
+            put("timestamp", SimpleDateFormat("E MMM d yyyy HH:mm:ss 'GMT'Z", Locale.US).format(Date()))
+            put("isConsumerApp", isConsumerApp)
+            put("image", isImageRequired)
+        }.toString(JSONStyle.NO_COMPRESS)
+        var requestBody = RequestBody.create(
+            MediaType.parse("application/json"),
+            actualBody
+        )
 
-        if(activeProfile.authPreference == "apikey"){
-             request = Request.Builder().run {
-                 url("https://kernelserver.${env}.haloplus.io/consumer/tt3Applink")
-                 val actualBody: String = JSONObject().apply {
-                     put("merchantId", merchantId)
-                     put("accountNumber", accountNumber)
-                     put("collectionDay", collectionDay)
-                     put("creditorABSN", creditorABSN)
-                     put("id", id)
-                     put("maxCollectionAmount", maxCollectionAmount)
-                     put("contractReference", contractReference)
-                     put("instalmentAmount", instalmentAmount)
-                     put("instalmentVisibility", instalmentVisibility)
-                     put("timestamp", SimpleDateFormat("E MMM d yyyy HH:mm:ss 'GMT'Z", Locale.US).format(Date()))
-                     put("isConsumerApp", isConsumerApp)
-                     put("image", isImageRequired)
-                 }.toString(JSONStyle.NO_COMPRESS)
-                 var requestBody = RequestBody.create(
-                     MediaType.parse("application/json"),
-                     actualBody
-                 )
-                 method("POST", requestBody)
-                 header("x-api-key", activeProfile.apiKey)
-                 build()
-             }
-
+        try {
+            request = Request.Builder().run {
+                url(url)
+                method("POST", requestBody)
+                build()
+            }
+            if(activeProfile.authPreference == "apikey"){
+                request = request.newBuilder().addHeader("x-api-key", activeProfile.apiKey).build()
+            } else{
+                runBlocking {
+                    loginForJWT(activeProfile.username.toString(), activeProfile.password.toString()) { jwt ->
+                        request = request!!.newBuilder().addHeader("Authorization", "Bearer $jwt").build()
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            println("Error postTT3Applink -> $e")
+        } finally {
             okHttpClient.newCall(request).enqueue(object : Callback {
                 override fun onFailure(call: Call, e: IOException) {
-                    println("Error generate tt3Applink -> $e")
+                    println("Error generate tt3 applink -> $e")
                     Handler(Looper.getMainLooper()).post {
                         Toast.makeText(
                             context,
-                            "Generate tt3Applink failed $e",
+                            "Generate TT3 Applink failed $e",
                             Toast.LENGTH_LONG
                         ).show()
                     }
@@ -1275,106 +856,32 @@ class Api (private val context: Context) {
 
                     when {
                         responseBody.isEmpty() -> {
-                            println("Error generate tt3Applink -> EMPTY RESPONSE")
+                            println("Error generate TT3 Applink -> EMPTY RESPONSE")
                             Handler(Looper.getMainLooper()).post {
                                 Toast.makeText(
                                     context,
-                                    "Generate tt3Applink request has failed: EMPTY RESPONSE",
+                                    "Generate TT3 Applink request has failed: EMPTY RESPONSE",
                                     Toast.LENGTH_LONG
                                 ).show()
                             }
                             callback("", "")
                         }
                         responseCode != 201 -> {
-                            println("Generate tt3Applink failed")
+                            println("Generate TT3 Applink failed")
                             println("responseCode = $responseCode")
                             println("responseBody = $responseBody")
                             callback("", "")
                         }
                         else -> {
                             println("FULL RESPONSE BODY = $responseBody")
-                            val postTT3QrCode = responseBody.parseBodyWithTwoElements("responseBody","url", "reference")
-                            println("Generated tt3Applink url = ${postTT3QrCode[0]}")
-                            println("Reference = ${postTT3QrCode[1]}")
-                            callback(postTT3QrCode[0], postTT3QrCode[1])
+                            val postTT3Applink = responseBody.parseBodyWithTwoElements("responseBody","url", "reference")
+                            println("Generated TT3 Applink url = ${postTT3Applink[0]}")
+                            println("Reference = ${postTT3Applink[1]}")
+                            callback(postTT3Applink[0], postTT3Applink[1])
                         }
                     }
                 }
             })
-        } else {
-            loginForJWT(activeProfile.username.toString(), activeProfile.password.toString()){ jwt ->
-                request = Request.Builder().run {
-                    url("https://kernelserver.${env}.haloplus.io/consumer/tt3Applink")
-                    val actualBody: String = JSONObject().apply {
-                        put("merchantId", merchantId)
-                        put("accountNumber", accountNumber)
-                        put("collectionDay", collectionDay)
-                        put("creditorABSN", creditorABSN)
-                        put("id", id)
-                        put("maxCollectionAmount", maxCollectionAmount)
-                        put("contractReference", contractReference)
-                        put("instalmentAmount", instalmentAmount)
-                        put("instalmentVisibility", instalmentVisibility)
-                        put("timestamp", SimpleDateFormat("E MMM d yyyy HH:mm:ss 'GMT'Z", Locale.US).format(Date()))
-                        put("isConsumerApp", isConsumerApp)
-                        put("image", isImageRequired)
-                    }.toString(JSONStyle.NO_COMPRESS)
-                    var requestBody = RequestBody.create(
-                        MediaType.parse("application/json"),
-                        actualBody
-                    )
-                    method("POST", requestBody)
-                        .addHeader("Authorization", "Bearer $token")
-                    build()
-                }
-
-                okHttpClient.newCall(request).enqueue(object : Callback {
-                    override fun onFailure(call: Call, e: IOException) {
-                        println("Error generate tt3Applink -> $e")
-                        Handler(Looper.getMainLooper()).post {
-                            Toast.makeText(
-                                context,
-                                "Generate tt3Applink failed $e",
-                                Toast.LENGTH_LONG
-                            ).show()
-                        }
-                        callback("", "")
-                    }
-
-                    override fun onResponse(call: Call, response: Response) {
-                        val responseBody = response.body()?.string() ?: ""
-                        val responseCode = response.code()
-                        response.body()?.close()
-
-                        when {
-                            responseBody.isEmpty() -> {
-                                println("Error generate tt3Applink -> EMPTY RESPONSE")
-                                Handler(Looper.getMainLooper()).post {
-                                    Toast.makeText(
-                                        context,
-                                        "Generate tt3Applink request has failed: EMPTY RESPONSE",
-                                        Toast.LENGTH_LONG
-                                    ).show()
-                                }
-                                callback("", "")
-                            }
-                            responseCode != 201 -> {
-                                println("Generate tt3Applink failed")
-                                println("responseCode = $responseCode")
-                                println("responseBody = $responseBody")
-                                callback("", "")
-                            }
-                            else -> {
-                                println("FULL RESPONSE BODY = $responseBody")
-                                val postTT3QrCode = responseBody.parseBodyWithTwoElements("responseBody","url", "reference")
-                                println("Generated tt3Applink url = ${postTT3QrCode[0]}")
-                                println("Reference = ${postTT3QrCode[1]}")
-                                callback(postTT3QrCode[0], postTT3QrCode[1])
-                            }
-                        }
-                    }
-                })
-            }
         }
     }
 }
