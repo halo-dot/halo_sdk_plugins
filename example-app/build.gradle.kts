@@ -4,13 +4,13 @@ plugins {
 }
 
 android {
-    namespace = "io.halodot.example"
+    namespace = "za.co.synthesis.halo.sdk_ui.example"
     compileSdk {
         version = release(37)
     }
 
     defaultConfig {
-        applicationId = "io.halodot.example"
+        applicationId = "za.co.synthesis.halo.sdk_ui.example"
         minSdk = 29
         targetSdk = 37
         versionCode = 1
@@ -47,5 +47,7 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     debugImplementation(libs.androidx.compose.ui.tooling)
-    implementation(libs.sdk.ui)
+    implementation(libs.sdk.ui) {
+        isChanging = true
+    }
 }

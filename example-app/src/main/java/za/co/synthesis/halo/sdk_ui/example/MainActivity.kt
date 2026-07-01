@@ -1,4 +1,4 @@
-package io.halodot.example
+package za.co.synthesis.halo.sdk_ui.example
 
 import android.os.Bundle
 import android.util.Base64
@@ -14,7 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.lifecycleScope
 import com.nimbusds.jose.crypto.RSASSASigner
 import com.nimbusds.jwt.JWTClaimsSet
-import io.halodot.sdk_ui.HaloSdkUi
+import za.co.synthesis.halo.sdk_ui.HaloSdkUi
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
 import java.security.KeyFactory
@@ -32,7 +32,7 @@ class MainActivity : ComponentActivity() {
             "za.co.quantumcode.halo_dot",
             "0.0.1",
             "Pick n Pay",
-            "https://cavendish.co.za/content/uploads/picknpay.jpg0",
+            "https://cavendish.co.za/content/uploads/picknpay.jpg",
             onTokenRequest = ::getJWTOffline
         )
 
@@ -125,8 +125,8 @@ fun getJWTOffline(): String {
     val claims = JWTClaimsSet.Builder()
         .subject("{D8208288-E869-4726-B198-364D66EC9243}")
         .issuer("https://portal.iveri.net/")
-        .audience("kernelserver.go.dev.haloplus.io")
-        .claim("aud_fingerprints", "sha256/njzWuJWBZoQz5FsWiic9uCXrLkNL+qObPavkJqfwhYc=")
+        .audience("kernelserver.qa.haloplus.io")
+        .claim("aud_fingerprints", "sha256/CNOtjib4NAlSqDZDY5aknDcVbcfLEWBgnGl/dgec4aA=")
         .claim("usr", "bob")
         .issueTime(Date())
         .expirationTime(
