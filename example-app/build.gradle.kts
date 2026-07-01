@@ -47,7 +47,12 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     debugImplementation(libs.androidx.compose.ui.tooling)
-    implementation(libs.sdk.ui) {
-        isChanging = true
-    }
+    implementation(project(":lib"))
+
+
+
+    debugImplementation(libs.halo.debug.sdk)
+    releaseImplementation(libs.halo.sdk)
+//    implementation(libs.visa.sensorybranding)
+//    implementation(libs.mastercard.sonic)
 }
