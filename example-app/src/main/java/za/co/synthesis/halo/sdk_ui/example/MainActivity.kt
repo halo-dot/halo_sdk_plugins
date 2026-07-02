@@ -12,10 +12,14 @@ import androidx.compose.material3.Text
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.lifecycleScope
+import com.nimbusds.jose.JWSAlgorithm
+import com.nimbusds.jose.JWSHeader
 import com.nimbusds.jose.crypto.RSASSASigner
 import com.nimbusds.jwt.JWTClaimsSet
+import com.nimbusds.jwt.SignedJWT
 import za.co.synthesis.halo.sdk_ui.HaloSdkUi
 import kotlinx.coroutines.launch
+import za.co.synthesis.halo.sdk_ui.models.HDConfig
 import java.math.BigDecimal
 import java.security.KeyFactory
 import java.security.spec.PKCS8EncodedKeySpec
@@ -28,12 +32,14 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         HaloSdkUi.init(
-            this@MainActivity,
-            "za.co.quantumcode.halo_dot",
-            "0.0.1",
-            "Pick n Pay",
-            "https://cavendish.co.za/content/uploads/picknpay.jpg",
-            onTokenRequest = ::getJWTOffline
+            HDConfig(
+                this@MainActivity,
+                "za.co.quantumcode.halo_dot",
+                "0.0.1",
+                "Pick n Pay",
+                "logo.png",
+                onTokenRequest = ::getJWTOffline,
+            )
         )
 
         setContent {
@@ -135,8 +141,8 @@ fun getJWTOffline(): String {
 
     val signer = RSASSASigner(privateKey)
 
-    val signedJwt = com.nimbusds.jwt.SignedJWT(
-        com.nimbusds.jose.JWSHeader.Builder(com.nimbusds.jose.JWSAlgorithm.RS512).build(),
+    val signedJwt = SignedJWT(
+        JWSHeader.Builder(JWSAlgorithm.RS512).build(),
         claims.build()
     )
 
