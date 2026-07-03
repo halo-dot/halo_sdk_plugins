@@ -11,6 +11,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.lifecycleScope
 import com.nimbusds.jose.JWSAlgorithm
 import com.nimbusds.jose.JWSHeader
@@ -20,7 +21,9 @@ import com.nimbusds.jwt.SignedJWT
 import za.co.synthesis.halo.sdk_ui.HaloSdkUi
 import kotlinx.coroutines.launch
 import za.co.synthesis.halo.sdk_ui.models.HDConfig
-import java.math.BigDecimal
+import za.co.synthesis.halo.sdk_ui.models.HDSchemeLogos
+import za.co.synthesis.halo.sdk_ui.models.HaloColorScheme
+import za.co.synthesis.halo.sdk_ui.models.HaloTheme
 import java.security.KeyFactory
 import java.security.spec.PKCS8EncodedKeySpec
 import java.time.Duration
@@ -39,6 +42,20 @@ class MainActivity : ComponentActivity() {
                 "Pick n Pay",
                 "logo.png",
                 onTokenRequest = ::getJWTOffline,
+                schemeLogos = HDSchemeLogos(
+                    nfc = false,
+                    visa = true,
+                    mastercard = true,
+                    amex = true,
+                    discover = true,
+                    elo = false
+                ),
+                theme = HaloTheme(
+                    light = HaloColorScheme.default().copy(
+                        primary = Color(0xFFFF0000),
+                        secondary = Color(0xFF2F00FF),
+                    )
+                )
             )
         )
 
@@ -51,8 +68,8 @@ class MainActivity : ComponentActivity() {
                     onClick = {
                         lifecycleScope.launch {
                             val result = HaloSdkUi.launch(
-//                                null,
-                                BigDecimal.valueOf(100.0),
+                                null,
+//                                BigDecimal.valueOf(100.0),
 //                                "Ref passed from the host",
                                 null,
                                 null
