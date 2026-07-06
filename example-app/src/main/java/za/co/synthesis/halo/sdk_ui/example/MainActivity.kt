@@ -43,14 +43,14 @@ class MainActivity : ComponentActivity() {
                     "za.co.synthesis.example",
                     "0.0.1",
                     "Tom's Bike Shop",
-                    HDCompanyLogo(
-                        "pxp-logo-dark.png",
-                        "pxp-logo-light.svg",
-                        aspectRatio = 2f,
-                    )
                 ),
                 onTokenRequest = ::getJWTOffline,
                 theme = HaloTheme(
+                    logo = HDCompanyLogo(
+                        "pxp-logo-dark.png",
+                        "pxp-logo-light.svg",
+                        aspectRatio = 2f,
+                    ),
                     light = HaloColorScheme.default().copy(
                         primary = Color(0xFF292CF5),
                         secondary = Color(0xFF292CF5),
