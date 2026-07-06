@@ -39,7 +39,7 @@ class MainActivity : ComponentActivity() {
         HaloSdkUi.init(
             HDConfig(
                 this@MainActivity,
-                companyDetails = HDMerchantDetails(
+                merchantDetails = HDMerchantDetails(
                     "za.co.synthesis.example",
                     "0.0.1",
                     "Tom's Bike Shop",
