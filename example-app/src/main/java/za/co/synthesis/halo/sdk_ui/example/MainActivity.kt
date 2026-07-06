@@ -12,6 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
 import com.nimbusds.jose.JWSAlgorithm
 import com.nimbusds.jose.JWSHeader
@@ -20,11 +21,11 @@ import com.nimbusds.jwt.JWTClaimsSet
 import com.nimbusds.jwt.SignedJWT
 import za.co.synthesis.halo.sdk_ui.HaloSdkUi
 import kotlinx.coroutines.launch
+import za.co.synthesis.halo.sdk_ui.models.HDMerchantDetails
+import za.co.synthesis.halo.sdk_ui.models.HDCompanyLogo
 import za.co.synthesis.halo.sdk_ui.models.HDConfig
-import za.co.synthesis.halo.sdk_ui.models.HDSchemeLogos
 import za.co.synthesis.halo.sdk_ui.models.HaloColorScheme
 import za.co.synthesis.halo.sdk_ui.models.HaloTheme
-import java.math.BigDecimal
 import java.security.KeyFactory
 import java.security.spec.PKCS8EncodedKeySpec
 import java.time.Duration
@@ -38,24 +39,29 @@ class MainActivity : ComponentActivity() {
         HaloSdkUi.init(
             HDConfig(
                 this@MainActivity,
-                "za.co.synthesis.example",
-                "0.0.1",
-                "PXP",
-                "pxp-logo.png",
-                onTokenRequest = ::getJWTOffline,
-                schemeLogos = HDSchemeLogos(
-                    nfc = false,
-                    visa = true,
-                    mastercard = true,
-                    amex = true,
-                    discover = true,
-                    elo = false
+                companyDetails = HDMerchantDetails(
+                    "za.co.synthesis.example",
+                    "0.0.1",
+                    "Tom's Bike Shop",
+                    HDCompanyLogo(
+                        "pxp-logo-dark.png",
+                        "pxp-logo-light.svg",
+                        aspectRatio = 2f,
+                    )
                 ),
+                onTokenRequest = ::getJWTOffline,
                 theme = HaloTheme(
                     light = HaloColorScheme.default().copy(
                         primary = Color(0xFF292CF5),
                         secondary = Color(0xFF292CF5),
-                    )
+                        outline = Color(0x80666666),
+                    ),
+                    dark = HaloColorScheme.defaultDark().copy(
+                        primary = Color(0xFF292CF5),
+                        secondary = Color(0xFF292CF5),
+                        outline = Color(0xFF999999),
+                    ),
+                    shape = 20.dp
                 )
             )
         )
@@ -69,8 +75,8 @@ class MainActivity : ComponentActivity() {
                     onClick = {
                         lifecycleScope.launch {
                             val result = HaloSdkUi.launch(
-//                                null,
-                                BigDecimal.valueOf(100.0),
+                                null,
+//                                BigDecimal.valueOf(100.0),
 //                                "Ref passed from the host",
                                 null,
                                 null
