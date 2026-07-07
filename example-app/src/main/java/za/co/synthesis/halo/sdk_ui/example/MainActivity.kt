@@ -45,24 +45,24 @@ class MainActivity : ComponentActivity() {
                     "Tom's Bike Shop",
                 ),
                 onTokenRequest = ::getJWTOffline,
-                theme = HaloTheme(
-                    logo = HDCompanyLogo(
-                        "pxp-logo-dark.png",
-                        "pxp-logo-light.svg",
-                        aspectRatio = 2f,
-                    ),
-                    light = HaloColorScheme.default().copy(
-                        primary = Color(0xFF292CF5),
-                        secondary = Color(0xFF292CF5),
-                        outline = Color(0x80666666),
-                    ),
-                    dark = HaloColorScheme.defaultDark().copy(
-                        primary = Color(0xFF292CF5),
-                        secondary = Color(0xFF292CF5),
-                        outline = Color(0xFF999999),
-                    ),
-                    shape = 20.dp
-                )
+//                theme = HaloTheme(
+//                    logo = HDCompanyLogo(
+//                        "pxp-logo-dark.png",
+//                        "pxp-logo-light.svg",
+//                        aspectRatio = 2f,
+//                    ),
+//                    light = HaloColorScheme.default().copy(
+//                        primary = Color(0xFF292CF5),
+//                        secondary = Color(0xFF292CF5),
+//                        outline = Color(0x80666666),
+//                    ),
+//                    dark = HaloColorScheme.defaultDark().copy(
+//                        primary = Color(0xFF292CF5),
+//                        secondary = Color(0xFF292CF5),
+//                        outline = Color(0xFF999999),
+//                    ),
+//                    shape = 20.dp
+//                )
             )
         )
 
@@ -91,9 +91,39 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+// Parsed once — key parsing + signer setup is expensive and onRequestJWT is
+// called repeatedly during a transaction.
+private val jwtSigner: RSASSASigner by lazy {
+    val privateKey = KeyFactory.getInstance("RSA")
+        .generatePrivate(PKCS8EncodedKeySpec(Base64.decode(privateKeyPem, Base64.DEFAULT)))
+    RSASSASigner(privateKey)
+}
+
 fun getJWTOffline(): String {
     Log.d("HaloTest", "Getting JWT offline")
-    val privateKeyPem =
+
+    val claims = JWTClaimsSet.Builder()
+        .subject("{D8208288-E869-4726-B198-364D66EC9243}")
+        .issuer("https://portal.iveri.net/")
+        .audience("kernelserver.qa.haloplus.io")
+        .claim("aud_fingerprints", "sha256/CNOtjib4NAlSqDZDY5aknDcVbcfLEWBgnGl/dgec4aA=")
+        .claim("usr", "bob")
+        .issueTime(Date())
+        .expirationTime(
+            Date.from(Instant.now().plus(Duration.ofMinutes(15)))
+        )
+
+    val signedJwt = SignedJWT(
+        JWSHeader.Builder(JWSAlgorithm.RS512).build(),
+        claims.build()
+    )
+
+    signedJwt.sign(jwtSigner)
+
+    return signedJwt.serialize()
+}
+
+private val privateKeyPem =
         "" +
                 "MIIJJwIBAAKCAgEAvP164Pcxo9tVM5dNVmFXVqEhF4yONuETwrlBvE3C42ZxGH23\n" +
                 "jLCEiRhTGl6rSy/5KHnmt7dG1YvyQif9UldW1uEGE0e5GcJyitc6tCIxoiRgKnpj\n" +
@@ -145,32 +175,3 @@ fun getJWTOffline(): String {
                 "l9vBNFBxYn8ZYlzP6rerIJ1/+BceI5KsvVL+Z9aaX0yX3MYiDDOm50aUkyZs+008\n" +
                 "mrUFFb02JkA1bMnd71Urd29bDt5rLdxibuUcECxX9Q3u+LIjtx/0UEN89A==\n" +
                 ""
-
-    val privateKey =
-        KeyFactory.getInstance("RSA")
-            .generatePrivate(
-                PKCS8EncodedKeySpec(Base64.decode(privateKeyPem, Base64.DEFAULT))
-            )
-
-    val claims = JWTClaimsSet.Builder()
-        .subject("{D8208288-E869-4726-B198-364D66EC9243}")
-        .issuer("https://portal.iveri.net/")
-        .audience("kernelserver.qa.haloplus.io")
-        .claim("aud_fingerprints", "sha256/CNOtjib4NAlSqDZDY5aknDcVbcfLEWBgnGl/dgec4aA=")
-        .claim("usr", "bob")
-        .issueTime(Date())
-        .expirationTime(
-            Date.from(Instant.now().plus(Duration.ofMinutes(15)))
-        )
-
-    val signer = RSASSASigner(privateKey)
-
-    val signedJwt = SignedJWT(
-        JWSHeader.Builder(JWSAlgorithm.RS512).build(),
-        claims.build()
-    )
-
-    signedJwt.sign(signer)
-
-    return signedJwt.serialize()
-}
