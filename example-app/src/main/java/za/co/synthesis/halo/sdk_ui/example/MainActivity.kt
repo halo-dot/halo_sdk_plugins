@@ -46,24 +46,24 @@ class MainActivity : ComponentActivity() {
                     "Tom's Bike Shop",
                 ),
                 onTokenRequest = ::getJWTOffline,
-//                theme = HaloTheme(
-//                    logo = HDCompanyLogo(
-//                        "pxp-logo-dark.png",
-//                        "pxp-logo-light.svg",
-//                        aspectRatio = 2f,
-//                    ),
-//                    light = HaloColorScheme.default().copy(
-//                        primary = Color(0xFF292CF5),
-//                        secondary = Color(0xFF292CF5),
-//                        outline = Color(0x80666666),
-//                    ),
-//                    dark = HaloColorScheme.defaultDark().copy(
-//                        primary = Color(0xFF292CF5),
-//                        secondary = Color(0xFF292CF5),
-//                        outline = Color(0xFF999999),
-//                    ),
-//                    shape = 20.dp
-//                )
+                theme = HaloTheme(
+                    logo = HDCompanyLogo(
+                        "pxp-logo-dark.png",
+                        "pxp-logo-light.svg",
+                        aspectRatio = 2f,
+                    ),
+                    light = HaloColorScheme.default().copy(
+                        primary = Color(0xFF292CF5),
+                        secondary = Color(0xFF292CF5),
+                        outline = Color(0x80666666),
+                    ),
+                    dark = HaloColorScheme.defaultDark().copy(
+                        primary = Color(0xFF292CF5),
+                        secondary = Color(0xFF292CF5),
+                        outline = Color(0xFF999999),
+                    ),
+                    shape = 20.dp
+                )
             )
         )
 
