@@ -27,6 +27,9 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            // Debug-signed so the APK is installable when shared with testers.
+            // Swap in a real keystore before any store distribution.
+            signingConfig = signingConfigs.getByName("debug")
         }
     }
     compileOptions {

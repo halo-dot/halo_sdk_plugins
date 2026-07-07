@@ -76,8 +76,8 @@ class MainActivity : ComponentActivity() {
                     onClick = {
                         lifecycleScope.launch {
                             val result = HaloSdkUi.launch(
-//                                null,
-                                BigDecimal.valueOf(100.0),
+                                null,
+//                                BigDecimal.valueOf(100.0),
 //                                "Ref passed from the host",
                                 null,
                                 null
