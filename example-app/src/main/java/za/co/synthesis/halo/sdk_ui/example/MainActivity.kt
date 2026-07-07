@@ -44,6 +44,7 @@ class MainActivity : ComponentActivity() {
                     "za.co.synthesis.example",
                     "0.0.1",
                     "Tom's Bike Shop",
+//                    ""
                 ),
                 onTokenRequest = ::getJWTOffline,
                 theme = HaloTheme(
