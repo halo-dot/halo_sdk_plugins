@@ -5,10 +5,12 @@ import android.util.Base64
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -19,11 +21,11 @@ import com.nimbusds.jose.JWSHeader
 import com.nimbusds.jose.crypto.RSASSASigner
 import com.nimbusds.jwt.JWTClaimsSet
 import com.nimbusds.jwt.SignedJWT
-import za.co.synthesis.halo.sdk_ui.HaloSdkUi
 import kotlinx.coroutines.launch
-import za.co.synthesis.halo.sdk_ui.models.HDMerchantDetails
+import za.co.synthesis.halo.sdk_ui.HaloSdkUi
 import za.co.synthesis.halo.sdk_ui.models.HDCompanyLogo
 import za.co.synthesis.halo.sdk_ui.models.HDConfig
+import za.co.synthesis.halo.sdk_ui.models.HDMerchantDetails
 import za.co.synthesis.halo.sdk_ui.models.HaloColorScheme
 import za.co.synthesis.halo.sdk_ui.models.HaloTheme
 import java.math.BigDecimal
@@ -45,7 +47,7 @@ class MainActivity : ComponentActivity() {
                     "0.0.1",
                     "Tom's Bike Shop",
                 ),
-                onTokenRequest = ::getJWTOffline,
+                onTokenRequest = OfflineJwt::generate,
                 theme = HaloTheme(
                     logo = HDCompanyLogo(
                         "pxp-logo-dark.png",
@@ -68,65 +70,65 @@ class MainActivity : ComponentActivity() {
         )
 
         setContent {
-            Box(
+            Column(
                 modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
+                verticalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterVertically),
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                Button(
-                    onClick = {
-                        lifecycleScope.launch {
-                            val result = HaloSdkUi.launch(
-                                null,
-//                                BigDecimal.valueOf(100.0),
-//                                "Ref passed from the host",
-                                null,
-                                null
-                            )
-                            Log.d("MainActivity", "Transaction result: $result")
-                        }
-                    }) {
-                    Text("Launch SDK")
-                }
+                LaunchButton("Launch Keypad", amount = null, merchantRef = null)
+                LaunchButton("Launch Keypad with Ref", amount = null, merchantRef = "host-reference")
+                LaunchButton("Launch Transact", amount = BigDecimal.valueOf(100.0), merchantRef = null)
+                LaunchButton("Launch Transact with Ref", amount = BigDecimal.valueOf(100.0), merchantRef = "host-reference")
             }
+        }
+    }
+
+    @Composable
+    private fun LaunchButton(label: String, amount: BigDecimal?, merchantRef: String?) {
+        Button(onClick = {
+            lifecycleScope.launch {
+                val result = HaloSdkUi.launch(amount, merchantRef, currency = null)
+                Log.d("MainActivity", "Transaction result: $result")
+            }
+        }) {
+            Text(label)
         }
     }
 }
 
-// Parsed once — key parsing + signer setup is expensive and onRequestJWT is
-// called repeatedly during a transaction.
-private val jwtSigner: RSASSASigner by lazy {
-    val privateKey = KeyFactory.getInstance("RSA")
-        .generatePrivate(PKCS8EncodedKeySpec(Base64.decode(privateKeyPem, Base64.DEFAULT)))
-    RSASSASigner(privateKey)
-}
+// Signs SDK tokens locally with a test key so the example runs without a backend.
+// A real integration must fetch the token from its own backend instead — never
+// ship a private key in the app.
+private object OfflineJwt {
 
-fun getJWTOffline(): String {
-    Log.d("HaloTest", "Getting JWT offline")
+    // Parsed once — key parsing + signer setup is expensive and onTokenRequest is
+    // called repeatedly during a transaction.
+    private val signer: RSASSASigner by lazy {
+        val privateKey = KeyFactory.getInstance("RSA")
+            .generatePrivate(PKCS8EncodedKeySpec(Base64.decode(PRIVATE_KEY_PEM, Base64.DEFAULT)))
+        RSASSASigner(privateKey)
+    }
 
-    val claims = JWTClaimsSet.Builder()
-        .subject("{D8208288-E869-4726-B198-364D66EC9243}")
-        .issuer("https://portal.iveri.net/")
-        .audience("kernelserver.qa.haloplus.io")
-        .claim("aud_fingerprints", "sha256/CNOtjib4NAlSqDZDY5aknDcVbcfLEWBgnGl/dgec4aA=")
-        .claim("usr", "bob")
-        .issueTime(Date())
-        .expirationTime(
-            Date.from(Instant.now().plus(Duration.ofMinutes(15)))
-        )
+    fun generate(): String {
+        Log.d("HaloTest", "Getting JWT offline")
 
-    val signedJwt = SignedJWT(
-        JWSHeader.Builder(JWSAlgorithm.RS512).build(),
-        claims.build()
-    )
+        val claims = JWTClaimsSet.Builder()
+            .subject("{D8208288-E869-4726-B198-364D66EC9243}")
+            .issuer("https://portal.iveri.net/")
+            .audience("kernelserver.qa.haloplus.io")
+            .claim("aud_fingerprints", "sha256/CNOtjib4NAlSqDZDY5aknDcVbcfLEWBgnGl/dgec4aA=")
+            .claim("usr", "bob")
+            .issueTime(Date())
+            .expirationTime(Date.from(Instant.now().plus(Duration.ofMinutes(15))))
+            .build()
 
-    signedJwt.sign(jwtSigner)
+        return SignedJWT(JWSHeader.Builder(JWSAlgorithm.RS512).build(), claims)
+            .apply { sign(signer) }
+            .serialize()
+    }
 
-    return signedJwt.serialize()
-}
-
-private val privateKeyPem =
-        "" +
-                "MIIJJwIBAAKCAgEAvP164Pcxo9tVM5dNVmFXVqEhF4yONuETwrlBvE3C42ZxGH23\n" +
+    private const val PRIVATE_KEY_PEM =
+        "MIIJJwIBAAKCAgEAvP164Pcxo9tVM5dNVmFXVqEhF4yONuETwrlBvE3C42ZxGH23\n" +
                 "jLCEiRhTGl6rSy/5KHnmt7dG1YvyQif9UldW1uEGE0e5GcJyitc6tCIxoiRgKnpj\n" +
                 "BRfaoJfSjIKSuBm56XRQhdHUmRYMT8lRH9F2zjNXH4vNxafDUPbfw5+SKZShDJfI\n" +
                 "ZAZzOJ7+BzAXtDHQ6J/JZ863ERiqC5W2fqBFlfn4Gr1JGZaMnrXQP503IU+zOM8j\n" +
@@ -174,5 +176,5 @@ private val privateKeyPem =
                 "dKuGOdumO/Be5QYz3kxWOXilMR4BQKZgCW2La5faXe3KOb3zkjEcUGay0HaQ6igY\n" +
                 "SBmlP3h+EWkaWg4Jfd3++5DHqmOuoCsIYoFZLdWvswhQ+/fTCNfKPN2hUtYgjnAN\n" +
                 "l9vBNFBxYn8ZYlzP6rerIJ1/+BceI5KsvVL+Z9aaX0yX3MYiDDOm50aUkyZs+008\n" +
-                "mrUFFb02JkA1bMnd71Urd29bDt5rLdxibuUcECxX9Q3u+LIjtx/0UEN89A==\n" +
-                ""
+                "mrUFFb02JkA1bMnd71Urd29bDt5rLdxibuUcECxX9Q3u+LIjtx/0UEN89A=="
+}
