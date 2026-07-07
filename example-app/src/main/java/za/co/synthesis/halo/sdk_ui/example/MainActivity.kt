@@ -26,6 +26,7 @@ import za.co.synthesis.halo.sdk_ui.models.HDCompanyLogo
 import za.co.synthesis.halo.sdk_ui.models.HDConfig
 import za.co.synthesis.halo.sdk_ui.models.HaloColorScheme
 import za.co.synthesis.halo.sdk_ui.models.HaloTheme
+import java.math.BigDecimal
 import java.security.KeyFactory
 import java.security.spec.PKCS8EncodedKeySpec
 import java.time.Duration
@@ -75,8 +76,8 @@ class MainActivity : ComponentActivity() {
                     onClick = {
                         lifecycleScope.launch {
                             val result = HaloSdkUi.launch(
-                                null,
-//                                BigDecimal.valueOf(100.0),
+//                                null,
+                                BigDecimal.valueOf(100.0),
 //                                "Ref passed from the host",
                                 null,
                                 null
