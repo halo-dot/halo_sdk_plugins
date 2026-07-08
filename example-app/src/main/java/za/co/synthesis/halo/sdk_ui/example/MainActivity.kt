@@ -28,6 +28,7 @@ import za.co.synthesis.halo.sdk_ui.models.HDConfig
 import za.co.synthesis.halo.sdk_ui.models.HDMerchantDetails
 import za.co.synthesis.halo.sdk_ui.models.HDTheme
 import za.co.synthesis.halo.sdk_ui.models.HDColorScheme
+import za.co.synthesis.halo.sdk_ui.models.HDCurrency
 import java.math.BigDecimal
 import java.security.KeyFactory
 import java.security.spec.PKCS8EncodedKeySpec
@@ -77,19 +78,19 @@ class MainActivity : ComponentActivity() {
                 verticalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterVertically),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                LaunchButton("Launch Keypad", amount = null, merchantRef = null)
-                LaunchButton("Launch Keypad with Ref", amount = null, merchantRef = "host-reference")
-                LaunchButton("Launch Transact", amount = BigDecimal.valueOf(1000.0), merchantRef = null)
-                LaunchButton("Launch Transact with Ref", amount = BigDecimal.valueOf(1000.0), merchantRef = "host-reference")
+                LaunchButton("Launch Keypad", amount = null, merchantRef = null, currency = HDCurrency.EUR)
+                LaunchButton("Launch Keypad with Ref", amount = null, merchantRef = "host-reference", currency = null)
+                LaunchButton("Launch Transact", amount = BigDecimal.valueOf(1000.0), merchantRef = null, currency = null)
+                LaunchButton("Launch Transact with Ref", amount = BigDecimal.valueOf(1000.0), merchantRef = "host-reference", currency = null)
             }
         }
     }
 
     @Composable
-    private fun LaunchButton(label: String, amount: BigDecimal?, merchantRef: String?) {
+    private fun LaunchButton(label: String, amount: BigDecimal?, merchantRef: String?, currency: HDCurrency?) {
         Button(onClick = {
             lifecycleScope.launch {
-                val result = HaloSdkUi.launch(amount, merchantRef, currency = null)
+                val result = HaloSdkUi.launch(amount, merchantRef, currency = currency)
                 Log.d("MainActivity", "Transaction result: $result")
             }
         }) {
