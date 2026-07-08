@@ -7,10 +7,18 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -40,6 +48,38 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        initSdk(showDCC = true)
+
+        setContent {
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterVertically),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                LaunchButton("Launch Keypad", amount = null, merchantRef = null, currency = HDCurrency.GBP)
+                LaunchButton("Launch Keypad with Ref", amount = null, merchantRef = "host-reference", currency = HDCurrency.GBP)
+                LaunchButton("Launch Transact", amount = BigDecimal.valueOf(1.0), merchantRef = null, currency = HDCurrency.GBP)
+                LaunchButton("Launch Transact with Ref", amount = BigDecimal.valueOf(1.0), merchantRef = "host-reference", currency = HDCurrency.GBP)
+
+                // temp: flip DCC on/off — re-init with the same merchant only
+                // updates the flags, it doesn't restart the SDK
+                var showDcc by remember { mutableStateOf(true) }
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text("Show DCC")
+                    Spacer(Modifier.width(8.dp))
+                    Switch(
+                        checked = showDcc,
+                        onCheckedChange = {
+                            showDcc = it
+                            initSdk(showDCC = it)
+                        },
+                    )
+                }
+            }
+        }
+    }
+
+    private fun initSdk(showDCC: Boolean) {
         HaloSdkUi.init(
             HDConfig(
                 this@MainActivity,
@@ -50,7 +90,7 @@ class MainActivity : ComponentActivity() {
                 ),
                 onTokenRequest = OfflineJwt::generate,
                 showTransactionResult = true,
-                showDCC = true,
+                showDCC = showDCC,
                 theme = HDTheme(
                     logo = HDCompanyLogo(
                         "pxp-logo-dark.png",
@@ -71,19 +111,6 @@ class MainActivity : ComponentActivity() {
                 )
             )
         )
-
-        setContent {
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterVertically),
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                LaunchButton("Launch Keypad", amount = null, merchantRef = null, currency = HDCurrency.EUR)
-                LaunchButton("Launch Keypad with Ref", amount = null, merchantRef = "host-reference", currency = null)
-                LaunchButton("Launch Transact", amount = BigDecimal.valueOf(1000.0), merchantRef = null, currency = null)
-                LaunchButton("Launch Transact with Ref", amount = BigDecimal.valueOf(1000.0), merchantRef = "host-reference", currency = null)
-            }
-        }
     }
 
     @Composable
