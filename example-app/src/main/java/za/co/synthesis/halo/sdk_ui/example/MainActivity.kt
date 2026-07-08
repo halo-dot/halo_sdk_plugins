@@ -48,38 +48,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        initSdk(showDCC = true)
-
-        setContent {
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterVertically),
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                LaunchButton("Launch Keypad", amount = null, merchantRef = null, currency = HDCurrency.GBP)
-                LaunchButton("Launch Keypad with Ref", amount = null, merchantRef = "host-reference", currency = HDCurrency.GBP)
-                LaunchButton("Launch Transact", amount = BigDecimal.valueOf(1.0), merchantRef = null, currency = HDCurrency.GBP)
-                LaunchButton("Launch Transact with Ref", amount = BigDecimal.valueOf(1.0), merchantRef = "host-reference", currency = HDCurrency.GBP)
-
-                // temp: flip DCC on/off — re-init with the same merchant only
-                // updates the flags, it doesn't restart the SDK
-                var showDcc by remember { mutableStateOf(true) }
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text("Show DCC")
-                    Spacer(Modifier.width(8.dp))
-                    Switch(
-                        checked = showDcc,
-                        onCheckedChange = {
-                            showDcc = it
-                            initSdk(showDCC = it)
-                        },
-                    )
-                }
-            }
-        }
-    }
-
-    private fun initSdk(showDCC: Boolean) {
         HaloSdkUi.init(
             HDConfig(
                 this@MainActivity,
@@ -90,7 +58,7 @@ class MainActivity : ComponentActivity() {
                 ),
                 onTokenRequest = OfflineJwt::generate,
                 showTransactionResult = true,
-                showDCC = showDCC,
+                showDCC = true,
                 theme = HDTheme(
                     logo = HDCompanyLogo(
                         "pxp-logo-dark.png",
@@ -111,6 +79,33 @@ class MainActivity : ComponentActivity() {
                 )
             )
         )
+
+        setContent {
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterVertically),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                LaunchButton("Launch Keypad", amount = null, merchantRef = null, currency = HDCurrency.GBP)
+                LaunchButton("Launch Keypad with Ref", amount = null, merchantRef = "host-reference", currency = HDCurrency.GBP)
+                LaunchButton("Launch Transact", amount = BigDecimal.valueOf(1.0), merchantRef = null, currency = HDCurrency.GBP)
+                LaunchButton("Launch Transact with Ref", amount = BigDecimal.valueOf(1.0), merchantRef = "host-reference", currency = HDCurrency.GBP)
+
+                // temp: flip DCC on/off for the demo
+                var showDcc by remember { mutableStateOf(true) }
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text("Show DCC")
+                    Spacer(Modifier.width(8.dp))
+                    Switch(
+                        checked = showDcc,
+                        onCheckedChange = {
+                            showDcc = it
+                            HaloSdkUi.setShowDCC(it)
+                        },
+                    )
+                }
+            }
+        }
     }
 
     @Composable
