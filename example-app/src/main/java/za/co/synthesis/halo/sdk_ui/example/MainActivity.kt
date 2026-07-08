@@ -13,6 +13,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
 import com.nimbusds.jose.JWSAlgorithm
@@ -22,8 +23,11 @@ import com.nimbusds.jwt.JWTClaimsSet
 import com.nimbusds.jwt.SignedJWT
 import kotlinx.coroutines.launch
 import za.co.synthesis.halo.sdk_ui.HaloSdkUi
+import za.co.synthesis.halo.sdk_ui.models.HDCompanyLogo
 import za.co.synthesis.halo.sdk_ui.models.HDConfig
 import za.co.synthesis.halo.sdk_ui.models.HDMerchantDetails
+import za.co.synthesis.halo.sdk_ui.models.HDTheme
+import za.co.synthesis.halo.sdk_ui.models.HDColorScheme
 import java.math.BigDecimal
 import java.security.KeyFactory
 import java.security.spec.PKCS8EncodedKeySpec
@@ -45,24 +49,25 @@ class MainActivity : ComponentActivity() {
                 ),
                 onTokenRequest = OfflineJwt::generate,
                 showTransactionResult = true,
-//                theme = HaloTheme(
-//                    logo = HDCompanyLogo(
-//                        "pxp-logo-dark.png",
-//                        "pxp-logo-light.svg",
-//                        aspectRatio = 2f,
-//                    ),
-//                    light = HaloColorScheme.default().copy(
-//                        primary = Color(0xFF292CF5),
-//                        secondary = Color(0xFF292CF5),
-//                        outline = Color(0x80666666),
-//                    ),
-//                    dark = HaloColorScheme.defaultDark().copy(
-//                        primary = Color(0xFF292CF5),
-//                        secondary = Color(0xFF292CF5),
-//                        outline = Color(0xFF999999),
-//                    ),
-//                    shape = 20.dp
-//                )
+                showDCC = true,
+                theme = HDTheme(
+                    logo = HDCompanyLogo(
+                        "pxp-logo-dark.png",
+                        "pxp-logo-light.svg",
+                        aspectRatio = 2f,
+                    ),
+                    light = HDColorScheme.default().copy(
+                        primary = Color(0xFF292CF5),
+                        secondary = Color(0xFF292CF5),
+                        outline = Color(0x80666666),
+                    ),
+                    dark = HDColorScheme.defaultDark().copy(
+                        primary = Color(0xFF292CF5),
+                        secondary = Color(0xFF292CF5),
+                        outline = Color(0xFF999999),
+                    ),
+                    shape = 20.dp
+                )
             )
         )
 
