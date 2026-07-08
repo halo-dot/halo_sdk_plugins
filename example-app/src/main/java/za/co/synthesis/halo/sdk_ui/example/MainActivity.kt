@@ -117,7 +117,7 @@ private object OfflineJwt {
 
         val claims = JWTClaimsSet.Builder()
             .subject("{D8208288-E869-4726-B198-364D66EC9243}")
-            .issuer("https://portal.iveri.net/")
+            .issuer("pxp-demo")
             .audience("kernelserver.qa.haloplus.io")
             .claim("aud_fingerprints", "sha256/CNOtjib4NAlSqDZDY5aknDcVbcfLEWBgnGl/dgec4aA=")
             .claim("usr", "bob")
