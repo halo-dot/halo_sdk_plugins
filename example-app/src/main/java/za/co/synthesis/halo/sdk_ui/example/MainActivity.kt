@@ -31,6 +31,7 @@ import com.nimbusds.jwt.JWTClaimsSet
 import com.nimbusds.jwt.SignedJWT
 import kotlinx.coroutines.launch
 import za.co.synthesis.halo.sdk_ui.HaloSdkUi
+import za.co.synthesis.halo.sdk_ui.core.HDLanguage
 import za.co.synthesis.halo.sdk_ui.models.HDCompanyLogo
 import za.co.synthesis.halo.sdk_ui.models.HDConfig
 import za.co.synthesis.halo.sdk_ui.models.HDMerchantDetails
@@ -59,6 +60,7 @@ class MainActivity : ComponentActivity() {
                 onTokenRequest = OfflineJwt::generate,
                 showTransactionResult = true,
                 showDCC = true,
+                language = HDLanguage.AFRIKAANS,
                 theme = HDTheme(
                     logo = HDCompanyLogo(
                         "pxp-logo-dark.png",
