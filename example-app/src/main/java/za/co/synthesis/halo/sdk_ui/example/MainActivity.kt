@@ -6,12 +6,15 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -60,7 +63,7 @@ class MainActivity : ComponentActivity() {
                 onTokenRequest = OfflineJwt::generate,
                 showTransactionResult = true,
                 showDCC = true,
-                language = HDLanguage.AFRIKAANS,
+                language = HDLanguage.ENGLISH,
                 theme = HDTheme(
                     logo = HDCompanyLogo(
                         "pxp-logo-dark.png",
@@ -105,6 +108,34 @@ class MainActivity : ComponentActivity() {
                             HaloSdkUi.setShowDCC(it)
                         },
                     )
+                }
+
+                // temp: pick the SDK language for the demo
+                var language by remember { mutableStateOf(HDLanguage.ENGLISH) }
+                var langMenuOpen by remember { mutableStateOf(false) }
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text("Language")
+                    Spacer(Modifier.width(8.dp))
+                    Box {
+                        Button(onClick = { langMenuOpen = true }) {
+                            Text(language.name)
+                        }
+                        DropdownMenu(
+                            expanded = langMenuOpen,
+                            onDismissRequest = { langMenuOpen = false },
+                        ) {
+                            HDLanguage.entries.forEach { lang ->
+                                DropdownMenuItem(
+                                    text = { Text(lang.name) },
+                                    onClick = {
+                                        language = lang
+                                        langMenuOpen = false
+                                        HaloSdkUi.setLanguage(lang)
+                                    },
+                                )
+                            }
+                        }
+                    }
                 }
             }
         }
