@@ -61,8 +61,6 @@ class MainActivity : ComponentActivity() {
                     "Tom's Bike Shop",
                 ),
                 onTokenRequest = OfflineJwt::generate,
-                showTransactionResult = true,
-                showDCC = true,
                 language = HDLanguage.ENGLISH,
                 theme = HDTheme(
                     logo = HDCompanyLogo(
