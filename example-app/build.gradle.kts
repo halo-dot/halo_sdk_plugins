@@ -51,7 +51,7 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     debugImplementation(libs.androidx.compose.ui.tooling)
-    implementation("za.co.synthesis.halo:sdk_ui:0.0.1")
+    implementation(libs.sdk.ui)
 //    implementation(project(":lib"))
 
 
