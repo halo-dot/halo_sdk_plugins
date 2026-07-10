@@ -51,12 +51,13 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     debugImplementation(libs.androidx.compose.ui.tooling)
-    implementation(project(":lib"))
+    implementation("za.co.synthesis.halo:sdk_ui:0.0.1")
+//    implementation(project(":lib"))
 
 
 
-    debugImplementation(libs.halo.debug.sdk)
-    releaseImplementation(libs.halo.sdk)
+//    debugImplementation(libs.halo.debug.sdk)
+//    releaseImplementation(libs.halo.sdk)
 //    implementation(libs.visa.sensorybranding)
 //    implementation(libs.mastercard.sonic)
 }
