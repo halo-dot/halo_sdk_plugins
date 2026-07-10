@@ -94,47 +94,47 @@ class MainActivity : ComponentActivity() {
                 LaunchButton("Launch Transact", amount = BigDecimal.valueOf(1.0), merchantRef = null, currency = HDCurrency.GBP)
                 LaunchButton("Launch Transact with Ref", amount = BigDecimal.valueOf(1.0), merchantRef = "host-reference", currency = HDCurrency.GBP)
 
-                // temp: flip DCC on/off for the demo
-                var showDcc by remember { mutableStateOf(true) }
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text("Show DCC")
-                    Spacer(Modifier.width(8.dp))
-                    Switch(
-                        checked = showDcc,
-                        onCheckedChange = {
-                            showDcc = it
-                            HaloSdkUi.setShowDCC(it)
-                        },
-                    )
-                }
+//                // temp: flip DCC on/off for the demo
+//                var showDcc by remember { mutableStateOf(true) }
+//                Row(verticalAlignment = Alignment.CenterVertically) {
+//                    Text("Show DCC")
+//                    Spacer(Modifier.width(8.dp))
+//                    Switch(
+//                        checked = showDcc,
+//                        onCheckedChange = {
+//                            showDcc = it
+//                            HaloSdkUi.setShowDCC(it)
+//                        },
+//                    )
+//                }
 
                 // temp: pick the SDK language for the demo
-                var language by remember { mutableStateOf(HDLanguage.ENGLISH) }
-                var langMenuOpen by remember { mutableStateOf(false) }
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text("Language")
-                    Spacer(Modifier.width(8.dp))
-                    Box {
-                        Button(onClick = { langMenuOpen = true }) {
-                            Text(language.name)
-                        }
-                        DropdownMenu(
-                            expanded = langMenuOpen,
-                            onDismissRequest = { langMenuOpen = false },
-                        ) {
-                            HDLanguage.entries.forEach { lang ->
-                                DropdownMenuItem(
-                                    text = { Text(lang.name) },
-                                    onClick = {
-                                        language = lang
-                                        langMenuOpen = false
-                                        HaloSdkUi.setLanguage(lang)
-                                    },
-                                )
-                            }
-                        }
-                    }
-                }
+//                var language by remember { mutableStateOf(HDLanguage.ENGLISH) }
+//                var langMenuOpen by remember { mutableStateOf(false) }
+//                Row(verticalAlignment = Alignment.CenterVertically) {
+//                    Text("Language")
+//                    Spacer(Modifier.width(8.dp))
+//                    Box {
+//                        Button(onClick = { langMenuOpen = true }) {
+//                            Text(language.name)
+//                        }
+//                        DropdownMenu(
+//                            expanded = langMenuOpen,
+//                            onDismissRequest = { langMenuOpen = false },
+//                        ) {
+//                            HDLanguage.entries.forEach { lang ->
+//                                DropdownMenuItem(
+//                                    text = { Text(lang.name) },
+//                                    onClick = {
+//                                        language = lang
+//                                        langMenuOpen = false
+//                                        HaloSdkUi.setLanguage(lang)
+//                                    },
+//                                )
+//                            }
+//                        }
+//                    }
+//                }
             }
         }
     }
