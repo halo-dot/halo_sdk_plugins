@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -52,19 +51,20 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        HaloSdkUi.init(
-            HDConfig(
-                this@MainActivity,
+        // Suspends until the SDK's real outcome (attestation included).
+        lifecycleScope.launch {
+            val result = HaloSdkUi.init(
+                HDConfig(
+                    this@MainActivity,
                 merchantDetails = HDMerchantDetails(
                     "za.co.synthesis.example",
                     "0.0.1",
                     "Tom's Bike Shop",
                 ),
-                onTokenRequest = OfflineJwt::generate,
+                onTokenRequest = { OfflineJwt.generate() },
                 language = HDLanguage.ENGLISH,
                 theme = HDTheme(
                     logo = HDCompanyLogo(
-                        "pxp-logo-dark.png",
                         "pxp-logo-light.svg",
                         aspectRatio = 2f,
                     ),
@@ -80,8 +80,10 @@ class MainActivity : ComponentActivity() {
                     ),
                     shape = 20.dp
                 )
+                )
             )
-        )
+            Log.d("MainActivity", "SDK UI initialized: ${result?.resultType} (${result?.errorCode})")
+        }
 
         setContent {
             Column(

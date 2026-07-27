@@ -52,8 +52,10 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.ktx)
     debugImplementation(libs.androidx.compose.ui.tooling)
 
-    implementation(libs.sdk.ui)
-//    implementation(project(":lib"))
+    // The library source, not the published artifact — the example exists
+    // to exercise the code in this repo.
+    implementation(project(":lib"))
+//    implementation(libs.sdk.ui)
 //    debugImplementation(libs.halo.debug.sdk)
 //    releaseImplementation(libs.halo.sdk)
 }
