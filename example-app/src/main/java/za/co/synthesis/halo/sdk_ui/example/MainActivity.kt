@@ -34,11 +34,7 @@ import com.nimbusds.jwt.SignedJWT
 import kotlinx.coroutines.launch
 import za.co.synthesis.halo.sdk_ui.HaloSdkUi
 import za.co.synthesis.halo.sdk_ui.core.HDLanguage
-import za.co.synthesis.halo.sdk_ui.models.HDCompanyLogo
 import za.co.synthesis.halo.sdk_ui.models.HDConfig
-import za.co.synthesis.halo.sdk_ui.models.HDMerchantDetails
-import za.co.synthesis.halo.sdk_ui.models.HDTheme
-import za.co.synthesis.halo.sdk_ui.models.HDColorScheme
 import za.co.synthesis.halo.sdk_ui.models.HDCurrency
 import java.math.BigDecimal
 import java.security.KeyFactory
@@ -56,33 +52,32 @@ class MainActivity : ComponentActivity() {
             val result = HaloSdkUi.init(
                 HDConfig(
                     this@MainActivity,
-                merchantDetails = HDMerchantDetails(
-                    "za.co.synthesis.example",
-                    "0.0.1",
-                    "Tom's Bike Shop",
-                ),
                 onTokenRequest = { OfflineJwt.generate() },
                 language = HDLanguage.ENGLISH,
-                theme = HDTheme(
-                    logo = HDCompanyLogo(
-                        "pxp-logo-light.svg",
-                        aspectRatio = 2f,
-                    ),
-                    light = HDColorScheme.default().copy(
-                        primary = Color(0xFF292CF5),
-                        secondary = Color(0xFF292CF5),
-                        outline = Color(0x80666666),
-                    ),
-                    dark = HDColorScheme.defaultDark().copy(
-                        primary = Color(0xFF292CF5),
-                        secondary = Color(0xFF292CF5),
-                        outline = Color(0xFF999999),
-                    ),
-                    shape = 20.dp
-                )
+//                theme = HDTheme(
+//                    logo = HDCompanyLogo(
+//                        "pxp-logo-light.svg",
+//                        aspectRatio = 2f,
+//                    ),
+//                    light = HDColorScheme.default().copy(
+//                        primary = Color(0xFF292CF5),
+//                        secondary = Color(0xFF292CF5),
+//                        outline = Color(0x80666666),
+//                    ),
+//                    dark = HDColorScheme.defaultDark().copy(
+//                        primary = Color(0xFF292CF5),
+//                        secondary = Color(0xFF292CF5),
+//                        outline = Color(0xFF999999),
+//                    ),
+//                    shape = 20.dp
+//                )
                 )
             )
             Log.d("MainActivity", "SDK UI initialized: ${result?.resultType} (${result?.errorCode})")
+            // Inbound payment intents need no wiring here: the SDK's HDActivity
+            // owns the filters and handles them natively (boot from the config
+            // cached by this call, then initializeWithoutConfig +
+            // startConsumerTransaction) with no host involvement.
         }
 
         setContent {
