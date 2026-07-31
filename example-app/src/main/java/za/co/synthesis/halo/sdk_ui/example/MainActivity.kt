@@ -23,7 +23,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
 import com.nimbusds.jose.JWSAlgorithm
@@ -167,8 +166,8 @@ private object OfflineJwt {
         val claims = JWTClaimsSet.Builder()
             .subject("{D8208288-E869-4726-B198-364D66EC9243}")
             .issuer("pxp-demo")
-            .audience("kernelserver.qa.haloplus.io")
-            .claim("aud_fingerprints", "sha256/CNOtjib4NAlSqDZDY5aknDcVbcfLEWBgnGl/dgec4aA=")
+            .audience("kernelserver.go.qa.haloplus.io")
+            .claim("aud_fingerprints", "sha256/bCmLgLDpIJjR9pX+l0XFrc3zq+8KNKYbpLjiiF4oa9E=")
             .claim("usr", "bob")
             .issueTime(Date())
             .expirationTime(Date.from(Instant.now().plus(Duration.ofMinutes(15))))
