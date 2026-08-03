@@ -1,3 +1,24 @@
+import java.util.Properties
+
+/**
+ * The App Link domain, resolved the way the SDK's hosts are expected to resolve
+ * it: the `applinkHost` gradle property first (part of the build invocation, so
+ * a running daemon can't serve a stale one), else `APPLINK_HOST` from the
+ * environment, else `applink.url` from local.properties, else the QA portal
+ * this example's links come from.
+ */
+fun applinkHost(): String {
+    (findProperty("applinkHost") as? String)?.takeIf { it.isNotBlank() }?.let { return it }
+    System.getenv("APPLINK_HOST")?.takeIf { it.isNotBlank() }?.let { return it }
+    val file = rootProject.file("local.properties")
+    if (file.exists()) {
+        val properties = Properties()
+        file.inputStream().use { properties.load(it) }
+        properties.getProperty("applink.url")?.takeIf { it.isNotBlank() }?.let { return it }
+    }
+    return "go.merchantportal.qa.haloplus.io"
+}
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
@@ -17,6 +38,7 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        resValue("string", "halo_applink_host", applinkHost())
     }
 
     buildTypes {
@@ -38,6 +60,8 @@ android {
     }
     buildFeatures {
         compose = true
+        // Carries the resValue above — the App Link domain.
+        resValues = true
     }
 }
 
