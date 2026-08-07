@@ -53,6 +53,13 @@ class MainActivity : ComponentActivity() {
                     this@MainActivity,
                 onTokenRequest = { OfflineJwt.generate() },
                 language = HDLanguage.ENGLISH,
+                // Lets the SDK resolve a short App Link — `https://<domain>/<reference>`
+                // with no `configJwt` — which it cannot do off a token, because
+                // resolving it is what produces the token. Same kernel the JWT
+                // below names; a link minted by a different environment won't
+                // resolve here.
+                kernel = "kernelserver.qa.haloplus.io",
+                kernelPins = setOf("sha256/CNOtjib4NAlSqDZDY5aknDcVbcfLEWBgnGl/dgec4aA="),
 //                theme = HDTheme(
 //                    logo = HDCompanyLogo(
 //                        "pxp-logo-light.svg",
@@ -166,8 +173,17 @@ private object OfflineJwt {
         val claims = JWTClaimsSet.Builder()
             .subject("{D8208288-E869-4726-B198-364D66EC9243}")
             .issuer("pxp-demo")
-            .audience("kernelserver.go.qa.haloplus.io")
-            .claim("aud_fingerprints", "sha256/bCmLgLDpIJjR9pX+l0XFrc3zq+8KNKYbpLjiiF4oa9E=")
+            // The test key below is only registered against the legacy QA kernel
+            // server — kernelserver.go.qa.haloplus.io rejects it with E117
+            // (JWTInvalid), so don't point this at the go host until Synthesis
+            // provisions the pxp-demo public key there.
+            .audience("kernelserver.qa.haloplus.io")
+            .claim("aud_fingerprints", "sha256/CNOtjib4NAlSqDZDY5aknDcVbcfLEWBgnGl/dgec4aA=")
+            .claim(
+                "ksk_pin",
+                "sha256/1Zna4T6PKcJ3Kq/dbVylb8n62j/AdQYUzWrj/4sk5Q8=;" +
+                        "sha256/5mAflVMXDD/MqidhKb66dYEDpCXakgkK1NNszVVKFsE=",
+            )
             .claim("usr", "bob")
             .issueTime(Date())
             .expirationTime(Date.from(Instant.now().plus(Duration.ofMinutes(15))))
