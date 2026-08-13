@@ -46,45 +46,40 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Suspends until the SDK's real outcome (attestation included).
+        // ── 1. Attach — the first thing this activity does ──────────────────
+        // Loads the payment kernel. It needs nothing but this activity, and it
+        // is the longest single step of bringing the SDK up, so it goes ahead
+        // of everything else in the app: everything below now runs against a
+        // payment stack that is already coming up. Anywhere later and the cost
+        // just lands on whoever is waiting at that point.
+        HaloSdkUi.attach(this, savedInstanceState)
+
+        // One config, handed to both calls below — see haloConfig().
+        val config = haloConfig()
+
+        // ── 2. Prepare, at your splash ──────────────────────────────────────
+        // Caches the branding an inbound payment paints itself with, loads the
+        // copy, warms the tap screen's artwork. Needs your config but no token,
+        // and returns at once. A real app calls this from its splash; this
+        // example has none, so it is the next line.
+        HaloSdkUi.prepare(config)
+
+        // ── 3. Init, as soon as there is a session token ────────────────────
+        // Registers the device and brings the SDK up, suspending until its real
+        // outcome (attestation included). A real host calls this the moment its
+        // login succeeds, so the wait runs while the merchant is still finding
+        // their way around; this example signs its own tokens, so it can run
+        // straight away.
         lifecycleScope.launch {
-            val result = HaloSdkUi.init(
-                HDConfig(
-                    this@MainActivity,
-                onTokenRequest = { OfflineJwt.generate() },
-                language = HDLanguage.ENGLISH,
-                // Lets the SDK resolve a short App Link — `https://<domain>/<reference>`
-                // with no `configJwt` — which it cannot do off a token, because
-                // resolving it is what produces the token. Same kernel the JWT
-                // below names; a link minted by a different environment won't
-                // resolve here.
-                kernel = "kernelserver.qa.haloplus.io",
-                kernelPins = setOf("sha256/CNOtjib4NAlSqDZDY5aknDcVbcfLEWBgnGl/dgec4aA="),
-//                theme = HDTheme(
-//                    logo = HDCompanyLogo(
-//                        "pxp-logo-light.svg",
-//                        aspectRatio = 2f,
-//                    ),
-//                    light = HDColorScheme.default().copy(
-//                        primary = Color(0xFF292CF5),
-//                        secondary = Color(0xFF292CF5),
-//                        outline = Color(0x80666666),
-//                    ),
-//                    dark = HDColorScheme.defaultDark().copy(
-//                        primary = Color(0xFF292CF5),
-//                        secondary = Color(0xFF292CF5),
-//                        outline = Color(0xFF999999),
-//                    ),
-//                    shape = 20.dp
-//                )
-                )
-            )
+            val result = HaloSdkUi.init(config)
             Log.d("MainActivity", "SDK UI initialized: ${result?.resultType} (${result?.errorCode})")
             // Inbound payment intents need no wiring here: the SDK's HDActivity
             // owns the filters and handles them natively (boot from the config
-            // cached by this call, then initializeWithoutConfig +
+            // cached by `prepare`, then initializeWithoutConfig +
             // startConsumerTransaction) with no host involvement.
         }
+
+        // ── 4. Launch, per charge — see LaunchButton below ──────────────────
 
         setContent {
             Column(
@@ -140,6 +135,42 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
+    /**
+     * Built once and passed to both `prepare` and `init`.
+     *
+     * Deliberately not two configs: `prepare` caches the branding the intent
+     * path paints itself with, and `init` registers against it — hand them
+     * different values and a payment arriving cold looks like a different app.
+     */
+    private fun haloConfig() = HDConfig(
+        this,
+        onTokenRequest = { OfflineJwt.generate() },
+        language = HDLanguage.ENGLISH,
+        // Lets the SDK resolve a short App Link — `https://<domain>/<reference>`
+        // with no `configJwt` — which it cannot do off a token, because
+        // resolving it is what produces the token. Same kernel the JWT below
+        // names; a link minted by a different environment won't resolve here.
+        kernel = "kernelserver.qa.haloplus.io",
+        kernelPins = setOf("sha256/CNOtjib4NAlSqDZDY5aknDcVbcfLEWBgnGl/dgec4aA="),
+//        theme = HDTheme(
+//            logo = HDCompanyLogo(
+//                "pxp-logo-light.svg",
+//                aspectRatio = 2f,
+//            ),
+//            light = HDColorScheme.default().copy(
+//                primary = Color(0xFF292CF5),
+//                secondary = Color(0xFF292CF5),
+//                outline = Color(0x80666666),
+//            ),
+//            dark = HDColorScheme.defaultDark().copy(
+//                primary = Color(0xFF292CF5),
+//                secondary = Color(0xFF292CF5),
+//                outline = Color(0xFF999999),
+//            ),
+//            shape = 20.dp
+//        )
+    )
 
     @Composable
     private fun LaunchButton(label: String, amount: BigDecimal?, merchantRef: String?, currency: HDCurrency?) {
