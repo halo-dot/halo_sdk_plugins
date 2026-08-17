@@ -35,6 +35,7 @@ import za.co.synthesis.halo.sdk_ui.HaloSdkUi
 import za.co.synthesis.halo.sdk_ui.core.HDLanguage
 import za.co.synthesis.halo.sdk_ui.models.HDConfig
 import za.co.synthesis.halo.sdk_ui.models.HDCurrency
+import za.co.synthesis.halo.sdk_ui.models.HDPresentation
 import java.math.BigDecimal
 import java.security.KeyFactory
 import java.security.spec.PKCS8EncodedKeySpec
@@ -87,10 +88,12 @@ class MainActivity : ComponentActivity() {
                 verticalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterVertically),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                LaunchButton("Launch Keypad", amount = null, merchantRef = null, currency = HDCurrency.GBP)
-                LaunchButton("Launch Keypad with Ref", amount = null, merchantRef = "host-reference", currency = HDCurrency.GBP)
-                LaunchButton("Launch Transact", amount = BigDecimal.valueOf(1.0), merchantRef = null, currency = HDCurrency.GBP)
-                LaunchButton("Launch Transact with Ref", amount = BigDecimal.valueOf(1.0), merchantRef = "host-reference", currency = HDCurrency.GBP)
+                // Presentation is per launch, so these mix freely — run them in
+                // any order and each charge is presented the way it asked.
+                LaunchButton("Keypad — full screen", amount = null, merchantRef = null, currency = HDCurrency.GBP)
+                LaunchButton("Keypad — sheet", amount = null, merchantRef = null, currency = HDCurrency.GBP, presentation = HDPresentation.SHEET)
+                LaunchButton("Transact — full screen", amount = BigDecimal.valueOf(1.0), merchantRef = null, currency = HDCurrency.GBP)
+                LaunchButton("Transact — sheet", amount = BigDecimal.valueOf(1.0), merchantRef = "host-reference", currency = HDCurrency.GBP, presentation = HDPresentation.SHEET)
 
                 // temp: flip DCC on/off for the demo
 //                var showDcc by remember { mutableStateOf(true) }
@@ -153,6 +156,9 @@ class MainActivity : ComponentActivity() {
         // names; a link minted by a different environment won't resolve here.
         kernel = "kernelserver.qa.haloplus.io",
         kernelPins = setOf("sha256/CNOtjib4NAlSqDZDY5aknDcVbcfLEWBgnGl/dgec4aA="),
+        // Inbound payments only — an intent has no `launch` call to say how it
+        // wants to be presented. The buttons below each say it themselves.
+        presentation = HDPresentation.SHEET
 //        theme = HDTheme(
 //            logo = HDCompanyLogo(
 //                "pxp-logo-light.svg",
@@ -173,10 +179,16 @@ class MainActivity : ComponentActivity() {
     )
 
     @Composable
-    private fun LaunchButton(label: String, amount: BigDecimal?, merchantRef: String?, currency: HDCurrency?) {
+    private fun LaunchButton(
+        label: String,
+        amount: BigDecimal?,
+        merchantRef: String?,
+        currency: HDCurrency?,
+        presentation: HDPresentation = HDPresentation.FULL_SCREEN,
+    ) {
         Button(onClick = {
             lifecycleScope.launch {
-                val result = HaloSdkUi.launch(amount, merchantRef, currency = currency)
+                val result = HaloSdkUi.launch(amount, merchantRef, currency, presentation)
                 Log.d("MainActivity", "Transaction result: $result")
             }
         }) {
