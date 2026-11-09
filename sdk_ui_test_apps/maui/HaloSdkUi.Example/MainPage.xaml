@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="HaloDot.SdkUi.Example.MainPage"
+             BackgroundColor="{AppThemeBinding Light={StaticResource PageLight}, Dark={StaticResource PageDark}}">
+
+    <ContentPage.Resources>
+        <!-- The brand's primary colour from brand.json, so the app matches the SDK's payment screens. -->
+        <Color x:Key="Brand">#292CF5</Color>
+        <Color x:Key="BrandSoftLight">#E9E9FE</Color>
+        <Color x:Key="BrandSoftDark">#23244A</Color>
+        <Color x:Key="PageLight">#F4F5FA</Color>
+        <Color x:Key="PageDark">#101014</Color>
+        <Color x:Key="CardLight">#FFFFFF</Color>
+        <Color x:Key="CardDark">#1C1C22</Color>
+        <Color x:Key="TextLight">#16161D</Color>
+        <Color x:Key="TextDark">#F2F2F7</Color>
+        <Color x:Key="MutedLight">#6B6B78</Color>
+        <Color x:Key="MutedDark">#9A9AA8</Color>
+
+        <Style x:Key="Card" TargetType="Border">
+            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource CardLight}, Dark={StaticResource CardDark}}" />
+            <Setter Property="StrokeThickness" Value="0" />
+            <Setter Property="StrokeShape" Value="RoundRectangle 16" />
+            <Setter Property="Padding" Value="16" />
+        </Style>
+        <Style x:Key="Title" TargetType="Label">
+            <Setter Property="FontSize" Value="24" />
+            <Setter Property="FontAttributes" Value="Bold" />
+            <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource TextLight}, Dark={StaticResource TextDark}}" />
+        </Style>
+        <Style x:Key="SectionTitle" TargetType="Label">
+            <Setter Property="FontSize" Value="17" />
+            <Setter Property="FontAttributes" Value="Bold" />
+            <Setter Property="VerticalOptions" Value="Center" />
+            <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource TextLight}, Dark={StaticResource TextDark}}" />
+        </Style>
+        <Style x:Key="Key" TargetType="Label">
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource MutedLight}, Dark={StaticResource MutedDark}}" />
+        </Style>
+        <Style x:Key="Value" TargetType="Label">
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="FontAttributes" Value="Bold" />
+            <Setter Property="HorizontalTextAlignment" Value="End" />
+            <Setter Property="LineBreakMode" Value="MiddleTruncation" />
+            <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource TextLight}, Dark={StaticResource TextDark}}" />
+        </Style>
+        <Style x:Key="Chip" TargetType="Border">
+            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource BrandSoftLight}, Dark={StaticResource BrandSoftDark}}" />
+            <Setter Property="StrokeThickness" Value="0" />
+            <Setter Property="StrokeShape" Value="RoundRectangle 10" />
+            <Setter Property="Padding" Value="8,2" />
+            <Setter Property="VerticalOptions" Value="Center" />
+        </Style>
+        <Style x:Key="ChipText" TargetType="Label">
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Brand}, Dark={StaticResource TextDark}}" />
+        </Style>
+        <Style x:Key="Chevron" TargetType="Label">
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="VerticalOptions" Value="Center" />
+            <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource MutedLight}, Dark={StaticResource MutedDark}}" />
+        </Style>
+        <Style x:Key="PrimaryAction" TargetType="Button">
+            <Setter Property="BackgroundColor" Value="{StaticResource Brand}" />
+            <Setter Property="TextColor" Value="White" />
+            <Setter Property="FontAttributes" Value="Bold" />
+            <Setter Property="CornerRadius" Value="12" />
+            <Setter Property="HeightRequest" Value="48" />
+        </Style>
+        <Style x:Key="SecondaryAction" TargetType="Button">
+            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource BrandSoftLight}, Dark={StaticResource BrandSoftDark}}" />
+            <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Brand}, Dark={StaticResource TextDark}}" />
+            <Setter Property="FontAttributes" Value="Bold" />
+            <Setter Property="CornerRadius" Value="12" />
+            <Setter Property="HeightRequest" Value="48" />
+        </Style>
+    </ContentPage.Resources>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="16,24" Spacing="12">
+
+            <Label Text="Halo SDK UI" Style="{StaticResource Title}" />
+
+            <Border Style="{StaticResource Card}">
+                <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto" RowSpacing="10" ColumnSpacing="16">
+                    <Label Grid.Row="0" Text="SDK" Style="{StaticResource Key}" />
+                    <Label Grid.Row="0" Grid.Column="1" x:Name="SdkValue" Style="{StaticResource Value}" />
+                    <Label Grid.Row="1" Text="NFC" Style="{StaticResource Key}" />
+                    <Label Grid.Row="1" Grid.Column="1" x:Name="NfcValue" Style="{StaticResource Value}" />
+                    <Label Grid.Row="2" Text="Installation" Style="{StaticResource Key}" />
+                    <Label Grid.Row="2" Grid.Column="1" x:Name="InstallationValue" Style="{StaticResource Value}" />
+                    <Label Grid.Row="3" Text="Last outcome" Style="{StaticResource Key}" />
+                    <Label Grid.Row="3" Grid.Column="1" x:Name="OutcomeValue" Style="{StaticResource Value}" />
+                    <Label Grid.Row="4" Text="Printer" Style="{StaticResource Key}" />
+                    <Label Grid.Row="4" Grid.Column="1" x:Name="PrinterValue" Style="{StaticResource Value}" />
+                </Grid>
+            </Border>
+
+            <Border Style="{StaticResource Card}" Padding="14,12"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource BrandSoftLight}, Dark={StaticResource BrandSoftDark}}">
+                <Label x:Name="ActionLabel" Text="Bringing the SDK up…" FontSize="14"
+                       TextColor="{AppThemeBinding Light={StaticResource Brand}, Dark={StaticResource TextDark}}" />
+            </Border>
+
+            <Border Style="{StaticResource Card}">
+                <VerticalStackLayout Spacing="12">
+                    <Grid x:Name="PaymentsHeader" ColumnDefinitions="Auto,Auto,*,Auto" ColumnSpacing="8">
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnToggleSection" />
+                        </Grid.GestureRecognizers>
+                        <Label Text="Payments" Style="{StaticResource SectionTitle}" />
+                        <Border Grid.Column="1" Style="{StaticResource Chip}"><Label Text="3" Style="{StaticResource ChipText}" /></Border>
+                        <Label Grid.Column="3" x:Name="PaymentsChevron" Style="{StaticResource Chevron}" />
+                    </Grid>
+                    <VerticalStackLayout x:Name="PaymentsSection" Spacing="8">
+                        <Button Text="Charge R10.00" Clicked="OnCharge" Style="{StaticResource PrimaryAction}" />
+                        <Button Text="Charge R10.00 as a sheet" Clicked="OnChargeAsSheet" Style="{StaticResource SecondaryAction}" />
+                        <Button Text="Charge on the SDK's keypad" Clicked="OnChargeOnKeypad" Style="{StaticResource SecondaryAction}" />
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </Border>
+
+            <Border Style="{StaticResource Card}">
+                <VerticalStackLayout Spacing="12">
+                    <Grid x:Name="DeviceHeader" ColumnDefinitions="Auto,Auto,*,Auto" ColumnSpacing="8">
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnToggleSection" />
+                        </Grid.GestureRecognizers>
+                        <Label Text="Device and settings" Style="{StaticResource SectionTitle}" />
+                        <Border Grid.Column="1" Style="{StaticResource Chip}"><Label Text="4" Style="{StaticResource ChipText}" /></Border>
+                        <Label Grid.Column="3" x:Name="DeviceChevron" Style="{StaticResource Chevron}" />
+                    </Grid>
+                    <VerticalStackLayout x:Name="DeviceSection" Spacing="8" IsVisible="False">
+                        <Button Text="Open NFC settings" Clicked="OnOpenNfcSettings" Style="{StaticResource SecondaryAction}" />
+                        <Button x:Name="LanguageButton" Text="Speak Afrikaans" Clicked="OnToggleLanguage" Style="{StaticResource SecondaryAction}" />
+                        <Button Text="Open the docs in a browser" Clicked="OnOpenDocs" Style="{StaticResource SecondaryAction}" />
+                        <Button Text="Forget this terminal registration" Clicked="OnForgetRegistration" Style="{StaticResource SecondaryAction}" />
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </Border>
+
+            <Border Style="{StaticResource Card}">
+                <VerticalStackLayout Spacing="12">
+                    <Grid x:Name="PrinterHeader" ColumnDefinitions="Auto,Auto,*,Auto" ColumnSpacing="8">
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnToggleSection" />
+                        </Grid.GestureRecognizers>
+                        <Label Text="Printer" Style="{StaticResource SectionTitle}" />
+                        <Border Grid.Column="1" Style="{StaticResource Chip}"><Label Text="5" Style="{StaticResource ChipText}" /></Border>
+                        <Label Grid.Column="3" x:Name="PrinterChevron" Style="{StaticResource Chevron}" />
+                    </Grid>
+                    <VerticalStackLayout x:Name="PrinterSection" Spacing="8" IsVisible="False">
+                        <Button Text="Check for a printer" Clicked="OnCheckPrinter" Style="{StaticResource SecondaryAction}" />
+                        <Button Text="Scan for a Zebra printer" Clicked="OnScanForPrinter" Style="{StaticResource SecondaryAction}" />
+                        <Button x:Name="NfcTapsButton" Text="Listen for printer taps" Clicked="OnToggleNfcTaps" Style="{StaticResource SecondaryAction}" />
+                        <Button Text="Print a receipt" Clicked="OnPrintReceipt" Style="{StaticResource PrimaryAction}" />
+                        <Button Text="Print a line of text" Clicked="OnPrintText" Style="{StaticResource SecondaryAction}" />
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </Border>
+
+            <Border Style="{StaticResource Card}">
+                <VerticalStackLayout Spacing="12">
+                    <Grid x:Name="SamplesHeader" ColumnDefinitions="Auto,Auto,*,Auto" ColumnSpacing="8">
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnToggleSection" />
+                        </Grid.GestureRecognizers>
+                        <Label Text="Sample till slips" Style="{StaticResource SectionTitle}" />
+                        <Border Grid.Column="1" Style="{StaticResource Chip}"><Label Text="4" Style="{StaticResource ChipText}" /></Border>
+                        <Label Grid.Column="3" x:Name="SamplesChevron" Style="{StaticResource Chevron}" />
+                    </Grid>
+                    <VerticalStackLayout x:Name="SamplesSection" Spacing="8" IsVisible="False">
+                        <Button Text="Till slip 1" Clicked="OnPrintSample1" Style="{StaticResource SecondaryAction}" />
+                        <Button Text="Till slip 2" Clicked="OnPrintSample2" Style="{StaticResource SecondaryAction}" />
+                        <Button Text="Till slip 1, centred" Clicked="OnPrintSample1Centred" Style="{StaticResource SecondaryAction}" />
+                        <Button Text="Till slip 2, centred" Clicked="OnPrintSample2Centred" Style="{StaticResource SecondaryAction}" />
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </Border>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

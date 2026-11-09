@@ -1,0 +1,29 @@
+{
+  "light": {
+    "primary": "#FF292CF5",
+    "secondary": "#FF292CF5",
+    "outline": "#80666666"
+  },
+  "dark": {
+    "primary": "#FF292CF5",
+    "secondary": "#FF292CF5",
+    "outline": "#FF999999"
+  },
+  "shape": 20,
+  "language": "en",
+  "presentation": "SHEET",
+  "showTransactionResult": {
+    "share": [
+      "email",
+      "sms"
+    ],
+    "qr": true,
+    "print": [
+      "nfc",
+      "bluetooth"
+    ],
+    "autoClose": 30
+  },
+  "analytics": true,
+  "crashReports": true
+}
