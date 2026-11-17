@@ -1,0 +1,65 @@
+{
+  "themeMode": "SYSTEM",
+  "logo": "halo/halo-sdk-logo.svg",
+  "style": "HORIZONTAL",
+  "gradient": [
+    "SECONDARY",
+    "PRIMARY"
+  ],
+  "light": {
+    "primary": "#FF292CF5",
+    "secondary": "#FF7B5CFF",
+    "tertiary": "#FF7B5CFF",
+    "accent": "#FF292CF5",
+    "surface": "#FFFFFFFF",
+    "onSurface": "#FF000000",
+    "onPrimary": "#FFFFFFFF",
+    "outline": "#80666666",
+    "error": "#FFFF647C"
+  },
+  "dark": {
+    "primary": "#FF5B5EFF",
+    "secondary": "#FF9D85FF",
+    "tertiary": "#FF9D85FF",
+    "accent": "#FF5B5EFF",
+    "surface": "#FF000000",
+    "onSurface": "#FFFFFFFF",
+    "onPrimary": "#FFFFFFFF",
+    "outline": "#FF999999",
+    "error": "#FFFF647C"
+  },
+  "shape": 20,
+  "text": {
+    "display": 45,
+    "titleLarge": 22,
+    "title": 16,
+    "body": 14,
+    "bold": 16,
+    "label": 12,
+    "value": 14
+  },
+  "schemeLogos": {
+    "nfc": true,
+    "visa": true,
+    "mastercard": true,
+    "amex": true,
+    "discover": false,
+    "elo": false
+  },
+  "language": "en",
+  "presentation": "SHEET",
+  "showTransactionResult": {
+    "share": [
+      "email",
+      "sms"
+    ],
+    "qr": true,
+    "print": [
+      "nfc",
+      "bluetooth"
+    ],
+    "autoClose": 30
+  },
+  "analytics": true,
+  "crashReports": true
+}

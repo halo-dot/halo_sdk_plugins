@@ -1,0 +1,44 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0-android</TargetFramework>
+    <SupportedOSPlatformVersion>29</SupportedOSPlatformVersion>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>HaloDot.SdkUi.Example</RootNamespace>
+    <UseMaui>true</UseMaui>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <SingleProject>true</SingleProject>
+    <MauiXamlInflator>SourceGen</MauiXamlInflator>
+    <ApplicationTitle>Halo SDK UI</ApplicationTitle>
+    <ApplicationId>za.co.synthesis.halo.maui.example</ApplicationId>
+    <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
+    <ApplicationVersion>1</ApplicationVersion>
+
+    <!-- Debug builds keep their code in the APK too, so clearing the app's data doesn't break them. -->
+    <EmbedAssembliesIntoApk>true</EmbedAssembliesIntoApk>
+
+    <HaloLocalProperties>$(MSBuildThisFileDirectory)../local.properties</HaloLocalProperties>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <MauiIcon Include="Resources/AppIcon/appicon.svg" ForegroundFile="Resources/AppIcon/appiconfg.svg" Color="#292CF5" />
+    <MauiSplashScreen Include="Resources/Splash/splash.svg" Color="#292CF5" BaseSize="128,128" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
+    <PackageReference Include="HaloDot.SdkUi.Maui" Version="0.0.5" />
+  </ItemGroup>
+
+  <!-- Your Config.cs replaces the committed placeholders once you've copied them. -->
+  <ItemGroup Condition="Exists('Config.cs')">
+    <Compile Remove="Config.example.cs" />
+  </ItemGroup>
+
+  <!-- The private key from the Halo Developer Portal, which .gitignore keeps out of git. -->
+  <ItemGroup Condition="Exists('private_key.pem') and '$(Configuration)' == 'Debug'">
+    <MauiAsset Include="private_key.pem" />
+  </ItemGroup>
+
+</Project>
