@@ -1,0 +1,19 @@
+{
+  "charge": "Take payment",
+  "total_transaction_amount": "Amount to pay",
+  "tap_and_hold": "Hold your card against the back of the phone.",
+  "processing": "Processing",
+  "authorising": "Authorising",
+  "card_read_ok": "Got it, thanks!",
+  "see_phone_then_tap": "Check phone for instructions then tap again.",
+  "try_again": "Try again.",
+  "try_another_card": "Try a different card.",
+  "please_wait": "Please wait",
+  "tap_failed": "Tap failed.",
+  "cancel_transaction_title": "Cancel transaction?",
+  "cancel_transaction_message": "This payment will not be completed.",
+  "cancel_transaction_confirm": "Yes, cancel",
+  "cancel_transaction_dismiss": "No, continue",
+  "payment_approved": "Payment Approved",
+  "payment_unsuccessful": "Payment Unsuccessful"
+}
